@@ -14,6 +14,20 @@ reminder_stamp="$state_dir/last-reminder"
 today="$(date +%Y-%m-%d)"
 mkdir -p "$state_dir"
 
+# One run at a time. A run can sit for minutes waiting on the Reminders
+# permission prompt; a second run started meanwhile must not double up.
+lock="$state_dir/lock"
+if ! mkdir "$lock" 2>/dev/null; then
+  other="$(cat "$lock/pid" 2>/dev/null || true)"
+  if [ -n "$other" ] && kill -0 "$other" 2>/dev/null; then
+    echo "$(date '+%Y-%m-%d %H:%M:%S') another run is already in progress (pid $other), exiting"
+    exit 0
+  fi
+  rm -rf "$lock" && mkdir "$lock" || exit 1   # stale lock from a killed run
+fi
+echo $$ > "$lock/pid"
+trap 'rm -rf "$lock"' EXIT
+
 done_today() { [ -f "$1" ] && [ "$(cat "$1")" = "$today" ]; }
 log() { echo "$(date '+%Y-%m-%d %H:%M:%S') $*"; }
 
@@ -46,16 +60,26 @@ if ! done_today "$reminder_stamp"; then
 
   # The first run prompts for permission to control Reminders. Until it is
   # approved this fails; the stamp is not written, so it retries next run.
-  if osascript - "Workout: $session" "$body" <<'APPLESCRIPT'
+  # The script also checks Reminders itself, so even a lost stamp cannot
+  # produce a second "Workout: ..." item for the same day.
+  if result="$(osascript - "Workout: $session" "$body" <<'APPLESCRIPT'
 on run argv
   set theName to item 1 of argv
   set theBody to item 2 of argv
-  set dueDate to current date
-  set hours of dueDate to 17
-  set minutes of dueDate to 0
-  set seconds of dueDate to 0
+  set dayStart to current date
+  set time of dayStart to 0
+  set dayEnd to dayStart + 1 * days
+  set dueDate to dayStart + 17 * hours
   tell application "Reminders"
     tell default list
+      repeat with r in (every reminder whose name is theName and completed is false)
+        try
+          set d to due date of r
+          if d is not missing value and d is greater than or equal to dayStart and d is less than dayEnd then
+            return "already exists"
+          end if
+        end try
+      end repeat
       if theBody is "" then
         make new reminder with properties {name:theName, due date:dueDate, remind me date:dueDate}
       else
@@ -63,11 +87,12 @@ on run argv
       end if
     end tell
   end tell
+  return "created"
 end run
 APPLESCRIPT
-  then
+  )"; then
     echo "$today" > "$reminder_stamp"
-    log "reminder created: Workout: $session (due 5pm)"
+    log "reminder ${result}: Workout: $session (due 5pm)"
   else
     log "reminder failed. If a Reminders permission prompt appeared, approve it; this retries on the next run." >&2
     status=1
