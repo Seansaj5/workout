@@ -4,7 +4,7 @@
 // this file. You do NOT need to bump it for edits to index.html: the page is
 // fetched network-first, so a fresh copy is picked up on the next open with
 // signal.
-const CACHE_VERSION = 'v2';
+const CACHE_VERSION = 'v3';
 const CACHE_NAME = 'home-program-' + CACHE_VERSION;
 
 // Same-origin files needed to open the app with no signal at all.
