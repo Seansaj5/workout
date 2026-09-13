@@ -8,7 +8,7 @@ Live URL: https://seansaj5.github.io/workout/
 |------|-----|
 | `index.html` | The plan. One page, no build step. Picks today's session from the device date. |
 | `manifest.json`, `icons/` | Make it installable on the iPhone home screen. |
-| `sw.js` | Offline cache for the basement. Network-first for the page, cache-first for icons, manifest and the Google Fonts. |
+| `sw.js` | Offline cache for the basement. Network-first for the page, cache-first for icons, manifest and the Google Fonts (stylesheet and font files are precached at install). Other origins, such as the YouTube form links, are never touched. |
 | `pages-url.txt` | The one place the live URL is written. The workflow and the open script both read it. |
 | `.github/workflows/daily.yml` | 13:00 UTC every day: works out the session in New York time and posts it to ntfy. The topic lives only in the `NTFY_TOPIC` repository secret. |
 | `bin/open-program.sh` | Once a day on this Mac: opens the page in the default browser and adds a "Workout: Push" style reminder due 5pm to the default Reminders list. |
@@ -32,7 +32,7 @@ GitHub Pages redeploys in about a minute. The phone picks up the new page the ne
 
 ## Bump the service worker cache
 
-Only needed when you change the icons, `manifest.json` or `sw.js` itself. Change the constant at the top of `sw.js`:
+Only needed when you change the icons, `manifest.json`, the Google Fonts link (copy the new `<link>` URL into `FONT_CSS` in `sw.js` as well) or `sw.js` itself. Change the constant at the top of `sw.js`:
 
 ```
 const CACHE_VERSION = 'v2';

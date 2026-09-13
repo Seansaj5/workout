@@ -70,6 +70,7 @@ on run argv
   set time of dayStart to 0
   set dayEnd to dayStart + 1 * days
   set dueDate to dayStart + 17 * hours
+  with timeout of 600 seconds
   tell application "Reminders"
     tell default list
       repeat with r in (every reminder whose name is theName and completed is false)
@@ -87,6 +88,7 @@ on run argv
       end if
     end tell
   end tell
+  end timeout
   return "created"
 end run
 APPLESCRIPT
