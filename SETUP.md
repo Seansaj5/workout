@@ -50,6 +50,8 @@ Push it. On the next open with signal the new worker installs, throws away the o
 
 - Run it by hand: `bin/open-program.sh`. A second run on the same day does nothing.
 - Force it to run again today: `rm ~/.local/state/workout/last-open ~/.local/state/workout/last-reminder`.
+- Only one run goes at a time. A run waiting on the Reminders permission prompt holds `~/.local/state/workout/lock`; later runs exit at once. A lock left by a killed run is taken over automatically.
+- It never makes two "Workout: ..." items for one day: it checks the default list before creating one, so even a deleted stamp is safe.
 - Change the 06:00 time or drop it: edit `StartCalendarInterval` in the plist, then bootout and bootstrap again (below).
 
 Disable the LaunchAgent:
