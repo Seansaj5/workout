@@ -12,7 +12,7 @@ Live URL: https://seansaj5.github.io/workout/
 | `pages-url.txt` | The one place the live URL is written. The workflow and the open script both read it. |
 | `.github/workflows/daily.yml` | 13:00 UTC every day: works out the session in New York time and posts it to ntfy. The topic lives only in the `NTFY_TOPIC` repository secret. |
 | `bin/open-program.sh` | Once a day on this Mac: opens the page in the default browser. A stamp file holds the date it last did. |
-| `bin/daily-reminder.sh` | Makes sure today's reminder exists in the **Workout** list in Reminders.app, due 5pm: "Workout: Push" and so on, or "Rest day, face and neck only" on Sunday. Creates the list if it is missing and asks Reminders before creating, so it never duplicates. |
+| `bin/daily-reminder.sh` | Keeps the next 7 days topped up in the **Workout** list in Reminders.app: one item per day named for that day's session, "Workout: Push" and so on, or "Rest day, face and neck only" on a Sunday, due 5pm. Creates the list if it is missing and checks each date in Reminders before creating, so it never duplicates. Run daily by the LaunchAgent, the window rolls forward by itself. |
 | `~/Library/LaunchAgents/com.sean.workout.plist` | Runs both scripts, open first then reminder, at login and at 06:00 (or on the first wake after 06:00). Not in the repo; it holds absolute paths. |
 
 State on this Mac: `~/.local/state/workout/last-open` holds the date the page was last opened. The reminder keeps no stamp; Reminders itself is the record. Both scripts log to `~/Library/Logs/workout.log`.
@@ -51,7 +51,8 @@ Push it. On the next open with signal the new worker installs, throws away the o
 
 - Run them by hand from this folder: `bin/open-program.sh` and `bin/daily-reminder.sh`. A second run of either on the same day does nothing.
 - Make the page open again today: `rm ~/.local/state/workout/last-open`.
-- The reminder script is safe to run from anywhere, any number of times. It looks in the Workout list for an item with today's exact name and a due date today, completed or not, and only creates one if none is there. Only one copy runs at a time; a run waiting on the permission prompt holds `~/.local/state/workout/reminder.lock` and later runs exit at once.
+- Deleted a reminder on purpose? The next run puts it back. Tick it off instead, completed items count as present.
+- The reminder script is safe to run from anywhere, any number of times. For each of the next 7 days it looks in the Workout list for an item with that day's exact name and a due date on that day, completed or not, and creates one only if none is there. The log line says how many it created and how many were already in place. Only one copy runs at a time; a run waiting on the permission prompt holds `~/.local/state/workout/reminder.lock` and later runs exit at once.
 - If it fails, the exit status is 1 and the real error is in `~/Library/Logs/workout.log`, for example `Not authorized to send Apple events to Reminders. (-1743)`.
 - Change the 06:00 time or drop it: edit `StartCalendarInterval` in the plist, then bootout and bootstrap again (below).
 

@@ -1,10 +1,12 @@
 #!/bin/bash
-# Today's reminder in the "Workout" list of Reminders.app, due 5pm.
+# Keeps the next 7 days (today included) topped up in the "Workout" list of
+# Reminders.app: one item per day, named for that day's session, due 5pm.
 #
 # Idempotent and self-healing: creates the Workout list if it is missing, and
-# asks Reminders whether today's item already exists before creating one, so
-# it can run any number of times from anywhere without piling up duplicates.
-# Exit 0: created or already there. Exit 1: failed; the error is in the log.
+# for each date asks Reminders whether that day's item already exists before
+# creating one. Run it as often as you like; it tops up the window rather
+# than piling up copies. The LaunchAgent runs it daily, so the window rolls.
+# Exit 0: window is complete. Exit 1: failed; the error is in the log.
 set -u
 
 log_file="$HOME/Library/Logs/workout.log"
@@ -29,61 +31,107 @@ if ! mkdir "$lock" 2>/dev/null; then
   rm -rf "$lock" && mkdir "$lock" || exit 1   # stale lock from a killed run
 fi
 echo $$ > "$lock/pid"
-trap 'rm -rf "$lock"' EXIT
-
-# Same day mapping as .github/workflows/daily.yml.
-case "$(date +%A)" in
-  Monday)    name="Workout: Push" ;;
-  Tuesday)   name="Workout: Pull" ;;
-  Wednesday) name="Workout: Legs" ;;
-  Thursday)  name="Workout: Upper" ;;
-  Friday)    name="Workout: Lower" ;;
-  Saturday)  name="Workout: Shape" ;;
-  Sunday)    name="Rest day, face and neck only" ;;
-  *) log "unexpected day: $(date +%A)"; exit 1 ;;
-esac
-
 errors="$(mktemp -t workout-reminder)"
 trap 'rm -rf "$lock" "$errors"' EXIT
+
+# Same day mapping as .github/workflows/daily.yml.
+session_name() {
+  case "$1" in
+    Monday)    echo "Workout: Push" ;;
+    Tuesday)   echo "Workout: Pull" ;;
+    Wednesday) echo "Workout: Legs" ;;
+    Thursday)  echo "Workout: Upper" ;;
+    Friday)    echo "Workout: Lower" ;;
+    Saturday)  echo "Workout: Shape" ;;
+    Sunday)    echo "Rest day, face and neck only" ;;
+    *) return 1 ;;
+  esac
+}
+
+# One "YYYY-MM-DD|name" entry per day, today first.
+entries=()
+for offset in 0 1 2 3 4 5 6; do
+  day="$(date -v+${offset}d +%A)"
+  name="$(session_name "$day")" || { log "unexpected day: $day"; exit 1; }
+  entries+=("$(date -v+${offset}d +%Y-%m-%d)|$name")
+done
 
 # The first run from any new "responsible" app (Terminal, or the launchd job
 # itself) makes macOS ask for permission to control Reminders. The 10 minute
 # timeout gives you time to approve it; if it is declined, the error below is
 # logged and the exit status is 1.
-if result="$(osascript - "$name" 2>"$errors" <<'APPLESCRIPT'
+output="$(mktemp -t workout-reminder-out)"
+trap 'rm -rf "$lock" "$errors" "$output"' EXIT
+if osascript - "${entries[@]}" >"$output" 2>"$errors" <<'APPLESCRIPT'
 on run argv
-  set theName to item 1 of argv
   set listName to "Workout"
-  set dayStart to current date
-  set time of dayStart to 0
-  set dayEnd to dayStart + 1 * days
-  set dueDate to dayStart + 17 * hours
+  -- Each argument is "YYYY-MM-DD|name". Build every date up front, from its
+  -- calendar parts, so 5pm is 5pm on the wall clock even across a daylight
+  -- saving change.
+  set names to {}
+  set starts to {}
+  set ends to {}
+  set dues to {}
+  repeat with i from 1 to (count argv)
+    set e to (item i of argv) as text
+    set dayStart to current date
+    set day of dayStart to 1
+    set year of dayStart to (text 1 thru 4 of e) as integer
+    set month of dayStart to (text 6 thru 7 of e) as integer
+    set day of dayStart to (text 9 thru 10 of e) as integer
+    set time of dayStart to 0
+    set dayEnd to dayStart + 36 * hours
+    set time of dayEnd to 0
+    set dueDate to dayStart
+    set time of dueDate to 17 * hours
+    set end of names to (text 12 thru -1 of e)
+    set end of starts to dayStart
+    set end of ends to dayEnd
+    set end of dues to dueDate
+  end repeat
+  set created to 0
+  set existing to 0
+  set madeList to ""
   with timeout of 600 seconds
     tell application "Reminders"
       if not (exists list listName) then
         make new list with properties {name:listName}
+        set madeList to " (created the Workout list)"
       end if
       set theList to list listName
-      repeat with r in (every reminder of theList whose name is theName)
-        try
-          set d to due date of r
-          if d is not missing value and d is greater than or equal to dayStart and d is less than dayEnd then
-            return "already exists"
-          end if
-        end try
+      repeat with i from 1 to (count names)
+        set theName to item i of names
+        set dayStart to item i of starts
+        set dayEnd to item i of ends
+        set found to false
+        repeat with r in (every reminder of theList whose name is theName)
+          try
+            set d to due date of r
+            if d is not missing value and d is greater than or equal to dayStart and d is less than dayEnd then
+              set found to true
+              exit repeat
+            end if
+          end try
+        end repeat
+        if found then
+          set existing to existing + 1
+        else
+          tell theList
+            make new reminder with properties {name:theName, due date:(item i of dues), remind me date:(item i of dues)}
+          end tell
+          set created to created + 1
+        end if
       end repeat
-      tell theList
-        make new reminder with properties {name:theName, due date:dueDate, remind me date:dueDate}
-      end tell
     end tell
   end timeout
-  return "created"
+  return "created " & created & ", already there " & existing & madeList
 end run
 APPLESCRIPT
-)"; then
-  log "$result: \"$name\" in list Workout, due 5pm"
+then
+  result="$(tr -d '\n' < "$output")"
+  log "7-day window ${entries[0]%%|*} to ${entries[6]%%|*}: $result"
   exit 0
 else
-  log "FAILED for \"$name\": $(tr '\n' ' ' < "$errors" | sed 's/  */ /g')"
+  log "FAILED: $(tr '\n' ' ' < "$errors" | sed 's/  */ /g')"
   exit 1
 fi
