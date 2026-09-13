@@ -1,0 +1,4 @@
+.DS_Store
+# Throwaway tooling, never committed
+make-icon.swift
+*.swift

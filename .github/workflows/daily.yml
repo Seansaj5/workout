@@ -1,0 +1,46 @@
+name: Daily session
+
+on:
+  schedule:
+    # 13:00 UTC. GitHub Actions cron has no time zone support, so this fires
+    # at 9:00am Eastern in summer (daylight saving) and 8:00am Eastern in winter.
+    - cron: '0 13 * * *'
+  workflow_dispatch:
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Work out today's session and send it
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+        run: |
+          set -euo pipefail
+          if [ -z "$NTFY_TOPIC" ]; then
+            echo "The NTFY_TOPIC repository secret is not set." >&2
+            exit 1
+          fi
+
+          # Tapping the notification opens the app. The URL lives in one file.
+          app_url="$(tr -d '[:space:]' < pages-url.txt)"
+
+          day="$(TZ=America/New_York date +%A)"
+          case "$day" in
+            Monday)    body="Push" ;;
+            Tuesday)   body="Pull" ;;
+            Wednesday) body="Legs" ;;
+            Thursday)  body="Upper" ;;
+            Friday)    body="Lower" ;;
+            Saturday)  body="Shape" ;;
+            Sunday)    body="Rest. The face and neck routine still happens." ;;
+            *) echo "Unexpected day: $day" >&2; exit 1 ;;
+          esac
+          echo "$day: $body"
+
+          curl --fail --silent --show-error \
+            -H "Title: Today" \
+            -H "Click: $app_url" \
+            -d "$body" \
+            "https://ntfy.sh/$NTFY_TOPIC"

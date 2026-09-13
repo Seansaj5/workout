@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Home program</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#16202B">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Program">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Archivo+Narrow:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EFEDE6;
+    --panel:#E5E2D9;
+    --ink:#16202B;
+    --mute:#6F6E66;
+    --rule:#C9C6BB;
+    --red:#C8342B;
+    --green:#2F5D50;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Archivo',system-ui,-apple-system,sans-serif;
+    font-size:16px;
+    line-height:1.5;
+    -webkit-text-size-adjust:100%;
+  }
+  .wrap{max-width:640px;margin:0 auto;padding:20px 18px 64px;}
+  /* Installed on iOS the page runs under the translucent status bar; pad by the safe area (zero everywhere else). */
+  .wrap{padding-top:calc(20px + env(safe-area-inset-top));padding-bottom:calc(64px + env(safe-area-inset-bottom));}
+
+  .masthead{
+    display:flex;justify-content:space-between;align-items:baseline;
+    padding-bottom:10px;border-bottom:2px solid var(--ink);
+  }
+  .masthead .who{font-family:'Archivo Narrow';font-weight:700;font-size:17px;letter-spacing:.01em;}
+  .masthead .where{color:var(--mute);font-size:13px;}
+
+  .today{padding:22px 0 18px;border-bottom:1px solid var(--rule);}
+  .today .stamp{
+    display:inline-block;font-family:'Archivo Narrow';font-weight:600;
+    font-size:14px;color:var(--red);border:1.5px solid var(--red);
+    border-radius:2px;padding:2px 8px;margin-bottom:12px;
+  }
+  .today h1{
+    font-family:'Archivo Narrow';font-weight:700;
+    font-size:clamp(40px,15vw,68px);line-height:.92;margin:0;
+    letter-spacing:-.015em;
+  }
+  .today .sub{margin-top:10px;color:var(--mute);font-size:15px;max-width:44ch;}
+
+  .days{display:flex;gap:6px;margin:18px 0 4px;overflow-x:auto;padding-bottom:4px;}
+  .days button{
+    flex:1 0 auto;min-width:44px;
+    font-family:'Archivo Narrow';font-weight:600;font-size:15px;
+    background:none;color:var(--mute);
+    border:1px solid var(--rule);border-radius:3px;
+    padding:9px 4px;cursor:pointer;
+  }
+  .days button:hover{color:var(--ink);border-color:var(--ink);}
+  .days button:focus-visible{outline:2.5px solid var(--red);outline-offset:2px;}
+  .days button[aria-pressed="true"]{
+    background:var(--ink);color:var(--paper);border-color:var(--ink);
+  }
+
+  section{margin-top:30px;}
+  h2{
+    font-family:'Archivo Narrow';font-weight:700;font-size:22px;
+    margin:0 0 4px;letter-spacing:-.01em;
+  }
+  .lede{color:var(--mute);font-size:14.5px;margin:0 0 14px;max-width:50ch;}
+
+  ol.lifts{list-style:none;margin:0;padding:0;counter-reset:lift;}
+  ol.lifts li{
+    display:grid;grid-template-columns:1fr auto;gap:2px 14px;
+    padding:12px 0 12px 14px;border-top:1px solid var(--rule);
+    border-left:2px solid transparent;
+    counter-increment:lift;
+  }
+  ol.lifts li:last-child{border-bottom:1px solid var(--rule);}
+  ol.lifts li.push{border-left-color:var(--red);}
+  .name{font-weight:600;font-size:16.5px;}
+  .load{
+    font-family:'Archivo Narrow';font-weight:700;font-size:17px;
+    white-space:nowrap;text-align:right;
+  }
+  .cue{grid-column:1/-1;color:var(--mute);font-size:14px;line-height:1.45;}
+  .cue b{color:var(--red);font-weight:600;}
+
+  .daily{
+    background:var(--panel);border-radius:4px;
+    border-left:4px solid var(--green);
+    padding:18px 16px;margin-top:30px;
+  }
+  .daily h2{color:var(--green);}
+  .daily ol.lifts li{border-color:#CFCCC2;}
+  .daily .load{color:var(--green);}
+
+  .notes li{margin-bottom:10px;}
+  .notes{padding-left:20px;max-width:52ch;}
+  .notes b{font-weight:600;}
+
+  .flag{
+    border:1.5px solid var(--red);border-radius:4px;
+    padding:14px 15px;margin-top:22px;
+  }
+  .flag h3{font-family:'Archivo Narrow';font-size:18px;margin:0 0 6px;color:var(--red);}
+  .flag p{margin:0;font-size:14.5px;max-width:50ch;}
+
+  footer{margin-top:40px;padding-top:14px;border-top:2px solid var(--ink);color:var(--mute);font-size:13.5px;}
+  @media (prefers-reduced-motion:no-preference){
+    .today h1{animation:rise .5s ease-out;}
+    @keyframes rise{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="masthead">
+    <span class="who">Sean's home program</span>
+    <span class="where">Push / pull / legs + upper / lower</span>
+  </div>
+
+  <div class="today">
+    <span class="stamp" id="stamp">Today</span>
+    <h1 id="sessionTitle">Push</h1>
+    <p class="sub" id="sessionSub"></p>
+  </div>
+
+  <div class="days" id="days" role="group" aria-label="Pick a day"></div>
+
+  <section>
+    <h2 id="liftHead">The work</h2>
+    <p class="lede" id="liftLede"></p>
+    <ol class="lifts" id="lifts"></ol>
+  </section>
+
+  <div class="daily">
+    <h2>Face and neck, every day</h2>
+    <p class="lede">Rest days too. Takes about eight minutes. Do it in the mirror so you can check you're not straining your jaw.</p>
+    <ol class="lifts">
+      <li><span class="name">Chin tucks</span><span class="load">3 × 10</span><span class="cue">Sit tall, slide the head straight back, hold 5 seconds. Builds the deep neck flexors and fixes forward head posture, which does more for your jawline than any facial move.</span></li>
+      <li><span class="name">Neck isometrics</span><span class="load">3 × 20s</span><span class="cue">Palm against forehead, then back of head, then each side. Push at about 70 percent, no movement.</span></li>
+      <li><span class="name">Tongue to palate</span><span class="load">2 min</span><span class="cue">Whole tongue flat against the roof of the mouth, lips sealed, breathing through the nose. Then just try to hold it as your default all day.</span></li>
+      <li><span class="name">Jaw-opening resistance</span><span class="load">2 × 10</span><span class="cue">Fist under the chin, open the mouth slowly against light pressure. Gentle. Stop the second anything clicks or aches.</span></li>
+      <li><span class="name">Mastic or hard gum</span><span class="load">10 min cap</span><span class="cue">Trains the masseter, which is the muscle that actually widens the lower face. <b>Ten to fifteen minutes a day is the ceiling.</b> Chewing for an hour buys you jaw pain, not a jaw.</span></li>
+      <li><span class="name">Orbicularis squeeze</span><span class="load">3 × 10</span><span class="cue">Firm squint, hold 5 seconds, release fully. This trains the ring muscle around the eye instead of stretching the skin over it.</span></li>
+      <li><span class="name">Under-eye drainage</span><span class="load">60s</span><span class="cue">Light tapping with the ring finger from the inner corner outward, then down toward the ear. For puffiness, not lines. Almost no pressure.</span></li>
+      <li><span class="name">Cheek and lip holds</span><span class="load">3 × 10</span><span class="cue">Puff both cheeks, hold 5 seconds, push the air side to side, then a hard lip press.</span></li>
+    </ol>
+  </div>
+
+  <div class="flag">
+    <h3>One thing I left out: eye pulling</h3>
+    <p>Nothing about tugging the outer corner changes the shape or tilt of an eye. That angle is set by where the tendon attaches to bone. What repeated pulling does reach is the thinnest skin on your body, and stretching it is the opposite of what you want under there. The squeeze and the drainage above are the versions of this that actually do something.</p>
+  </div>
+
+  <section>
+    <h2>How this got harder</h2>
+    <ol class="notes">
+      <li><b>Three working sets, not two.</b> This is the real change. Two hard sets grows muscle, but the research on volume is consistent, and going to three on your main lifts is what speeds things up. Grinding harder on two sets does not substitute for it.</li>
+      <li><b>Heavy stays heavy.</b> First set of every compound sits at 5 to 8 reps. Isolation work moves up to 8 to 15, because that is where cables and lateral raises actually pay off.</li>
+      <li><b>One intensity technique per exercise, last set only.</b> Marked in red where it applies. Doing them on every set just wrecks recovery.</li>
+      <li><b>Deload every seventh week.</b> Cut to two sets and about 60 percent of your weights for one week. Six days of this without a break catches up with you around week eight, and the deload is what keeps you from finding out.</li>
+      <li><b>Log everything.</b> Weight and reps for every set. The thing that makes you bigger is beating last week's numbers, and you cannot beat what you did not write down.</li>
+      <li><b>Eat for it.</b> Adding volume without adding food gets you tired instead of big. Slight surplus, roughly a gram of protein per pound.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Honest note on speed</h2>
+    <p class="lede" style="max-width:52ch">Muscle has a ceiling on how fast it comes, and no split beats it. What moves how you look in the near term is different: side delts for shoulder width, upper chest, neck thickness, and staying lean enough to see the work. That is why lateral raises show up four days a week here and why neck work is in the daily block. Those are the fastest visual levers you have.</p>
+  </section>
+
+  <footer>
+    Built for the home gym: magnetic cable unit, 200lb stack, two barbells, dumbbells to 75, rack with pull-up bar, bench. Set the cable pulley to the height called for in each cue.
+  </footer>
+
+</div>
+
+<script>
+const PLAN = {
+  mon:{title:"Push",sub:"Chest, front and side delts, triceps. The cable goes low for flyes and high for pushdowns.",
+    lede:"Rest three minutes on the bench and the press. Ninety seconds on everything else.",
+    lifts:[
+      ["Barbell bench press","3 × 5-8","Two ramp-up sets first. Last rep of set one should be a genuine grind."],
+      ["Incline dumbbell press","3 × 8-10","Up to the 75s. When ten is clean on all three sets, slow the lowering to four seconds instead."],
+      ["Cable fly, low pulley to high","2 × 12-15","Pulley at floor level, press up and together at chest height. <b>Drop set on the last one: cut the stack by a third and rep out.</b>"],
+      ["Seated dumbbell shoulder press","3 × 8-10","Bench upright against the rack. Stop one rep short of the grinder."],
+      ["Cable lateral raise","3 × 12-15","Pulley at floor, cable behind your back, one arm at a time. <b>Myo-reps on the last set: rest 15 seconds, get 4 more, twice.</b>"],
+      ["Overhead cable triceps extension","2 × 10-12","Pulley high, face away, elbows locked in beside your ears."],
+      ["Cable pushdown","2 × 12-15","<b>Drop set on the last one.</b> Elbows pinned to your sides the whole way."]
+    ]},
+  tue:{title:"Pull",sub:"Back thickness and width, rear delts, biceps. Pulley high for pulldowns, shoulder height for rear delts.",
+    lede:"Straps are fine on rows and pulldowns. Grip should not be the thing that ends the set.",
+    lifts:[
+      ["Weighted pull-up","3 × 5-8","Add weight the moment you can do eight clean. If eight bodyweight is not there yet, do five sets of whatever you have."],
+      ["Barbell row","3 × 6-8","Torso around 45 degrees, pull to the bottom of the ribs. No heaving."],
+      ["Cable pulldown","3 × 10-12","Pulley at the top, wide grip. Pull with the elbows, not the hands."],
+      ["Cable row","2 × 10-12","Pulley low, neutral grip, squeeze for a full second at the bottom."],
+      ["Cable rear delt fly","3 × 15-20","Pulley at shoulder height, cross the cables, sweep wide and back. Light weight, high reps, this one never gets heavy."],
+      ["Barbell curl","3 × 6-10","<b>Rest-pause on the last set: fail, rest 15 seconds, go again, twice.</b>"],
+      ["Incline dumbbell curl","2 × 10-12","Bench at 45, arms hanging straight down behind you. Full stretch at the bottom is the whole point."]
+    ]},
+  wed:{title:"Legs",sub:"Squat pattern, hamstrings, calves, hard abs.",
+    lede:"The heaviest day of the week. Eat before it.",
+    lifts:[
+      ["Barbell back squat","3 × 5-8","Three ramp sets. Depth below parallel or it does not count."],
+      ["Romanian deadlift","3 × 6-8","Bar close to the legs, push the hips back, stop when the hamstrings run out of stretch."],
+      ["Bulgarian split squat","2 × 8-10 each","Rear foot on the bench, dumbbells in hand. This one is supposed to be miserable."],
+      ["Cable pull-through","2 × 12-15","Pulley at floor between your legs, hinge and drive the hips forward hard."],
+      ["Standing calf raise","4 × 10-12","Dumbbell in one hand, toes on a plate. Two-second pause at the bottom stretch every rep."],
+      ["Hanging leg raise","3 × max","From the pull-up bar. Curl the pelvis up, do not just swing the legs."]
+    ]},
+  thu:{title:"Upper",sub:"Second hit on everything above the waist, angled differently than Monday and Tuesday.",
+    lede:"Lighter on the compounds than push day, heavier on the cable work.",
+    lifts:[
+      ["Incline barbell press","3 × 6-8","Bench at 30 degrees. This is your upper chest day, do not rush it."],
+      ["Weighted chin-up","3 × 6-10","Supinated grip, so this hits biceps hard too."],
+      ["Cable row, wide grip","3 × 10-12","Pulley at chest height, elbows flared out to hit the upper back."],
+      ["Dumbbell lateral raise","4 × 12-15","Four sets on purpose. Slight forward lean, pinkies a touch high."],
+      ["Cable fly, mid pulley","2 × 12-15","Pulley at chest height, straight across. <b>Drop set on the last one.</b>"],
+      ["Dumbbell overhead extension","2 × 10-12","One heavy dumbbell, both hands, deep stretch behind the head."],
+      ["Cable curl","2 × 10-12","Pulley at floor, step back so there is tension at the bottom."]
+    ]},
+  fri:{title:"Lower",sub:"Hinge pattern, glutes, calves again, weighted abs.",
+    lede:"Pulls instead of squats today. Your knees will thank you by week four.",
+    lifts:[
+      ["Deadlift","3 × 4-6","Reset on the floor between reps. Stop the set the moment your back rounds."],
+      ["Front squat or goblet squat","3 × 8-10","Front squat if the rack lets you unrack cleanly, goblet with a 75 if not."],
+      ["Reverse lunge","2 × 10-12 each","Dumbbells, step back not forward, easier on the knee."],
+      ["Cable hip thrust","3 × 12-15","Pulley at floor, shoulders on the bench, rope or belt across the hips. Two-second squeeze at the top."],
+      ["Seated calf raise","4 × 12-15","Dumbbell on the knee, seated on the bench. Different angle than Wednesday, hits the soleus."],
+      ["Kneeling cable crunch","3 × 12-15","Pulley high, rope behind the head, crunch the ribs toward the hips. The only ab move that loads properly."]
+    ]},
+  sat:{title:"Shape",sub:"Delts, arms, neck, abs. The day that changes how you look in a shirt fastest.",
+    lede:"Short rests, ninety seconds tops. This one should feel like a pump session, not a strength session.",
+    lifts:[
+      ["Cable lateral raise","4 × 12-15","<b>Myo-reps on the final set.</b> Side delts are the single highest-return muscle for looking wider."],
+      ["Cable rear delt fly","3 × 15-20","Rounds out the shoulder from behind so it reads three-dimensional."],
+      ["Dumbbell shrug","3 × 10-12","The 75s, two-second hold at the top, no rolling."],
+      ["Close-grip bench press","3 × 8-10","Hands just inside shoulder width, elbows tucked."],
+      ["Cable overhead extension","2 × 12-15","Long head of the triceps, which is most of your arm from the side."],
+      ["Hammer curl","3 × 10-12","Builds the brachialis, which pushes the bicep up and makes the arm look thicker."],
+      ["Cable curl","2 × 15","<b>Drop set both sets.</b> Finish the arms off completely."],
+      ["Neck extension and flexion","3 × 15-20 each","Lie face down on the bench with a towel-wrapped plate on the back of the head, then face up for the front. Start with five pounds. A thicker neck changes your whole frame and almost nobody trains it."],
+      ["Ab circuit","3 rounds","Hanging leg raise, cable crunch, plank for 45 seconds. Straight through, one minute rest between rounds."]
+    ]},
+  sun:{title:"Rest",sub:"No lifting. The face and neck block still happens.",
+    lede:"Growth is happening now, not during the sessions. Protect it.",
+    lifts:[
+      ["Walk","20-30 min","Easy pace. Moves blood without adding fatigue."],
+      ["Sauna or red light","Optional","If you're using them, today is the day they help most."],
+      ["Log review","5 min","Look back at the week and write down which lifts get more weight next week. Decide it now, not while you're under the bar."],
+      ["Sleep","10 hrs","You already do this. It is doing more for you than any supplement on your list."]
+    ]}
+};
+const ORDER=["mon","tue","wed","thu","fri","sat","sun"];
+const LABEL={mon:"Mon",tue:"Tue",wed:"Wed",thu:"Thu",fri:"Fri",sat:"Sat",sun:"Sun"};
+const todayKey=ORDER[(new Date().getDay()+6)%7];
+
+const daysEl=document.getElementById("days");
+ORDER.forEach(k=>{
+  const b=document.createElement("button");
+  b.textContent=LABEL[k];
+  b.setAttribute("aria-pressed",String(k===todayKey));
+  b.onclick=()=>render(k);
+  b.dataset.key=k;
+  daysEl.appendChild(b);
+});
+
+function render(key){
+  const d=PLAN[key];
+  document.getElementById("sessionTitle").textContent=d.title;
+  document.getElementById("sessionSub").textContent=d.sub;
+  document.getElementById("liftLede").textContent=d.lede;
+  document.getElementById("stamp").textContent = key===todayKey ? "Today" : LABEL[key];
+  const ol=document.getElementById("lifts");
+  ol.innerHTML="";
+  d.lifts.forEach(([name,load,cue])=>{
+    const li=document.createElement("li");
+    if(cue.includes("<b>")) li.className="push";
+    li.innerHTML='<span class="name">'+name+'</span><span class="load">'+load+'</span><span class="cue">'+cue+'</span>';
+    ol.appendChild(li);
+  });
+  [...daysEl.children].forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.key===key)));
+}
+render(todayKey);
+</script>
+<script>
+// Offline support. Progressive enhancement: the page works without it.
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .catch(err => console.warn('Service worker not registered:', err));
+  });
+}
+</script>
+</body>
+</html>
