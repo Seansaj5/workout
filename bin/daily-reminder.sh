@@ -82,7 +82,7 @@ on run argv
     set time of dayStart to 0
     set dayEnd to dayStart + 36 * hours
     set time of dayEnd to 0
-    set dueDate to dayStart
+    copy dayStart to dueDate     -- copy: plain assignment would alias the same date object
     set time of dueDate to 17 * hours
     set end of names to (text 12 thru -1 of e)
     set end of starts to dayStart
