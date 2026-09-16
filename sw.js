@@ -4,7 +4,7 @@
 // this file. You do NOT need to bump it for edits to index.html: the page is
 // fetched network-first, so a fresh copy is picked up on the next open with
 // signal.
-const CACHE_VERSION = 'v3';
+const CACHE_VERSION = 'v4';
 const CACHE_NAME = 'home-program-' + CACHE_VERSION;
 
 // Same-origin files needed to open the app with no signal at all.
@@ -19,7 +19,7 @@ const PRECACHE = [
 // The Google Fonts stylesheet index.html links to. Keep it identical to the
 // <link> in index.html. At install, the stylesheet and every font file it
 // names are cached too, so the typefaces are there offline from day one.
-const FONT_CSS = 'https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=Archivo:wght@400;500;600;700&display=swap';
+const FONT_CSS = 'https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap';
 const FONT_HOSTS = ['fonts.googleapis.com', 'fonts.gstatic.com'];
 
 self.addEventListener('install', event => {

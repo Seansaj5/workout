@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Home Program</title>
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0E1216">
+<meta name="theme-color" content="#08090C">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <meta name="mobile-web-app-capable" content="yes">
@@ -14,216 +14,206 @@
 <meta name="apple-mobile-web-app-title" content="Program">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --void:#0E1216;
-    --steel:#161C22;
-    --steel-2:#1E262E;
-    --rail:#2A343E;
-    --bone:#E9E5DD;
-    --mute:#8494A3;
-    --ember:#E2561D;
-    --ember-dim:#7A2F13;
-    --sage:#54B0A0;
-    --gold:#D7A93C;
+    --bg:#08090C;
+    --panel:#11141B;
+    --panel-2:#171B24;
+    --line:#212733;
+    --line-2:#2D3543;
+    --fg:#EDEFF3;
+    --muted:#7B8593;
+    --hot:#FF5A1F;
+    --hot-dim:#8A2F10;
+    --cool:#3DD6C0;
+    --gold:#E8B93B;
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-  html,body{margin:0;padding:0;background:var(--void);}
+  html{background:var(--bg);}
   body{
-    color:var(--bone);
-    font-family:'Archivo',system-ui,sans-serif;
-    font-size:16px;line-height:1.5;
+    margin:0;color:var(--fg);background:var(--bg);
+    font-family:'Archivo',system-ui,sans-serif;font-size:16px;line-height:1.5;
     -webkit-text-size-adjust:100%;
-    background-image:radial-gradient(ellipse 120% 60% at 50% -10%, #1C2630 0%, transparent 70%);
-    background-repeat:no-repeat;
   }
-  .wrap{max-width:660px;margin:0 auto;padding:0 16px 80px;}
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+    background:
+      radial-gradient(900px 420px at 78% -8%, rgba(255,90,31,.14), transparent 62%),
+      radial-gradient(700px 380px at 8% 6%, rgba(61,214,192,.07), transparent 60%);
+  }
+  .wrap{position:relative;z-index:1;max-width:680px;margin:0 auto;padding:0 16px 96px;}
   /* Installed on iOS the page runs under the translucent status bar; pad by the safe area (zero everywhere else). */
-  .wrap{padding-top:env(safe-area-inset-top);padding-bottom:calc(80px + env(safe-area-inset-bottom));}
+  .wrap{padding-top:env(safe-area-inset-top);padding-bottom:calc(96px + env(safe-area-inset-bottom));}
 
-  /* masthead */
-  .bar{
-    display:flex;justify-content:space-between;align-items:center;
-    padding:16px 0 14px;
-  }
-  .mark{
-    font-family:'Big Shoulders Display';font-weight:800;font-size:20px;
-    letter-spacing:.06em;text-transform:uppercase;
-  }
-  .mark i{color:var(--ember);font-style:normal;}
-  .streak{
-    font-size:12.5px;color:var(--mute);font-variant-numeric:tabular-nums;
-  }
+  .bar{display:flex;align-items:center;justify-content:space-between;padding:18px 0 6px;}
+  .mark{display:flex;align-items:center;gap:9px;}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--hot);box-shadow:0 0 0 3px rgba(255,90,31,.16),0 0 16px rgba(255,90,31,.7);}
+  .mark span{font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;letter-spacing:.01em;}
+  .clock{font-family:'JetBrains Mono';font-weight:600;font-size:12px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;}
 
-  /* hero */
-  .hero{position:relative;padding:14px 0 20px;overflow:hidden;}
-  .hero::before{
-    content:"";position:absolute;inset:0;
-    background:repeating-linear-gradient(115deg,transparent 0 22px,rgba(226,86,29,.05) 22px 24px);
-    mask-image:linear-gradient(to bottom,black,transparent 85%);
-    pointer-events:none;
+  .hero{position:relative;padding:26px 0 8px;}
+  .ghost{
+    position:absolute;right:-8px;top:-4px;pointer-events:none;
+    font-family:'Bricolage Grotesque';font-weight:800;
+    font-size:clamp(130px,38vw,210px);line-height:.72;
+    color:transparent;-webkit-text-stroke:1.5px var(--line-2);
+    opacity:.65;user-select:none;
   }
-  .tag{
-    position:relative;display:inline-flex;align-items:center;gap:7px;
-    font-family:'Big Shoulders Display';font-weight:700;font-size:14px;
-    letter-spacing:.14em;text-transform:uppercase;color:var(--ember);
+  .kicker{
+    position:relative;display:inline-flex;align-items:center;gap:8px;
+    font-family:'JetBrains Mono';font-weight:700;font-size:11.5px;
+    letter-spacing:.2em;text-transform:uppercase;color:var(--hot);
   }
-  .tag::before{content:"";width:22px;height:2px;background:var(--ember);}
+  .kicker b{width:6px;height:6px;border-radius:50%;background:var(--hot);animation:pulse 2.4s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.28;}}
   h1{
-    position:relative;font-family:'Big Shoulders Display';font-weight:800;
-    font-size:clamp(58px,20vw,108px);line-height:.82;margin:6px 0 0;
-    letter-spacing:-.01em;text-transform:uppercase;
+    position:relative;margin:10px 0 0;
+    font-family:'Bricolage Grotesque';font-weight:800;
+    font-size:clamp(50px,15vw,84px);line-height:.88;letter-spacing:-.035em;
   }
-  h1 em{font-style:normal;color:var(--ember);}
-  .blurb{position:relative;color:var(--mute);font-size:15px;margin:14px 0 0;max-width:42ch;}
+  .focus{position:relative;display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;}
+  .focus span{
+    font-family:'JetBrains Mono';font-weight:600;font-size:11px;
+    letter-spacing:.11em;text-transform:uppercase;color:var(--muted);
+    border:1px solid var(--line);border-radius:100px;padding:4px 10px;
+  }
+  .blurb{position:relative;color:var(--muted);font-size:15px;margin:16px 0 0;max-width:44ch;}
 
-  /* week rail */
-  .week{display:flex;gap:5px;margin:18px 0 6px;}
-  .week button{
-    flex:1;background:var(--steel);border:1px solid var(--rail);
-    border-radius:7px;padding:10px 2px 9px;cursor:pointer;
-    font-family:'Big Shoulders Display';font-weight:700;font-size:15px;
-    letter-spacing:.06em;text-transform:uppercase;color:var(--mute);
-    transition:background .15s,color .15s,border-color .15s;
+  .week{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin:24px 0 0;}
+  .wd{
+    position:relative;background:var(--panel);border:1px solid var(--line);
+    border-radius:10px;padding:9px 0 8px;cursor:pointer;overflow:hidden;
+    display:flex;flex-direction:column;align-items:center;gap:6px;
+    transition:border-color .16s,background .16s,transform .12s;
   }
-  .week button:hover{color:var(--bone);border-color:#3C4854;}
-  .week button:focus-visible{outline:2px solid var(--ember);outline-offset:2px;}
-  .week button[aria-pressed="true"]{
-    background:var(--ember);border-color:var(--ember);color:#12161A;
-  }
-  .week button.done::after{
-    content:"";display:block;width:4px;height:4px;border-radius:50%;
-    background:var(--sage);margin:4px auto 0;
+  .wd:hover{border-color:var(--line-2);transform:translateY(-1px);}
+  .wd:focus-visible{outline:2px solid var(--hot);outline-offset:2px;}
+  .wd .d{font-family:'JetBrains Mono';font-weight:700;font-size:11px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;}
+  .wd .bar2{width:20px;height:3px;border-radius:2px;background:var(--line-2);overflow:hidden;}
+  .wd .bar2 i{display:block;height:100%;width:0;background:var(--cool);transition:width .4s ease;}
+  .wd[aria-pressed="true"]{background:var(--panel-2);border-color:var(--hot);}
+  .wd[aria-pressed="true"] .d{color:var(--fg);}
+  .wd.istoday::after{
+    content:"";position:absolute;top:5px;right:5px;width:4px;height:4px;
+    border-radius:50%;background:var(--hot);
   }
 
-  /* progress */
-  .meter{display:flex;align-items:center;gap:11px;margin:16px 0 4px;}
-  .meter .track{flex:1;height:5px;background:var(--steel-2);border-radius:3px;overflow:hidden;}
-  .meter .fill{height:100%;width:0;background:linear-gradient(90deg,var(--ember-dim),var(--ember));transition:width .35s cubic-bezier(.3,.9,.3,1);}
-  .meter .count{font-family:'Big Shoulders Display';font-weight:700;font-size:16px;color:var(--mute);font-variant-numeric:tabular-nums;letter-spacing:.04em;}
+  .readout{
+    display:flex;align-items:center;gap:14px;margin:18px 0 2px;
+    background:var(--panel);border:1px solid var(--line);border-radius:12px;
+    padding:13px 15px;
+  }
+  .readout .big{font-family:'JetBrains Mono';font-weight:700;font-size:22px;letter-spacing:-.02em;}
+  .readout .big s{text-decoration:none;color:var(--muted);font-size:15px;}
+  .readout .track{flex:1;height:6px;background:#0C0F15;border-radius:4px;overflow:hidden;border:1px solid var(--line);}
+  .readout .fill{height:100%;width:0;border-radius:4px;background:linear-gradient(90deg,var(--hot-dim),var(--hot));transition:width .4s cubic-bezier(.3,.9,.3,1);}
+  .readout.full .fill{background:linear-gradient(90deg,#1F7A6C,var(--cool));}
+  .readout .lab{font-family:'JetBrains Mono';font-weight:600;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);}
 
-  /* exercise list */
-  ul.lifts{list-style:none;margin:14px 0 0;padding:0;}
+  ul.lifts{list-style:none;margin:16px 0 0;padding:0;}
   ul.lifts li{
-    background:var(--steel);border:1px solid var(--rail);
-    border-left:3px solid var(--rail);
-    border-radius:9px;margin-bottom:8px;overflow:hidden;
-    transition:border-color .18s,background .18s;
+    background:linear-gradient(180deg,var(--panel-2),var(--panel));
+    border:1px solid var(--line);border-radius:13px;margin-bottom:9px;
+    overflow:hidden;position:relative;
+    transition:border-color .18s,box-shadow .18s;
   }
-  ul.lifts li.complete{border-left-color:var(--sage);background:#151C1B;}
-  ul.lifts li.open{border-color:#3C4854;}
-  .head{
-    display:grid;grid-template-columns:1fr auto auto;
-    align-items:center;gap:10px;padding:13px 13px 13px 14px;cursor:pointer;
+  ul.lifts li::before{
+    content:"";position:absolute;left:0;top:0;bottom:0;width:2px;
+    background:var(--line-2);transition:background .25s;
   }
-  .title{min-width:0;}
-  .nm{font-weight:600;font-size:16.5px;line-height:1.25;}
-  .chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;}
+  ul.lifts li.open{border-color:var(--line-2);box-shadow:0 10px 30px -18px rgba(0,0,0,.9);}
+  ul.lifts li.done::before{background:var(--cool);}
+  ul.lifts li.done .nm{color:var(--muted);}
+  .head{display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;padding:14px 15px;cursor:pointer;}
+  .nm{font-weight:600;font-size:16.5px;line-height:1.25;transition:color .2s;}
+  .meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:7px;}
+  .mus{font-family:'JetBrains Mono';font-weight:600;font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);}
   .chip{
-    font-family:'Big Shoulders Display';font-weight:700;font-size:11.5px;
-    letter-spacing:.1em;text-transform:uppercase;
-    padding:2px 7px;border-radius:3px;border:1px solid;
+    font-family:'JetBrains Mono';font-weight:700;font-size:10px;
+    letter-spacing:.11em;text-transform:uppercase;
+    padding:3px 7px;border-radius:4px;border:1px solid;
   }
-  .chip.straps{color:var(--gold);border-color:#5C4A1C;background:#241D0C;}
-  .chip.grip{color:var(--sage);border-color:#26463F;background:#0F1E1B;}
-  .chip.int{color:var(--ember);border-color:#5A2915;background:#221009;}
+  .chip.straps{color:var(--gold);border-color:#5A4A1B;background:rgba(232,185,59,.07);}
+  .chip.grip{color:var(--cool);border-color:#1F4B44;background:rgba(61,214,192,.07);}
+  .chip.int{color:var(--hot);border-color:#5C2B14;background:rgba(255,90,31,.08);}
   .reps{
-    font-family:'Big Shoulders Display';font-weight:700;font-size:20px;
-    letter-spacing:.02em;white-space:nowrap;color:var(--bone);
+    font-family:'JetBrains Mono';font-weight:700;font-size:15px;
+    white-space:nowrap;text-align:right;letter-spacing:-.02em;
   }
-  .caret{color:var(--mute);font-size:13px;transition:transform .2s;}
-  li.open .caret{transform:rotate(90deg);}
+  .reps em{display:block;font-style:normal;font-size:9.5px;letter-spacing:.14em;color:var(--muted);margin-top:3px;text-transform:uppercase;}
 
-  .body{display:none;padding:0 14px 14px;}
-  li.open .body{display:block;}
-  .cue{color:var(--mute);font-size:14.5px;line-height:1.55;margin:0 0 13px;border-top:1px solid var(--rail);padding-top:12px;}
-  .cue b{color:var(--ember);font-weight:600;}
+  .body{max-height:0;overflow:hidden;transition:max-height .32s cubic-bezier(.4,0,.2,1);}
+  li.open .body{max-height:560px;}
+  .inner{padding:2px 15px 15px;}
+  .cue{color:var(--muted);font-size:14.5px;line-height:1.6;margin:0 0 15px;padding-top:13px;border-top:1px solid var(--line);}
+  .cue b{color:var(--hot);font-weight:600;}
   .row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
-  .sets{display:flex;gap:7px;}
+  .sets{display:flex;gap:6px;flex-wrap:wrap;}
   .sets button{
-    width:34px;height:34px;border-radius:50%;
-    background:transparent;border:1.5px solid var(--rail);color:var(--mute);
-    font-family:'Big Shoulders Display';font-weight:700;font-size:15px;
-    cursor:pointer;transition:all .15s;
+    min-width:40px;height:34px;padding:0 5px;border-radius:8px;
+    background:#0C0F15;border:1px solid var(--line-2);color:var(--muted);
+    font-family:'JetBrains Mono';font-weight:700;font-size:12px;
+    cursor:pointer;transition:all .16s;
   }
-  .sets button:hover{border-color:var(--mute);}
-  .sets button[aria-pressed="true"]{background:var(--sage);border-color:var(--sage);color:#0E1216;}
+  .sets button:hover{border-color:var(--muted);color:var(--fg);}
+  .sets button[aria-pressed="true"]{background:var(--cool);border-color:var(--cool);color:#06100E;}
   .form{
-    display:inline-flex;align-items:center;gap:7px;text-decoration:none;
-    color:var(--bone);background:var(--steel-2);border:1px solid var(--rail);
-    border-radius:6px;padding:8px 12px;font-size:13.5px;font-weight:500;
+    display:inline-flex;align-items:center;gap:8px;text-decoration:none;
+    color:var(--fg);background:#0C0F15;border:1px solid var(--line-2);
+    border-radius:8px;padding:8px 13px;font-size:13.5px;font-weight:500;
+    transition:border-color .16s,color .16s;
   }
-  .form:hover{border-color:var(--ember);color:var(--ember);}
-  .form span.play{
-    width:15px;height:15px;border-radius:50%;background:var(--ember);
-    display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;
-  }
-  .form span.play::after{
-    content:"";border-left:5px solid #0E1216;border-top:3.5px solid transparent;
-    border-bottom:3.5px solid transparent;margin-left:1.5px;
-  }
+  .form:hover{border-color:var(--hot);color:var(--hot);}
+  .play{width:16px;height:16px;border-radius:50%;background:var(--hot);display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;}
+  .play::after{content:"";border-left:5px solid #08090C;border-top:3.5px solid transparent;border-bottom:3.5px solid transparent;margin-left:2px;}
 
-  /* daily block */
-  .daily{
-    margin-top:30px;border:1px solid #26463F;border-radius:11px;
-    background:linear-gradient(180deg,#12201E,#0F1618);padding:18px 15px;
-  }
-  .daily h2{color:var(--sage);}
-  .daily ul.lifts li{background:#101917;border-color:#1E332F;border-left-color:#1E332F;}
-  .daily .chip.int{color:var(--sage);border-color:#26463F;background:#0F1E1B;}
-
-  h2{
-    font-family:'Big Shoulders Display';font-weight:800;font-size:27px;
-    text-transform:uppercase;letter-spacing:.02em;margin:0 0 3px;
-  }
-  .sub{color:var(--mute);font-size:14.5px;margin:0 0 4px;max-width:48ch;}
+  .pane{margin-top:34px;border-radius:15px;padding:20px 17px;border:1px solid var(--line);background:var(--panel);}
+  .pane.cool{border-color:#1C3F3A;background:linear-gradient(180deg,rgba(61,214,192,.05),transparent 60%),var(--panel);}
+  .pane.cool h2{color:var(--cool);}
+  .pane.cool ul.lifts li::before{background:#1F4B44;}
+  .pane.cool ul.lifts li.done::before{background:var(--cool);}
+  h2{font-family:'Bricolage Grotesque';font-weight:800;font-size:25px;letter-spacing:-.025em;margin:0 0 4px;}
+  .sub{color:var(--muted);font-size:14.5px;margin:0 0 6px;max-width:48ch;}
   section{margin-top:34px;}
+  .notes{padding-left:18px;color:var(--muted);font-size:15px;max-width:52ch;margin:14px 0 0;}
+  .notes li{margin-bottom:12px;}
+  .notes b{color:var(--fg);font-weight:600;}
 
-  .flag{
-    margin-top:26px;border-radius:10px;padding:16px 15px;
-    background:#1A1009;border:1px solid #5A2915;
-  }
-  .flag h3{font-family:'Big Shoulders Display';font-weight:700;font-size:19px;text-transform:uppercase;letter-spacing:.04em;margin:0 0 7px;color:var(--ember);}
-  .flag p{margin:0;font-size:14.5px;color:#C9BDB4;max-width:50ch;}
-
-  .notes{padding-left:19px;color:var(--mute);font-size:15px;max-width:52ch;}
-  .notes li{margin-bottom:11px;}
-  .notes b{color:var(--bone);font-weight:600;}
-
-  footer{
-    margin-top:40px;padding-top:16px;border-top:1px solid var(--rail);
-    color:#5E6C7A;font-size:13px;
-  }
-  .reset{background:none;border:none;color:#5E6C7A;font-size:13px;text-decoration:underline;cursor:pointer;padding:0;margin-top:8px;font-family:inherit;}
+  footer{margin-top:44px;padding-top:18px;border-top:1px solid var(--line);color:#5A6472;font-size:13px;}
+  .reset{background:none;border:none;color:#5A6472;font-size:13px;text-decoration:underline;cursor:pointer;padding:0;margin-top:10px;font-family:inherit;}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
 </style>
 </head>
 <body>
 <div class="wrap">
 
   <div class="bar">
-    <span class="mark">Home <i>Program</i></span>
-    <span class="streak" id="streak"></span>
+    <div class="mark"><i class="dot"></i><span>Home Program</span></div>
+    <div class="clock" id="clock"></div>
   </div>
 
   <div class="hero">
-    <span class="tag" id="tag">Today</span>
+    <div class="ghost" id="ghost">01</div>
+    <span class="kicker"><b></b><i id="kicker">Today</i></span>
     <h1 id="title">Push</h1>
+    <div class="focus" id="focus"></div>
     <p class="blurb" id="blurb"></p>
   </div>
 
   <div class="week" id="week" role="group" aria-label="Day"></div>
 
-  <div class="meter">
+  <div class="readout" id="readout">
+    <span class="big"><i id="done">0</i><s> / <i id="total">0</i></s></span>
     <div class="track"><div class="fill" id="fill"></div></div>
-    <span class="count" id="count">0 / 0</span>
+    <span class="lab">Sets</span>
   </div>
 
   <ul class="lifts" id="lifts"></ul>
 
-  <div class="daily">
+  <div class="pane cool">
     <h2>Face &amp; Neck</h2>
-    <p class="sub">Every single day, rest days included. About eight minutes in the mirror.</p>
+    <p class="sub">Every day, rest days included. Eight minutes in the mirror.</p>
     <ul class="lifts" id="face"></ul>
   </div>
 
@@ -231,121 +221,124 @@
     <h2>Straps</h2>
     <p class="sub">Gold chip means bring them.</p>
     <ul class="notes">
-      <li><b>Top sets only.</b> Warm up bare-handed, strap the heaviest one or two sets. If you strap everything, your grip never gets the message.</li>
-      <li><b>Never on curls or carries.</b> Farmer's carries and pinch holds exist to build the grip. Strapping them defeats the whole point.</li>
-      <li><b>The conflict is real.</b> You now train forearms directly, so grip work always goes last in the session. Fry your hands early and the rows suffer.</li>
+      <li><b>Top sets only.</b> Warm up bare-handed and strap the heaviest one or two sets. Strap everything and your grip never gets the message.</li>
+      <li><b>Never on carries.</b> Farmer's carries exist to build grip. Strapping them defeats the point entirely.</li>
+      <li><b>Grip work goes last.</b> You train forearms directly now, so fry your hands early and every row after it suffers.</li>
     </ul>
   </section>
 
   <section>
-    <h2>How this got harder</h2>
+    <h2>Rules</h2>
     <ul class="notes">
-      <li><b>Three working sets, not two.</b> This is the actual change. Grinding harder on two sets is not a substitute for more hard sets.</li>
-      <li><b>One intensity technique per exercise, last set only.</b> Orange chips mark them. On every set it just wrecks recovery.</li>
-      <li><b>Deload every seventh week.</b> Two sets, about 60 percent of your weights, one week. Six days at this intensity catches up around week eight.</li>
-      <li><b>Log the numbers.</b> Beating last week is the whole mechanism, and you cannot beat what you did not write down.</li>
+      <li><b>Three working sets.</b> This is what drives the growth. Grinding harder on two is not a substitute for more hard sets.</li>
+      <li><b>One technique per exercise, last set only.</b> Orange chips mark them. Everywhere at once just wrecks recovery.</li>
+      <li><b>Deload week seven.</b> Two sets, around 60 percent, one week. Six days at this intensity catches up around week eight.</li>
+      <li><b>Log the numbers.</b> Beating last week is the entire mechanism, and you cannot beat what you did not write down.</li>
       <li><b>Eat for it.</b> More volume without more food makes you tired, not bigger.</li>
     </ul>
   </section>
 
   <footer>
-    Home gym: magnetic cable unit, 200lb stack, two barbells, dumbbells to 75, rack with pull-up bar, bench. Each cue names the pulley height. Set marks clear automatically each morning.
+    Magnetic cable unit, 200lb stack, two barbells, dumbbells to 75, rack with pull-up bar, bench. Each cue names the pulley height. Set marks clear on their own each morning.
     <br><button class="reset" id="reset">Clear today's marks</button>
   </footer>
 
 </div>
 
 <script>
-const S = {
-  straps:['straps','Straps'], grip:['grip','Grip'], int:['int',null]
-};
-
-function ex(nm, reps, sets, cue, form, chips){
-  return {nm:nm, reps:reps, sets:sets, cue:cue, form:form, chips:chips||[]};
+function ex(nm,mus,reps,sets,cue,form,chips){
+  return {nm:nm,mus:mus,reps:reps,sets:sets,cue:cue,form:form,chips:chips||[]};
 }
 
 const PLAN={
- mon:{t:"Push",b:"Chest, front and side delts, triceps. Cable low for flyes, high for pushdowns.",
+ mon:{t:"Push",n:"01",f:["Chest","Front delt","Side delt","Triceps"],
+  b:"Cable low for flyes, high for pushdowns. Heaviest pressing of the week.",
   l:[
-   ex("Barbell bench press","3 × 5-8",3,"Two ramp sets first. The last rep of set one should be a real grind, not a warm-up.","barbell bench press form"),
-   ex("Incline dumbbell press","3 × 8-10",3,"Up to the 75s. Once ten is clean across all three, slow the lowering to four seconds instead of chasing more reps.","incline dumbbell press form"),
-   ex("Cable fly, low to high","2 × 12-15",2,"Pulley on the floor, press up and together at chest height. <b>Drop set on the last one. Cut the stack by a third and rep out.</b>","low to high cable fly upper chest",[["int","Drop set"]]),
-   ex("Seated dumbbell press","3 × 8-10",3,"Bench upright against the rack. Stop one rep before the grinder.","seated dumbbell shoulder press form"),
-   ex("Cable lateral raise","3 × 12-15",3,"Pulley at the floor, cable running behind your back, one arm at a time. <b>Myo-reps on the last set. Rest 15 seconds, get 4 more, twice.</b>","cable lateral raise form",[["int","Myo-reps"]]),
-   ex("Overhead cable extension","2 × 10-12",2,"Pulley high, face away, elbows locked in beside your ears the whole way.","overhead cable tricep extension form"),
-   ex("Cable pushdown","2 × 12-15",2,"<b>Drop set on the last one.</b> Elbows pinned to your ribs, no leaning into it.","cable tricep pushdown form",[["int","Drop set"]])
+   ex("Barbell bench press","Chest","3 \u00d7 5-8",3,"Two ramp sets first. The last rep of set one should be a real grind, not a warm-up.","barbell bench press form"),
+   ex("Incline dumbbell press","Upper chest","3 \u00d7 8-10",3,"Up to the 75s. Once ten is clean across all three, slow the lowering to four seconds rather than chasing more reps.","incline dumbbell press form"),
+   ex("Cable fly, low to high","Upper chest","3 \u00d7 12-15",3,"Pulley on the floor, press up and together at chest height. <b>Four second lowering on the last set.</b>","low to high cable fly upper chest",[["int","Slow eccentric"]]),
+   ex("Seated dumbbell press","Front delt","3 \u00d7 8-10",3,"Bench upright against the rack. Stop one rep before the grinder.","seated dumbbell shoulder press form"),
+   ex("Cable lateral raise","Side delt","3 \u00d7 12-15",3,"Pulley at the floor, cable behind your back, one arm at a time. <b>Myo-reps on the last set. Rest 15 seconds, get 4 more, twice.</b>","cable lateral raise form",[["int","Myo-reps"]]),
+   ex("Overhead cable extension","Triceps","2 \u00d7 10-12",2,"Pulley high, face away, elbows locked beside your ears the whole way.","overhead cable tricep extension form"),
+   ex("Cable pushdown","Triceps","3 \u00d7 12-15",3,"Elbows pinned to your ribs, no leaning into it. <b>Rest-pause the last set. Fail, rest 15 seconds, go again.</b>","cable tricep pushdown form",[["int","Rest-pause"]])
   ]},
- tue:{t:"Pull",b:"Back thickness and width, rear delts, biceps, and the first forearm block of the week.",
+ tue:{t:"Pull",n:"02",f:["Lats","Upper back","Rear delt","Biceps","Forearms"],
+  b:"Back thickness and width, then the first forearm block of the week.",
   l:[
-   ex("Pull-up","3 × 8-12",3,"Bodyweight, full hang at the bottom, chin clearly over the bar. When twelve is easy on all three sets, slow the lowering to three seconds instead of adding reps.","pull up form"),
-   ex("Barbell row","3 × 6-8",3,"Torso around 45 degrees, pull to the bottom of the ribs. Strap the top two sets and stop heaving.","barbell row form",[["straps","Straps"]]),
-   ex("Cable pulldown","3 × 10-12",3,"Pulley at the top, wide grip. Pull with the elbows, not the hands.","lat pulldown form"),
-   ex("Cable row","2 × 10-12",2,"Pulley low, neutral grip, full second of squeeze at the bottom.","seated cable row form"),
-   ex("Cable rear delt fly","3 × 15-20",3,"Pulley at shoulder height, cables crossed, sweep wide and back. This one never gets heavy.","cable rear delt fly form"),
-   ex("Barbell curl","3 × 6-10",3,"<b>Rest-pause the last set. Fail, rest 15 seconds, go again, twice.</b>","barbell curl form",[["int","Rest-pause"]]),
-   ex("Incline dumbbell curl","2 × 10-12",2,"Bench at 45, arms hanging straight down behind you. The stretch at the bottom is the entire point.","incline dumbbell curl form"),
-   ex("Barbell wrist curl","3 × 15-20",3,"Forearms on the bench, hands off the edge, palms up. Let the bar roll to the fingertips, then curl it back. Slow.","barbell wrist curl form",[["grip","Forearms"]])
+   ex("Pull-up","Lats","3 \u00d7 8-12",3,"Bodyweight, full hang at the bottom, chin clearly over the bar. When twelve is easy on all three, slow the lowering to three seconds.","pull up form"),
+   ex("Barbell row","Upper back","3 \u00d7 6-8",3,"Torso around 45 degrees, pull to the bottom of the ribs. Strap the top two sets and stop heaving.","barbell row form",[["straps","Straps"]]),
+   ex("Cable pulldown","Lats","3 \u00d7 10-12",3,"Pulley at the top, wide grip. Pull with the elbows, not the hands.","lat pulldown form"),
+   ex("Cable row","Mid back","2 \u00d7 10-12",2,"Pulley low, neutral grip, a full second of squeeze at the bottom.","seated cable row form"),
+   ex("Cable rear delt fly","Rear delt","3 \u00d7 15-20",3,"Pulley at shoulder height, cables crossed, sweep wide and back. This one never gets heavy.","cable rear delt fly form"),
+   ex("Barbell curl","Biceps","3 \u00d7 6-10",3,"<b>Rest-pause the last set. Fail, rest 15 seconds, go again, twice.</b>","barbell curl form",[["int","Rest-pause"]]),
+   ex("Incline dumbbell curl","Biceps","2 \u00d7 10-12",2,"Bench at 45, arms hanging straight down behind you. The stretch at the bottom is the entire point.","incline dumbbell curl form"),
+   ex("Barbell wrist curl","Forearms","3 \u00d7 15-20",3,"Forearms on the bench, hands off the edge, palms up. Let the bar roll to the fingertips, then curl it back. Slow.","barbell wrist curl form",[["grip","Forearms"]])
   ]},
- wed:{t:"Legs",b:"Squat pattern, hamstrings, calves, hard abs. The heaviest day of the week.",
+ wed:{t:"Legs",n:"03",f:["Quads","Hamstrings","Calves","Abs"],
+  b:"Squat pattern and hamstrings. The heaviest day of the week, eat before it.",
   l:[
-   ex("Barbell back squat","3 × 5-8",3,"Three ramp sets in. Below parallel or it does not count.","barbell back squat form"),
-   ex("Romanian deadlift","3 × 6-8",3,"Bar dragging the legs, hips back, stop when the hamstrings run out of stretch. Strap the heavy sets.","romanian deadlift form",[["straps","Straps"]]),
-   ex("Bulgarian split squat","2 × 8-10 ea",2,"Rear foot on the bench, dumbbells in hand. This is supposed to be miserable.","bulgarian split squat form"),
-   ex("Cable pull-through","2 × 12-15",2,"Pulley on the floor between your legs. Hinge, then drive the hips forward hard.","cable pull through form"),
-   ex("Standing calf raise","4 × 10-12",4,"Dumbbell in one hand, toes on a plate. Two second pause in the bottom stretch every rep.","standing calf raise form"),
-   ex("Hanging leg raise","3 × max",3,"From the pull-up bar. Curl the pelvis up, do not just swing the legs.","hanging leg raise form")
+   ex("Barbell back squat","Quads","3 \u00d7 5-8",3,"Three ramp sets in. Below parallel or it does not count.","barbell back squat form"),
+   ex("Romanian deadlift","Hamstrings","3 \u00d7 6-8",3,"Bar dragging the legs, hips back, stop when the hamstrings run out of stretch. Strap the heavy sets.","romanian deadlift form",[["straps","Straps"]]),
+   ex("Bulgarian split squat","Quads","2 \u00d7 8-10 ea",2,"Rear foot on the bench, dumbbells in hand. This is supposed to be miserable.","bulgarian split squat form"),
+   ex("Cable pull-through","Glutes","2 \u00d7 12-15",2,"Pulley on the floor between your legs. Hinge, then drive the hips forward hard.","cable pull through form"),
+   ex("Standing calf raise","Calves","4 \u00d7 10-12",4,"Dumbbell in one hand, toes on a plate. Two second pause in the bottom stretch every rep.","standing calf raise form"),
+   ex("Hanging leg raise","Abs","3 \u00d7 max",3,"From the pull-up bar. Curl the pelvis up, do not just swing the legs.","hanging leg raise form")
   ]},
- thu:{t:"Upper",b:"Second pass on everything above the waist, angled away from Monday and Tuesday.",
+ thu:{t:"Upper",n:"04",f:["Chest","Back","Side delt","Arms","Grip"],
+  b:"Second pass above the waist, angled away from Monday and Tuesday.",
   l:[
-   ex("Incline barbell press","3 × 6-8",3,"Bench at 30 degrees. This is your upper chest day, do not rush through it.","incline barbell bench press form"),
-   ex("Weighted chin-up","3 × 6-10",3,"Underhand grip, so the biceps take a real share of this.","weighted chin up form"),
-   ex("Cable row, wide","3 × 10-12",3,"Pulley at chest height, elbows flared out to catch the upper back.","wide grip cable row form",[["straps","Straps"]]),
-   ex("Dumbbell lateral raise","4 × 12-15",4,"Four sets deliberately. Slight forward lean, pinkies a shade high.","dumbbell lateral raise form"),
-   ex("Cable fly, mid","2 × 12-15",2,"Pulley at chest height, straight across. <b>Drop set on the last one.</b>","cable chest fly form",[["int","Drop set"]]),
-   ex("Dumbbell overhead ext","2 × 10-12",2,"One heavy dumbbell, both hands, deep stretch behind the head.","dumbbell overhead tricep extension form"),
-   ex("Cable curl","2 × 10-12",2,"Pulley on the floor, step back far enough that there is tension at the bottom.","cable bicep curl form"),
-   ex("Dead hang","3 × max",3,"Straight off the pull-up bar, no straps, hang until you drop. Free forearm and grip work and it decompresses the spine.","dead hang bar grip",[["grip","Grip"]])
+   ex("Incline barbell press","Upper chest","3 \u00d7 6-8",3,"Bench at 30 degrees. This is your upper chest day, do not rush it.","incline barbell bench press form"),
+   ex("Weighted chin-up","Lats","3 \u00d7 6-10",3,"Underhand grip, so the biceps take a real share of this.","weighted chin up form"),
+   ex("Cable row, wide","Upper back","3 \u00d7 10-12",3,"Pulley at chest height, elbows flared to catch the upper back.","wide grip cable row form",[["straps","Straps"]]),
+   ex("Dumbbell lateral raise","Side delt","4 \u00d7 12-15",4,"Four sets deliberately. Slight forward lean, pinkies a shade high.","dumbbell lateral raise form"),
+   ex("Cable fly, mid","Chest","3 \u00d7 12-15",3,"Pulley at chest height, straight across. <b>Four second lowering on the last set.</b>","cable chest fly form",[["int","Slow eccentric"]]),
+   ex("Dumbbell overhead ext","Triceps","2 \u00d7 10-12",2,"One heavy dumbbell, both hands, deep stretch behind the head.","dumbbell overhead tricep extension form"),
+   ex("Cable curl","Biceps","2 \u00d7 10-12",2,"Pulley on the floor, step back far enough that there is tension at the bottom.","cable bicep curl form"),
+   ex("Dead hang","Grip","3 \u00d7 max",3,"Straight off the pull-up bar, no straps, hang until you drop. Free grip work and it decompresses the spine.","dead hang bar grip",[["grip","Grip"]])
   ]},
- fri:{t:"Lower",b:"Hinge pattern, glutes, calves from a second angle, weighted abs.",
+ fri:{t:"Lower",n:"05",f:["Posterior chain","Glutes","Calves","Abs"],
+  b:"Hinge pattern instead of squat. Kinder on the knees by week four.",
   l:[
-   ex("Deadlift","3 × 4-6",3,"Reset on the floor between reps. Strap the top sets. End the set the moment the back rounds.","conventional deadlift form",[["straps","Straps"]]),
-   ex("Front squat","3 × 8-10",3,"Front squat if the rack unracks cleanly, goblet with a 75 if it does not.","front squat form"),
-   ex("Reverse lunge","2 × 10-12 ea",2,"Dumbbells, step backward not forward. Much kinder to the knee.","reverse lunge form"),
-   ex("Cable hip thrust","3 × 12-15",3,"Pulley on the floor, shoulders on the bench, belt or rope across the hips. Two second squeeze up top.","cable hip thrust form"),
-   ex("Seated calf raise","4 × 12-15",4,"Dumbbell on the knee, seated. Different angle than Wednesday, hits the soleus underneath.","seated calf raise form"),
-   ex("Kneeling cable crunch","3 × 12-15",3,"Pulley high, rope behind the head, crunch ribs toward hips. The only ab move you can actually load.","kneeling cable crunch form")
+   ex("Deadlift","Posterior chain","3 \u00d7 4-6",3,"Reset on the floor between reps. Strap the top sets. End the set the moment your back rounds.","conventional deadlift form",[["straps","Straps"]]),
+   ex("Front squat","Quads","3 \u00d7 8-10",3,"Front squat if the rack unracks cleanly, goblet with a 75 if not.","front squat form"),
+   ex("Reverse lunge","Quads","2 \u00d7 10-12 ea",2,"Dumbbells, step backward not forward. Much kinder to the knee.","reverse lunge form"),
+   ex("Cable hip thrust","Glutes","3 \u00d7 12-15",3,"Pulley on the floor, shoulders on the bench, belt across the hips. Two second squeeze up top.","cable hip thrust form"),
+   ex("Seated calf raise","Calves","4 \u00d7 12-15",4,"Dumbbell on the knee, seated. Different angle than Wednesday, hits the soleus underneath.","seated calf raise form"),
+   ex("Kneeling cable crunch","Abs","3 \u00d7 12-15",3,"Pulley high, rope behind the head, crunch ribs toward hips. The only ab move you can actually load.","kneeling cable crunch form")
   ]},
- sat:{t:"Shape",b:"Delts, arms, forearms, neck, abs. The day that changes how you look in a shirt fastest.",
+ sat:{t:"Shape",n:"06",f:["Side delt","Arms","Forearms","Neck","Abs"],
+  b:"Delts, arms, neck and grip. The day that changes how you look in a shirt fastest.",
   l:[
-   ex("Cable lateral raise","4 × 12-15",4,"<b>Myo-reps on the final set.</b> Side delts are the highest return muscle you own for looking wider.","cable lateral raise form",[["int","Myo-reps"]]),
-   ex("Cable rear delt fly","3 × 15-20",3,"Fills in the shoulder from behind so it reads round instead of flat.","cable rear delt fly form"),
-   ex("Dumbbell shrug","3 × 10-12",3,"The 75s, two second hold at the top, no rolling. Strap these, the traps can handle more than your fingers.","dumbbell shrug form",[["straps","Straps"]]),
-   ex("Close-grip bench","3 × 8-10",3,"Hands just inside shoulder width, elbows tucked to the ribs.","close grip bench press form"),
-   ex("Cable overhead ext","2 × 12-15",2,"Long head of the triceps, which is most of the arm when seen from the side.","overhead cable tricep extension form"),
-   ex("Hammer curl","3 × 10-12",3,"Builds the brachialis underneath, which pushes the bicep up and thickens the whole arm.","hammer curl form"),
-   ex("Reverse curl","3 × 12-15",3,"Palms down, bar or dumbbells. Hits the brachioradialis, the muscle that makes a forearm look thick from the front.","reverse curl forearm form",[["grip","Forearms"]]),
-   ex("Farmer's carry","3 × 40 steps",3,"The 75s, no straps ever. Walk tall, shoulders down. Best single thing you can do for grip and it hits everything holding you upright.","farmers carry form",[["grip","Grip"]]),
-   ex("Neck extension & flexion","3 × 15-20 ea",3,"Face down on the bench, towel-wrapped plate on the back of the head, then face up for the front. Start at five pounds. A thicker neck changes your whole frame and nobody trains it.","neck extension flexion training"),
-   ex("Ab circuit","3 rounds",3,"Hanging leg raise, cable crunch, 45 second plank. Straight through, one minute between rounds.","ab circuit core workout")
+   ex("Cable lateral raise","Side delt","4 \u00d7 12-15",4,"<b>Myo-reps on the final set.</b> Side delts are the highest return muscle you own for looking wider.","cable lateral raise form",[["int","Myo-reps"]]),
+   ex("Cable rear delt fly","Rear delt","3 \u00d7 15-20",3,"Fills in the shoulder from behind so it reads round instead of flat.","cable rear delt fly form"),
+   ex("Dumbbell shrug","Traps","3 \u00d7 10-12",3,"The 75s, two second hold at the top, no rolling. Strap these, traps handle more than fingers.","dumbbell shrug form",[["straps","Straps"]]),
+   ex("Close-grip bench","Triceps","3 \u00d7 8-10",3,"Hands just inside shoulder width, elbows tucked to the ribs.","close grip bench press form"),
+   ex("Cable overhead ext","Triceps","2 \u00d7 12-15",2,"Long head, which is most of the arm when seen from the side.","overhead cable tricep extension form"),
+   ex("Hammer curl","Biceps","3 \u00d7 10-12",3,"Builds the brachialis underneath, which pushes the bicep up and thickens the whole arm.","hammer curl form"),
+   ex("Reverse curl","Forearms","3 \u00d7 12-15",3,"Palms down, bar or dumbbells. Hits the brachioradialis, the muscle that makes a forearm look thick from the front.","reverse curl forearm form",[["grip","Forearms"]]),
+   ex("Farmer's carry","Grip","3 \u00d7 40 steps",3,"The 75s, no straps ever. Walk tall, shoulders down. Best single thing you can do for grip.","farmers carry form",[["grip","Grip"]]),
+   ex("Neck extension &amp; flexion","Neck","3 \u00d7 15-20 ea",3,"Face down on the bench, towel-wrapped plate on the back of the head, then face up for the front. Start at five pounds. A thicker neck changes your whole frame.","neck extension flexion training"),
+   ex("Ab circuit","Abs","3 rounds",3,"Hanging leg raise, cable crunch, 45 second plank. Straight through, one minute between rounds.","ab circuit core workout")
   ]},
- sun:{t:"Rest",b:"No lifting. The face and neck block still happens.",
+ sun:{t:"Rest",n:"07",f:["Recovery"],
+  b:"No lifting. The face and neck block still happens.",
   l:[
-   ex("Walk","20-30 min",1,"Easy pace. Moves blood without adding fatigue on top of the week.","zone 2 walking recovery"),
-   ex("Sauna or red light","Optional",1,"If you use them, today is the day they earn their keep.","sauna recovery benefits"),
-   ex("Log review","5 min",1,"Read back the week and write down which lifts get more weight next time. Decide now, not while you are under the bar.","training log progressive overload"),
-   ex("Sleep","10 hrs",1,"You already do this. It is outworking every supplement on the shelf.","sleep muscle recovery")
+   ex("Walk","Recovery","20-30 min",1,"Easy pace. Moves blood without adding fatigue on top of the week.","zone 2 walking recovery"),
+   ex("Sauna or red light","Recovery","Optional",1,"If you use them, today is the day they earn their keep.","sauna recovery benefits"),
+   ex("Log review","Planning","5 min",1,"Read back the week and decide which lifts get more weight next time. Decide now, not under the bar.","training log progressive overload"),
+   ex("Sleep","Recovery","10 hrs",1,"You already do this. It is outworking every supplement on the shelf.","sleep muscle recovery")
   ]}
 };
 
 const FACE=[
- ex("Chin tucks","3 × 10",3,"Sit tall, slide the head straight back, hold five seconds. Builds the deep neck flexors and kills forward head posture, which does more for a jawline than any facial move.","chin tuck exercise form"),
- ex("Neck isometrics","3 × 20s",3,"Palm to forehead, then the back of the head, then each side. Push around 70 percent, nothing moves.","neck isometric exercise"),
- ex("Tongue to palate","2 min",1,"Whole tongue flat on the roof of the mouth, lips sealed, breathing through the nose. Then try to hold it as your default all day.","proper tongue posture"),
- ex("Jaw-opening resistance","2 × 10",2,"Fist under the chin, open slowly against light pressure. Gentle. Stop the second anything clicks.","jaw resistance exercise"),
- ex("Mastic gum","10 min cap",1,"Trains the masseter, the muscle that actually widens the lower face. <b>Ten to fifteen minutes a day is the ceiling.</b> An hour of chewing buys jaw pain, not a jaw.","mastic gum jaw training",[["int","Capped"]]),
- ex("Orbicularis squeeze","3 × 10",3,"Firm squint, hold five, release completely. Trains the ring muscle around the eye instead of stretching the skin over it.","orbicularis oculi exercise"),
- ex("Under-eye drainage","60s",1,"Ring finger tapping from the inner corner outward, then down toward the ear. Almost no pressure. For puffiness, not lines.","lymphatic drainage under eye"),
- ex("Cheek and lip holds","3 × 10",3,"Puff both cheeks, hold five, push the air side to side, finish with a hard lip press.","facial muscle exercise cheeks")
+ ex("Chin tucks","Deep neck","3 \u00d7 10",3,"Sit tall, slide the head straight back, hold five seconds. Kills forward head posture, which does more for a jawline than any facial move.","chin tuck exercise form"),
+ ex("Neck isometrics","Neck","3 \u00d7 20s",3,"Palm to forehead, then the back of the head, then each side. Push around 70 percent, nothing moves.","neck isometric exercise"),
+ ex("Tongue to palate","Posture","2 min",1,"Whole tongue flat on the roof of the mouth, lips sealed, breathing through the nose. Then hold it as your default all day.","proper tongue posture"),
+ ex("Jaw-opening resistance","Jaw","2 \u00d7 10",2,"Fist under the chin, open slowly against light pressure. Gentle. Stop the second anything clicks.","jaw resistance exercise"),
+ ex("Mastic gum","Masseter","10 min cap",1,"Trains the muscle that actually widens the lower face. <b>Ten to fifteen minutes is the ceiling.</b> An hour of chewing buys jaw pain, not a jaw.","mastic gum jaw training",[["int","Capped"]]),
+ ex("Orbicularis squeeze","Eye area","3 \u00d7 10",3,"Firm squint, hold five, release completely.","orbicularis oculi exercise"),
+ ex("Under-eye drainage","Eye area","60s",1,"Ring finger tapping from the inner corner outward, then down toward the ear. Almost no pressure.","lymphatic drainage under eye"),
+ ex("Cheek and lip holds","Face","3 \u00d7 10",3,"Puff both cheeks, hold five, push the air side to side, finish with a hard lip press.","facial muscle exercise cheeks")
 ];
 
 const ORDER=["mon","tue","wed","thu","fri","sat","sun"];
@@ -353,119 +346,112 @@ const LBL={mon:"Mon",tue:"Tue",wed:"Wed",thu:"Thu",fri:"Fri",sat:"Sat",sun:"Sun"
 const todayKey=ORDER[(new Date().getDay()+6)%7];
 const stamp=new Date().toDateString();
 
-/* storage with graceful fallback */
 let mem={};
 const store={
-  get(){
+  get:function(){
     try{
-      const raw=localStorage.getItem("hp");
+      var raw=localStorage.getItem("hp");
       if(!raw) return {};
-      const o=JSON.parse(raw);
-      return o.d===stamp ? o.v : {};
-    }catch(e){ return mem.d===stamp ? (mem.v||{}) : {}; }
+      var o=JSON.parse(raw);
+      return o.d===stamp?o.v:{};
+    }catch(e){ return mem.d===stamp?(mem.v||{}):{}; }
   },
-  set(v){
+  set:function(v){
     try{ localStorage.setItem("hp",JSON.stringify({d:stamp,v:v})); }
     catch(e){ mem={d:stamp,v:v}; }
   }
 };
-let marks=store.get();
+var marks=store.get();
+var view=todayKey;
 
-let view=todayKey;
+function key(d,i,s){ return d+"-"+i+"-"+s; }
+function countDone(d,i,n){ var c=0; for(var s=0;s<n;s++) if(marks[key(d,i,s)]) c++; return c; }
+function chipHTML(c){ return c.map(function(x){ return '<span class="chip '+x[0]+'">'+x[1]+'</span>'; }).join(""); }
 
-function key(day,i,s){ return day+"-"+i+"-"+s; }
-
-function chipHTML(chips){
-  if(!chips.length) return "";
-  return '<div class="chips">'+chips.map(function(c){
-    return '<span class="chip '+c[0]+'">'+c[1]+'</span>';
-  }).join("")+'</div>';
-}
-
-function render(){
-  const d=PLAN[view];
-  document.getElementById("title").innerHTML = view===todayKey ? '<em>'+d.t+'</em>' : d.t;
-  document.getElementById("blurb").textContent=d.b;
-  document.getElementById("tag").textContent = view===todayKey ? "Today" : LBL[view];
-  buildList(document.getElementById("lifts"), d.l, view);
-  [].forEach.call(document.getElementById("week").children,function(b){
-    b.setAttribute("aria-pressed",String(b.dataset.k===view));
-  });
-  meter();
-}
-
-function buildList(root, items, day){
+function buildList(root,items,day){
   root.innerHTML="";
   items.forEach(function(x,i){
-    const li=document.createElement("li");
-    const done=countDone(day,i,x.sets);
-    if(done===x.sets) li.className="complete";
+    var li=document.createElement("li");
+    if(countDone(day,i,x.sets)===x.sets) li.className="done";
     li.innerHTML=
-      '<div class="head"><div class="title"><div class="nm">'+x.nm+'</div>'+chipHTML(x.chips)+'</div>'+
-      '<div class="reps">'+x.reps+'</div><div class="caret">&#9656;</div></div>'+
-      '<div class="body"><p class="cue">'+x.cue+'</p><div class="row">'+
-      '<div class="sets"></div>'+
-      '<a class="form" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query='+
-      encodeURIComponent(x.form)+'"><span class="play"></span>Watch form</a></div></div>';
+      '<div class="head"><div><div class="nm">'+x.nm+'</div>'+
+      '<div class="meta"><span class="mus">'+x.mus+'</span>'+chipHTML(x.chips)+'</div></div>'+
+      '<div class="reps">'+x.reps+'<em>'+x.sets+(x.sets===1?" set":" sets")+'</em></div></div>'+
+      '<div class="body"><div class="inner"><p class="cue">'+x.cue+'</p><div class="row">'+
+      '<div class="sets"></div><a class="form" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query='+
+      encodeURIComponent(x.form)+'"><span class="play"></span>Watch form</a></div></div></div>';
 
-    const setWrap=li.querySelector(".sets");
-    for(let s=0;s<x.sets;s++){
-      const b=document.createElement("button");
-      b.textContent=s+1;
-      b.setAttribute("aria-pressed",String(!!marks[key(day,i,s)]));
-      b.setAttribute("aria-label","Set "+(s+1));
-      b.onclick=function(ev){
-        ev.stopPropagation();
-        const k=key(day,i,s);
-        if(marks[k]) delete marks[k]; else marks[k]=1;
-        store.set(marks);
-        b.setAttribute("aria-pressed",String(!!marks[k]));
-        li.classList.toggle("complete",countDone(day,i,x.sets)===x.sets);
-        meter();
-      };
-      setWrap.appendChild(b);
+    var sw=li.querySelector(".sets");
+    for(var s=0;s<x.sets;s++){
+      (function(s){
+        var b=document.createElement("button");
+        b.textContent="S"+(s+1);
+        b.setAttribute("aria-pressed",String(!!marks[key(day,i,s)]));
+        b.setAttribute("aria-label","Set "+(s+1));
+        b.onclick=function(ev){
+          ev.stopPropagation();
+          var k=key(day,i,s);
+          if(marks[k]) delete marks[k]; else marks[k]=1;
+          store.set(marks);
+          b.setAttribute("aria-pressed",String(!!marks[k]));
+          li.classList.toggle("done",countDone(day,i,x.sets)===x.sets);
+          meter();
+        };
+        sw.appendChild(b);
+      })(s);
     }
     li.querySelector(".head").onclick=function(){ li.classList.toggle("open"); };
     root.appendChild(li);
   });
 }
 
-function countDone(day,i,n){
-  let c=0;
-  for(let s=0;s<n;s++) if(marks[key(day,i,s)]) c++;
-  return c;
-}
-
 function meter(){
-  const d=PLAN[view];
-  let total=0, done=0;
+  var d=PLAN[view], total=0, done=0;
   d.l.forEach(function(x,i){ total+=x.sets; done+=countDone(view,i,x.sets); });
   FACE.forEach(function(x,i){ total+=x.sets; done+=countDone("face",i,x.sets); });
   document.getElementById("fill").style.width=(total?done/total*100:0)+"%";
-  document.getElementById("count").textContent=done+" / "+total;
-  const anyToday=Object.keys(marks).length>0;
-  document.getElementById("streak").textContent = anyToday ? "Logging today" : "Nothing logged yet";
+  document.getElementById("done").textContent=done;
+  document.getElementById("total").textContent=total;
+  document.getElementById("readout").classList.toggle("full",total>0&&done===total);
   [].forEach.call(document.getElementById("week").children,function(b){
-    let t=0,c=0;
-    PLAN[b.dataset.k].l.forEach(function(x,i){ t+=x.sets; c+=countDone(b.dataset.k,i,x.sets); });
-    b.classList.toggle("done", t>0 && c===t);
+    var k=b.dataset.k, t=0, c=0;
+    PLAN[k].l.forEach(function(x,i){ t+=x.sets; c+=countDone(k,i,x.sets); });
+    b.querySelector("i").style.width=(t?c/t*100:0)+"%";
   });
 }
 
-const week=document.getElementById("week");
+function render(){
+  var d=PLAN[view];
+  document.getElementById("title").textContent=d.t;
+  document.getElementById("ghost").textContent=d.n;
+  document.getElementById("blurb").textContent=d.b;
+  document.getElementById("kicker").textContent = view===todayKey ? "Today" : LBL[view];
+  document.getElementById("focus").innerHTML=d.f.map(function(f){ return "<span>"+f+"</span>"; }).join("");
+  buildList(document.getElementById("lifts"),d.l,view);
+  [].forEach.call(document.getElementById("week").children,function(b){
+    b.setAttribute("aria-pressed",String(b.dataset.k===view));
+  });
+  meter();
+}
+
+var week=document.getElementById("week");
 ORDER.forEach(function(k){
-  const b=document.createElement("button");
-  b.textContent=LBL[k];
+  var b=document.createElement("button");
+  b.className="wd"+(k===todayKey?" istoday":"");
   b.dataset.k=k;
+  b.innerHTML='<span class="d">'+LBL[k]+'</span><span class="bar2"><i></i></span>';
   b.onclick=function(){ view=k; render(); };
   week.appendChild(b);
 });
 
+document.getElementById("clock").textContent=
+  new Date().toLocaleDateString(undefined,{weekday:"long",month:"short",day:"numeric"});
+
 document.getElementById("reset").onclick=function(){
   marks={};
   store.set(marks);
-  render();
   buildList(document.getElementById("face"),FACE,"face");
+  render();
 };
 
 buildList(document.getElementById("face"),FACE,"face");
