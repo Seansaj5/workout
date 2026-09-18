@@ -4,8 +4,9 @@
 // this file. You do NOT need to bump it for edits to index.html: the page is
 // fetched network-first, so a fresh copy is picked up on the next open with
 // signal.
-const CACHE_VERSION = 'v5';
-const CACHE_NAME = 'home-program-' + CACHE_VERSION;
+const CACHE_VERSION = 'v6';
+const CACHE_PREFIX = 'home-program-';
+const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION;
 
 // Same-origin files needed to open the app with no signal at all.
 const PRECACHE = [
@@ -33,8 +34,10 @@ self.addEventListener('install', event => {
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys()
+      // Only this app's old caches. Caches belong to the whole origin, and other
+      // apps live on it too (seansaj5.github.io/piano keeps its own).
       .then(keys => Promise.all(
-        keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
+        keys.filter(key => key.startsWith(CACHE_PREFIX) && key !== CACHE_NAME).map(key => caches.delete(key))
       ))
       .then(() => self.clients.claim())
   );
