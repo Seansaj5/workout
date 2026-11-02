@@ -49,7 +49,7 @@ The orb at the bottom right of the page, and the **Ask Spot** button inside ever
 
 The key never goes in this repo. It is stored in that browser's `localStorage` under `hp.spot`, sent only to `api.anthropic.com`, and billed to your Anthropic account, so use a dedicated key with a low spend limit. Each phone or browser needs the key pasted once. Clearing site data, or "Remove key from this device", deletes it.
 
-- The default model is the first entry in `MODELS` (`claude-opus-5`); the settings let you pick another per device.
+- The default model is Haiku 5.5 (`DEFAULT_MODEL`, `claude-haiku-5-5`); the settings let you pick Opus 5.5 or Sonnet 5.5 per device, and a pick saved from an older model moves to its successor (`RENAMED`). Any Anthropic API key works for every model. Opus and Sonnet requests opt into the server-side refusal fallback; Haiku 5.5 has none, so it never sends it.
 - The whole program is sent as a cached system prompt, built by `prompt()`. Keep it free of dates or anything else that changes between requests, or the cache stops working; per-request context belongs in `nowContext()`.
 - Spot's answers are written into the page as escaped text with a tiny markdown subset (`fmt()`). Keep it that way: model output must never reach `innerHTML` unescaped.
 

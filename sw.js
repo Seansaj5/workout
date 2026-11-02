@@ -4,7 +4,7 @@
 // this file. You do NOT need to bump it for edits to index.html: the page is
 // fetched network-first, so a fresh copy is picked up on the next open with
 // signal.
-const CACHE_VERSION = 'v6';
+const CACHE_VERSION = 'v7';
 const CACHE_PREFIX = 'home-program-';
 const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION;
 
