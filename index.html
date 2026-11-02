@@ -964,7 +964,11 @@
     transition:transform .45s var(--ease),scale .35s var(--spring);
   }
   .week,.tb-week{touch-action:pan-y;user-select:none;-webkit-user-select:none;}
-  .week.scrub .thumb,.tb-week.scrub .thumb{transition:transform .08s linear,scale .35s var(--spring);scale:1.1 1.16;}
+  .thumb{will-change:transform;}
+  .scrubbing .week .thumb,.scrubbing .tb-week .thumb{transition:scale .35s var(--spring);scale:1.08 1.12;}
+  .scrubbing .wd,.scrubbing .wd:active{transform:none;}
+  .scrubbing .hero h1,.scrubbing .ghost-w{transition:none;}
+  .week,.tb-week{-webkit-touch-callout:none;}
   .set,.form,.ask,.reset,.streak,.sh-x,.focus span,.rest button,.btn.ghost{
     background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.02));
     box-shadow:var(--gl-edge);
@@ -1743,72 +1747,89 @@ function meter(quiet){
   $("streakBtn").setAttribute("aria-label","Progress, "+st+" day streak");
 }
 
-function go(k){
+function go(k,soft){
   if(k===view) return;
   document.documentElement.style.setProperty("--dir",ORDER.indexOf(k)>ORDER.indexOf(view)?1:-1);
   view=k;
   buzz(6);
-  render(true);
+  render(soft?"soft":true);
 }
-// Drag along a week strip and the glass thumb follows the finger, switching days as it crosses them.
-var scrubbed=false;
+function setThumbs(i){
+  $("week").style.setProperty("--i",i);
+  $("tbWeek").style.setProperty("--i",i);
+}
+// Drag along a week strip and the glass thumb rides under the finger. Only the title follows live;
+// the cards are rebuilt once, when the finger lifts, so nothing flickers mid-drag.
+var scrubbing=false, scrubEnd=0;
 function scrubber(el,pad,gap){
-  var drag=null;
+  var drag=null, raf=0;
   function pos(x){ var r=el.getBoundingClientRect(), w=(r.width-2*pad-6*gap)/7; return Math.max(0,Math.min(6,(x-r.left-pad-w/2)/(w+gap))); }
-  el.addEventListener("pointerdown",function(e){ if(e.button>0) return; drag={x0:e.clientX,id:e.pointerId,on:false}; });
+  function frame(){
+    raf=0;
+    if(!drag) return;
+    var p=pos(drag.x), k=ORDER[Math.round(p)];
+    setThumbs(p);
+    if(k!==drag.k){ drag.k=k; paintHero(k); buzz(4); }
+  }
+  el.addEventListener("pointerdown",function(e){ if(e.button>0) return; drag={x0:e.clientX,x:e.clientX,id:e.pointerId,on:false,k:view}; });
   el.addEventListener("pointermove",function(e){
     if(!drag||e.pointerId!==drag.id) return;
+    drag.x=e.clientX;
     if(!drag.on){
       if(Math.abs(e.clientX-drag.x0)<8) return;
-      drag.on=scrubbed=true;
+      drag.on=scrubbing=true;
       try{ el.setPointerCapture(e.pointerId); }catch(err){}
-      el.classList.add("scrub");
+      document.documentElement.classList.add("scrubbing");
     }
-    var p=pos(e.clientX);
-    el.style.setProperty("--i",p);
-    go(ORDER[Math.round(p)]);
+    if(!raf) raf=requestAnimationFrame(frame);
   });
   function end(){
     if(!drag) return;
-    var was=drag.on; drag=null;
-    if(!was) return;
-    el.classList.remove("scrub");
-    el.style.setProperty("--i",ORDER.indexOf(view));
-    setTimeout(function(){ scrubbed=false; $("week").style.setProperty("--i",ORDER.indexOf(view)); $("tbWeek").style.setProperty("--i",ORDER.indexOf(view)); },60);
+    var d=drag; drag=null;
+    if(raf){ cancelAnimationFrame(raf); raf=0; }
+    if(!d.on) return;
+    scrubbing=false; scrubEnd=Date.now();
+    document.documentElement.classList.remove("scrubbing");
+    if(d.k!==view) go(d.k,true);
+    else { paintHero(view); setThumbs(ORDER.indexOf(view)); }
   }
   el.addEventListener("pointerup",end);
   el.addEventListener("pointercancel",end);
 }
+function tapDay(k){ if(Date.now()-scrubEnd>350) go(k); }
 
-function render(animate){
-  var d=PLAN[view];
+// Everything that names the day, without touching the cards.
+function paintHero(k){
+  var d=PLAN[k];
   $("title").textContent=d.t;
   $("ghost").textContent=d.n;
   $("ghost").setAttribute("data-n",d.n);
   $("blurb").textContent=d.b;
-  $("kicker").textContent = view===todayKey ? "Today" : LBL[view];
-  $("kick").classList.toggle("away",view!==todayKey);
+  $("kicker").textContent = k===todayKey ? "Today" : LBL[k];
+  $("kick").classList.toggle("away",k!==todayKey);
   $("tbTitle").textContent=d.t;
   $("lfName").textContent=d.t;
-  $("tbDay").textContent = view===todayKey ? "Today" : LBL[view];
+  $("tbDay").textContent = k===todayKey ? "Today" : LBL[k];
   $("focus").innerHTML=d.f.map(function(f){ return "<span>"+f+"</span>"; }).join("");
+  [].forEach.call(document.querySelectorAll("#week .wd, #tbWeek button"),function(b){
+    b.setAttribute("aria-pressed",String(b.dataset.k===k));
+  });
+  heroStats(k);
+}
+
+function render(animate){
+  var d=PLAN[view];
+  paintHero(view);
   buildList($("lifts"),d.l,view);
   buildSegs();
-  if(!scrubbed){
-    $("week").style.setProperty("--i",ORDER.indexOf(view));
-    $("tbWeek").style.setProperty("--i",ORDER.indexOf(view));
-  }
-  [].forEach.call(document.querySelectorAll("#week .wd, #tbWeek button"),function(b){
-    b.setAttribute("aria-pressed",String(b.dataset.k===view));
-  });
+  if(!scrubbing) setThumbs(ORDER.indexOf(view));
   if(animate){
     document.body.classList.add("swapping");
-    replay($("hero"),"swap");
+    if(animate!=="soft") replay($("hero"),"swap");
   }
   wasFull=null;
   wasLift=null;
   meter(true);
-  heroStats();
   tickClock();
 }
 
@@ -1823,14 +1844,14 @@ function render(animate){
     b.dataset.k=k;
     b.setAttribute("aria-label",dt.toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"})+", "+PLAN[k].t);
     b.innerHTML='<span class="d">'+LBL[k]+'</span><span class="n">'+dt.getDate()+'</span><span class="bar2"><i></i></span>';
-    b.onclick=function(){ if(!scrubbed) go(k); };
+    b.onclick=function(){ tapDay(k); };
     week.appendChild(b);
     var m=document.createElement("button");
     m.type="button";
     m.tabIndex=-1;
     m.dataset.k=k;
     m.innerHTML=LBL[k].charAt(0)+'<b>'+dt.getDate()+'</b>';
-    m.onclick=function(){ if(!scrubbed) go(k); };
+    m.onclick=function(){ tapDay(k); };
     $("tbWeek").appendChild(m);
   });
 })();
@@ -1912,13 +1933,13 @@ render();
 })();
 
 /* ---------- hero line: how long today takes ---------- */
-function heroStats(){
-  var d=PLAN[view], sets=0, sec=0, lifts=0;
+function heroStats(k){
+  var d=PLAN[k], sets=0, sec=0, lifts=0;
   d.l.forEach(function(x){ if(!/×|round/.test(x.reps)) return; var r=restFor(x); lifts++; sets+=x.sets; sec+=60+x.sets*45+(x.sets-1)*r; });
   $("stats").innerHTML=(lifts
       ? '<span><b>~'+Math.max(5,Math.round(sec/300)*5)+'</b>min</span><span><b>'+sets+'</b>sets</span><span><b>'+lifts+'</b>lifts</span>'
       : '<span>No lifting</span>')+
-    (isFaceDate(DATES[view]||new Date())?'<span class="jw">Face day</span>':'');
+    (isFaceDate(DATES[k]||new Date())?'<span class="jw">Face day</span>':'');
 }
 setInterval(tickClock,1000);
 
