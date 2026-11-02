@@ -41,6 +41,9 @@ GitHub Pages redeploys in about a minute. The phone picks up the new page the ne
 - **Workout mode.** The Start workout button under the day's stats opens a full-screen guided session for today: one exercise at a time, the same steppers, a big Log set button, the rest countdown, and it moves on by itself. It writes the same tick marks and log as the cards, and opens the finish card when the last lifting set is in.
 - **Warm-ups.** Barbell lifts at 95 lb or more show a warm-up ramp under the plates: the bar, then about 50, 70 and 85 percent of the working weight (`warmupHTML`).
 - **Badges.** `BADGES` near the end of the main script. They are worked out from `hp.log` each time; `hp.badges` only remembers which ones the finish card has already announced.
+- **Dock.** The floating glass bar at the bottom: Today, Workout (opens workout mode), Progress and Spot. The rest timer rises out of it. Spot's old corner orb is hidden in favour of the dock button.
+- **Extras in settings.** Voice coach (speech at ten seconds and at the end of rest, saying what comes next) and Tilt light (the glass highlight follows the phone's tilt; iPhone asks for motion access once). Both are off by default. Workout mode keeps the screen awake where the browser supports it.
+- **Share and body weight.** The finish card has Share, which hands a drawn image of the session to the share sheet (or downloads it). Progress has a body weight log in `hp.bw` with a trend line; Export and Import carry it too.
 - **Form videos.** `VID` maps each exercise's `form` phrase to a short YouTube video that plays inside the card (muted at first, via youtube-nocookie). A new exercise without an entry falls back to a YouTube search link. To swap a video, change its id in `VID`.
 
 ## Spot, the coach in the corner

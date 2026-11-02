@@ -1278,6 +1278,73 @@
     .form:hover,.ask:hover,.reset:hover,.btn.ghost:hover{color:var(--fg);box-shadow:var(--btn-edge),0 0 0 1px var(--hot),0 0 14px rgba(62,166,245,.3);}
   }
 
+  /* ================= Liquid glass, round two: lit edges, clearer glass, a light that follows the phone ================= */
+  :root{
+    --gl-fill:linear-gradient(180deg,rgba(150,195,255,.13),rgba(90,140,210,.06) 46%,rgba(30,60,120,.04) 54%,rgba(60,100,170,.09));
+    --gl-blur:blur(14px) saturate(190%);
+    --gl-edge:inset 0 1px 0 rgba(255,255,255,.16),inset 0 0 22px rgba(140,190,255,.05),0 0 0 1px rgba(0,8,25,.3);
+    --gl-rim:linear-gradient(135deg,rgba(255,255,255,.46),rgba(255,255,255,.1) 28%,rgba(255,255,255,.03) 55%,rgba(150,205,255,.22) 82%,rgba(255,255,255,.42));
+    --gl-spec:radial-gradient(130% 90% at var(--lx,22%) var(--ly,-10%),rgba(255,255,255,.14),transparent 50%);
+  }
+  .week,.readout,.main section,footer,.tile,.bd,.wm-rest{border:1px solid transparent;background:var(--gl-spec) padding-box,var(--gl-fill) padding-box,var(--gl-rim) border-box;}
+  ul.lifts li,.pane ul.lifts li{border:1px solid transparent;background:var(--gl-spec) padding-box,radial-gradient(130% 90% at var(--hx) -12%,rgba(255,255,255,.07),transparent 46%) padding-box,var(--gl-fill) padding-box,var(--gl-rim) border-box;}
+  .pane{border:1px solid transparent;background:var(--gl-spec) padding-box,linear-gradient(180deg,rgba(60,230,180,.14),rgba(40,160,150,.06) 46%,rgba(10,70,70,.04) 54%,rgba(30,130,120,.09)) padding-box,linear-gradient(135deg,rgba(160,255,220,.46),rgba(255,255,255,.08) 30%,rgba(255,255,255,.03) 55%,rgba(120,240,200,.24) 85%,rgba(255,255,255,.36)) border-box;}
+  .topbar,.rest{border:1px solid transparent;background:var(--gl-spec) padding-box,linear-gradient(180deg,rgba(40,75,130,.6),rgba(12,30,62,.76)) padding-box,var(--gl-rim) border-box;}
+  .sh-panel,.spot-panel{border:1px solid transparent;border-bottom:0;background:var(--gl-spec) padding-box,radial-gradient(420px 240px at 85% -8%,rgba(62,166,245,.18),transparent 70%) padding-box,linear-gradient(180deg,rgba(24,46,86,.93),rgba(10,24,52,.96)) padding-box,var(--gl-rim) border-box;}
+  .fin .sh-panel{background:var(--gl-spec) padding-box,radial-gradient(460px 280px at 12% -8%,rgba(47,215,160,.22),transparent 70%) padding-box,linear-gradient(180deg,rgba(18,52,70,.94),rgba(10,24,52,.96)) padding-box,var(--gl-rim) border-box;}
+  .set,.form,.ask,.reset,.btn.ghost,.sh-x,.rest button,.sug,.streak,.focus span{border:1px solid transparent;background:var(--btn-white) padding-box,var(--gl-rim) border-box;}
+  ul.lifts li,.head{border-radius:22px;}
+  .week,.readout{border-radius:24px;}
+  .thumb{border-radius:19px;}
+  .main section,footer,.pane{border-radius:28px;}
+  .set,.form,.ask{border-radius:16px;}
+  .stp{border-radius:17px;}
+  .tile{border-radius:20px;}
+
+  /* the dock: a floating glass bar, the rest timer rises out of it */
+  .dock{
+    position:fixed;z-index:24;left:50%;bottom:calc(12px + env(safe-area-inset-bottom));transform:translateX(-50%);
+    width:min(calc(100% - 28px),420px);height:66px;padding:6px;border-radius:33px;display:grid;grid-template-columns:repeat(4,1fr);gap:4px;
+    border:1px solid transparent;background:var(--gl-spec) padding-box,linear-gradient(180deg,rgba(40,75,130,.5),rgba(12,30,62,.68)) padding-box,var(--gl-rim) border-box;
+    -webkit-backdrop-filter:blur(22px) saturate(190%);backdrop-filter:blur(22px) saturate(190%);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 18px 40px -14px rgba(0,0,0,.9);
+    transition:opacity .3s,transform .45s var(--spring);
+    animation:dockIn .8s var(--spring) .35s backwards;
+  }
+  @keyframes dockIn{from{transform:translate(-50%,140%);}}
+  html.spot-open .dock,html.sheet-open .dock{opacity:0;pointer-events:none;transform:translate(-50%,30px);}
+  .dk{
+    appearance:none;-webkit-appearance:none;border:0;margin:0;background:none;cursor:pointer;border-radius:27px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:var(--fg-2);
+    font-family:var(--mono);font-weight:700;font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;
+    transition:background .25s,color .25s,transform .25s var(--spring);
+  }
+  .dk svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+  .dk:active{transform:scale(.88);}
+  .dk.on{color:#fff;background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.04));box-shadow:inset 0 1px 0 rgba(255,255,255,.3),inset 0 0 0 1px rgba(255,255,255,.1);}
+  .dk-gel{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--gel-blue);box-shadow:var(--gel-edge);}
+  .dk-gel svg{width:13px;height:13px;fill:#fff;stroke:none;margin-left:2px;}
+  #dkGo{color:#fff;}
+  #dkGo.dim{opacity:.4;}
+  .dk .orb{--s:28px;}
+  .spot-fab{display:none;}
+  .wrap{padding-bottom:calc(120px + env(safe-area-inset-bottom));}
+  .rest{left:50%;right:auto;bottom:calc(88px + env(safe-area-inset-bottom));transform:translate3d(-50%,46px,0) scale(.55);transform-origin:50% 100%;}
+  .rest.on{transform:translate3d(-50%,0,0);}
+  .rest.go{animation:restGo2 .6s var(--spring);}
+  @keyframes restGo2{40%{transform:translate3d(-50%,0,0) scale(1.07);}}
+
+  /* finish card buttons, body weight */
+  .fin-btns{display:grid;grid-template-columns:1fr 2fr;gap:8px;margin-top:24px;}
+  .fin-btns .btn{height:54px;font-size:15px;border-radius:18px;}
+  .fin-btns .fin-ok{width:auto;margin-top:0;}
+  .bw-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;}
+  .bw-row .btn{height:58px;padding:0 22px;border-radius:17px;}
+  .bw-c{display:block;width:100%;height:auto;margin-top:14px;overflow:visible;touch-action:pan-y;cursor:crosshair;}
+  .bw-g{stroke:rgba(150,190,240,.14);stroke-width:1;}
+  .bw-a{font-family:var(--mono);font-size:9px;font-weight:600;fill:var(--faint);}
+  .bw-note{margin-top:10px;}
+
   @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;}}
 </style>
 </head>
@@ -1384,6 +1451,13 @@
   </div>
 
 </div>
+
+<nav class="dock" id="dock" aria-label="Quick actions">
+  <button class="dk on" id="dkToday" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5.5" width="16" height="14" rx="3.5"/><path d="M4 10h16M9 3.5v3.5M15 3.5v3.5"/></svg><span>Today</span></button>
+  <button class="dk" id="dkGo" type="button"><span class="dk-gel"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5v11l9.5-5.5z"/></svg></span><span id="dkGoL">Workout</span></button>
+  <button class="dk" id="dkProg" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19v-6M10 19V9M15 19v-4M20 19V5"/></svg><span>Progress</span></button>
+  <button class="dk" id="dkSpot" type="button" aria-label="Ask Spot"><span class="orb" aria-hidden="true"><i class="orb-ring"></i><i class="orb-core"><b></b><b></b></i></span><span>Spot</span></button>
+</nav>
 
 <div class="rest" id="rest" role="timer" aria-label="Rest timer">
   <span class="rg" aria-hidden="true"><svg viewBox="0 0 40 40"><circle class="rt" cx="20" cy="20" r="16"/><circle class="ra" id="restArc" cx="20" cy="20" r="16" pathLength="100"/></svg></span>
@@ -1893,7 +1967,7 @@ function buildList(root,items,day){
           pipEls[s].classList.toggle("on",on);
           if(lk){ logSet(li,x,lk,s,on,b); relabel(li,x,lk,day,i); }
           if(on) pop();
-          if(on&&day!=="face"){ audio(); startSession(); if(lk) Rest.start(restFor(x)); }
+          if(on&&day!=="face"){ audio(); startSession(); if(lk) Rest.start(restFor(x),restLabel(day,i)); }
           var after=countDone(day,i,x.sets)===x.sets;
           li.classList.toggle("done",after);
           if(on){
@@ -2197,7 +2271,7 @@ setInterval(tickClock,1000);
 
 /* ---------- sound: two soft notes when rest is up (unlocked by the first tapped set) ---------- */
 var AC=null;
-function audio(){ try{ var C=window.AudioContext||window.webkitAudioContext; if(!AC&&C) AC=new C(); if(AC&&AC.state==="suspended") AC.resume(); }catch(e){} return AC; }
+function audio(){ unlockVoice(); try{ var C=window.AudioContext||window.webkitAudioContext; if(!AC&&C) AC=new C(); if(AC&&AC.state==="suspended") AC.resume(); }catch(e){} return AC; }
 function chime(){
   if(PREFS.sound===false) return;
   var ac=audio(); if(!ac) return;
@@ -2214,16 +2288,18 @@ function chime(){
 
 /* ---------- rest timer: counts from a fixed end time, so a locked phone does not lose it ---------- */
 var Rest=(function(){
-  var el=$("rest"), arc=$("restArc"), tx=$("restT"), end=0, dur=1, iv=0, hideT=0;
+  var el=$("rest"), arc=$("restArc"), tx=$("restT"), end=0, dur=1, iv=0, hideT=0, lbl="", said=false;
   function paint(){
     var left=end-Date.now();
     if(left<=0){ done(); return; }
     var sec=Math.ceil(left/1000);
     tx.textContent=Math.floor(sec/60)+":"+pad(sec%60);
     arc.style.strokeDashoffset=100-left/dur*100;
+    if(!said&&dur>=30000&&left<=10000&&!document.hidden){ said=true; say("Ten seconds."); }
   }
-  function start(sec){
+  function start(sec,label){
     if(PREFS.rest===false) return;
+    lbl=label||""; said=false;
     clearTimeout(hideT); clearInterval(iv);
     dur=sec*1000; end=Date.now()+dur;
     el.classList.remove("go"); el.classList.add("on");
@@ -2232,7 +2308,7 @@ var Rest=(function(){
   function done(){
     clearInterval(iv);
     tx.textContent="Go"; arc.style.strokeDashoffset=0;
-    if(!el.classList.contains("go")){ el.classList.add("go"); if(!document.hidden){ chime(); buzz([30,60,30]); } }
+    if(!el.classList.contains("go")){ el.classList.add("go"); if(!document.hidden){ chime(); buzz([30,60,30]); setTimeout(function(){ say("Rest's up. "+lbl); },350); } }
     clearTimeout(hideT); hideT=setTimeout(hide,8000);
   }
   function hide(){ clearInterval(iv); clearTimeout(hideT); el.classList.remove("on","go"); }
@@ -2314,8 +2390,9 @@ function finishDay(){
     (prs.length?'<ul class="fin-prs">'+prs.map(function(p){ return '<li><span class="chip pr">PR</span>'+p.n+'<b>'+p.v+'</b></li>'; }).join("")+'</ul>':'')+
     (nb.length?'<div class="fin-new">'+nb.map(function(b){ return '<span><i>'+b.g+'</i>'+b.t+'</span>'; }).join("")+'</div>':'')+
     (fd<fl?'<p class="fin-cmp">Face and neck still to go: '+fd+' of '+fl+' done.</p>':'')+
-    '<button class="btn fin-ok" type="button" data-close>Done</button>';
+    '<div class="fin-btns"><button class="btn ghost" type="button" id="finShare">Share</button><button class="btn fin-ok" type="button" data-close>Done</button></div>';
   openSheet("fin");
+  makeCard();
   setTimeout(function(){ FX.burst(innerWidth/2,innerHeight*.45,150,15); },260);
   buzz([20,60,20,60,40]);
 }
@@ -2373,8 +2450,8 @@ function liftsHTML(){
       '<div class="lv"><b>'+fmtSet(r.k,l.v)+'</b><small>'+shortDate(l.d)+'</small></div></div>';
   }).join("")+'</div>';
 }
-function opt(p,l,s){
-  var on=PREFS[p]!==false;
+function opt(p,l,s,def){
+  var on=def===false?PREFS[p]===true:PREFS[p]!==false;
   return '<div class="opt"><span>'+l+'<small>'+s+'</small></span><div class="seg" data-pref="'+p+'" role="group" aria-label="'+l+'">'+
     '<button type="button" data-v="1" aria-pressed="'+on+'">On</button><button type="button" data-v="0" aria-pressed="'+!on+'">Off</button></div></div>';
 }
@@ -2390,6 +2467,7 @@ function renderProgress(){
       tile("Volume",vol?fmtK(vol)+'<small>lb</small>':"0","This week, weight × reps")+
       tile("PRs",prs,"Last 30 days")+
     '</div>'+
+    '<div class="sh-sec"><span>Body weight</span></div>'+bwHTML()+
     '<div class="sh-sec"><span>Last 16 weeks</span><span class="hm-lg" aria-hidden="true">Less<i class="l0"></i><i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="l4"></i>More</span></div>'+
     heatHTML()+'<p class="hm-tip" id="hmTip">Share of each day’s sets ticked. Tap a day.</p>'+
     '<div class="sh-sec"><span>Badges</span></div>'+badgesHTML()+
@@ -2397,10 +2475,13 @@ function renderProgress(){
     '<div class="sh-sec"><span>Settings</span></div>'+
     opt("rest","Rest timer","Starts when you tick a set: 3 min after big lifts, 90 s after the rest.")+
     opt("sound","Sounds","A pop when you tick a set and a chime when rest ends. Ringer on.")+
+    opt("voice","Voice coach","Calls ten seconds, then says when rest is up and what comes next.",false)+
+    opt("tilt","Tilt light","The glass catches the light as you tilt the phone.",false)+
     '<div class="sh-sec"><span>Backup</span></div>'+
     '<p class="sh-p">The log lives on this phone only. Export it once in a while.</p>'+
     '<div class="bk"><button class="btn ghost" type="button" id="expBtn">Export log</button><button class="btn ghost" type="button" id="impBtn">Import</button></div>'+
     '<p class="sh-p" id="bkS" aria-live="polite"></p>';
+  wireBW();
   [].forEach.call($("progBody").querySelectorAll(".lf"),function(row){
     var r=PROWS[+row.dataset.r], sv=row.querySelector(".spk"), h=sv.querySelector(".spk-h"), lv=row.querySelector(".lv"), def=lv.innerHTML, xy=sparkXY(r);
     function at(ev){
@@ -2426,6 +2507,8 @@ $("progBody").addEventListener("click",function(e){
     [].forEach.call(sg.children,function(o){ o.setAttribute("aria-pressed",String(o===b)); });
     if(PREFS.rest===false) Rest.hide();
     if(sg.dataset.pref==="sound"&&PREFS.sound){ audio(); chime(); }
+    if(sg.dataset.pref==="voice"&&PREFS.voice){ voiceReady=false; unlockVoice(); say("Voice coach on."); }
+    if(sg.dataset.pref==="tilt"){ if(PREFS.tilt) tiltOn(true); else tiltOff(); }
     return;
   }
   if(b.id==="expBtn") exportLog();
@@ -2436,7 +2519,7 @@ $("streakBtn").onclick=function(){ renderProgress(); openSheet("prog"); };
 function exportLog(){
   try{
     var a=document.createElement("a");
-    a.href=URL.createObjectURL(new Blob([JSON.stringify({app:"home-program",v:1,log:LOG})],{type:"application/json"}));
+    a.href=URL.createObjectURL(new Blob([JSON.stringify({app:"home-program",v:1,log:LOG,bw:BWLOG})],{type:"application/json"}));
     a.download="home-program-log-"+TODAY+".json";
     document.body.appendChild(a); a.click();
     setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },1500);
@@ -2465,6 +2548,8 @@ $("importFile").onchange=function(){
       Object.keys(lg).forEach(function(d){
         if(/^\d{4}-\d\d-\d\d$/.test(d)&&lg[d]&&typeof lg[d]==="object"&&!LOG[d]){ LOG[d]=cleanDay(lg[d]); n++; }
       });
+      if(o.bw&&typeof o.bw==="object") Object.keys(o.bw).forEach(function(d){ if(/^\d{4}-\d\d-\d\d$/.test(d)&&num(o.bw[d])!=null&&BWLOG[d]==null){ BWLOG[d]=o.bw[d]; n++; } });
+      writeJSON("hp.bw",BWLOG);
       saveLog(); render();
       msg="Added "+n+" day"+(n===1?"":"s")+". Days already on this phone were kept.";
     }catch(err){ msg="That file is not a Home Program log."; }
@@ -2545,6 +2630,7 @@ function updateGo(k){
   b.classList.toggle("off",k===todayKey&&!lifting);
   b.classList.toggle("done",k===todayKey&&lifting&&!liftsLeft());
   $("goLbl").textContent=k!==todayKey?"Back to today":!liftsLeft()?"Workout done":any?"Resume workout":"Start workout";
+  updateDock(k);
 }
 
 /* ---------- workout mode: one exercise at a time, full screen ---------- */
@@ -2591,7 +2677,7 @@ function wmLog(){
   startSession();
   render();
   if(!liftsLeft()){ closeSheet($("wm")); setTimeout(finishDay,400); return; }
-  Rest.start(restFor(x));
+  Rest.start(restFor(x),restLabel(todayKey,i));
   if(wmUndone(i)>=x.sets){ var n2=wmNextOpen(i); if(n2>=0) WM.i=n2; }
   wmRender();
 }
@@ -2610,10 +2696,11 @@ function wmOpen(){
   WM.i=first<0?0:first;
   audio();
   openSheet("wm");
+  wakeOn();
   wmRender();
   clearInterval(WM.iv); WM.iv=setInterval(wmTick,250);
 }
-function wmStop(){ clearInterval(WM.iv); playVid($("wmBody"),false); }
+function wmStop(){ clearInterval(WM.iv); playVid($("wmBody"),false); wakeOff(); }
 $("goBtn").onclick=function(){
   if(view!==todayKey){ go(todayKey); return; }
   if(!liftsLeft()){ finishDay(); return; }
@@ -2629,6 +2716,164 @@ $("wm").addEventListener("click",function(e){
   else if(b.id==="wmVid"){ playVid($("wmBody")); b.textContent=$("wmBody").querySelector(".vid.on")?"Hide video":"Form video"; }
   else if(b.dataset.j!=null){ WM.i=+b.dataset.j; wmRender(); }
 });
+
+/* ---------- light: the glass highlight follows the pointer, or the phone's tilt when that is switched on ---------- */
+var LIGHT={x:22,y:-10,tx:22,ty:-10,raf:0};
+function setLight(x,y){
+  LIGHT.tx=Math.max(0,Math.min(100,x)); LIGHT.ty=Math.max(-30,Math.min(70,y));
+  if(!LIGHT.raf) LIGHT.raf=requestAnimationFrame(lightFrame);
+}
+function lightFrame(){
+  LIGHT.raf=0;
+  LIGHT.x+=(LIGHT.tx-LIGHT.x)*.18; LIGHT.y+=(LIGHT.ty-LIGHT.y)*.18;
+  var r=document.documentElement.style;
+  r.setProperty("--lx",LIGHT.x.toFixed(1)+"%"); r.setProperty("--ly",LIGHT.y.toFixed(1)+"%");
+  if(Math.abs(LIGHT.tx-LIGHT.x)>.4||Math.abs(LIGHT.ty-LIGHT.y)>.4) LIGHT.raf=requestAnimationFrame(lightFrame);
+}
+if(!CALM&&window.matchMedia&&matchMedia("(hover:hover)").matches) document.addEventListener("pointermove",function(e){ setLight(e.clientX/innerWidth*100,e.clientY/innerHeight*80-20); },{passive:true});
+function onTilt(e){ if(e.gamma==null||e.beta==null) return; setLight(50+e.gamma*1.5,(e.beta-45)*1.2); }
+function tiltOff(){ window.removeEventListener("deviceorientation",onTilt); setLight(22,-10); }
+// iPhone asks once for motion access, and only from a tap.
+function tiltOn(ask){
+  if(CALM||!window.DeviceOrientationEvent) return;
+  var R=DeviceOrientationEvent.requestPermission;
+  if(typeof R==="function"){ if(ask) R.call(DeviceOrientationEvent).then(function(s){ if(s==="granted") window.addEventListener("deviceorientation",onTilt); }).catch(function(){}); }
+  else window.addEventListener("deviceorientation",onTilt);
+}
+if(PREFS.tilt===true){ tiltOn(false); document.addEventListener("click",function once(){ document.removeEventListener("click",once); tiltOn(true); }); }
+
+/* ---------- voice coach: off unless switched on ---------- */
+var voiceReady=false;
+// iPhone only lets a page speak from a timer once it has spoken from a tap, so the first tapped set speaks a silent space.
+function unlockVoice(){
+  if(voiceReady||PREFS.voice!==true||!window.speechSynthesis) return;
+  try{ var u=new SpeechSynthesisUtterance(" "); u.volume=0; speechSynthesis.speak(u); voiceReady=true; }catch(e){}
+}
+function say(t){
+  if(PREFS.voice!==true||!window.speechSynthesis) return;
+  try{ speechSynthesis.cancel(); var u=new SpeechSynthesisUtterance(t); u.rate=1.02; speechSynthesis.speak(u); }catch(e){}
+}
+function restLabel(day,i){
+  var l=PLAN[day].l, x=l[i], s=countDone(day,i,x.sets), j, t;
+  if(s<x.sets) return nameOf(x)+", set "+(s+1)+".";
+  for(j=1;j<l.length;j++){ t=(i+j)%l.length; if(kindOf(l[t])&&countDone(day,t,l[t].sets)<l[t].sets) return "Next up, "+nameOf(l[t])+"."; }
+  return "That was the last set.";
+}
+
+/* ---------- keep the screen on during workout mode ---------- */
+var WL=null;
+function wakeOn(){ try{ if(navigator.wakeLock&&!WL) navigator.wakeLock.request("screen").then(function(l){ WL=l; l.addEventListener("release",function(){ WL=null; }); }).catch(function(){}); }catch(e){} }
+function wakeOff(){ try{ if(WL) WL.release(); }catch(e){} WL=null; }
+document.addEventListener("visibilitychange",function(){ if(!document.hidden&&$("wm").classList.contains("on")) wakeOn(); });
+
+/* ---------- the dock ---------- */
+$("dkToday").onclick=function(){ if(view!==todayKey) go(todayKey); window.scrollTo({top:0,behavior:CALM?"auto":"smooth"}); };
+$("dkGo").onclick=function(){
+  if(!PLAN[todayKey].l.some(function(x){ return kindOf(x); })) return;
+  if(view!==todayKey) go(todayKey);
+  if(!liftsLeft()) finishDay(); else wmOpen();
+};
+$("dkProg").onclick=function(){ renderProgress(); openSheet("prog"); };
+$("dkSpot").onclick=function(){ if(window.Spot) Spot.open(); };
+function updateDock(k){
+  var lifting=PLAN[todayKey].l.some(function(x){ return kindOf(x); }), any=PLAN[todayKey].l.some(function(x,i){ return countDone(todayKey,i,x.sets)>0; });
+  $("dkGo").classList.toggle("dim",!lifting);
+  $("dkGoL").textContent=!lifting?"Rest day":!liftsLeft()?"Done":any?"Resume":"Workout";
+  $("dkToday").classList.toggle("on",k===todayKey);
+}
+
+/* ---------- share card: drawn when the finish card opens, so the share sheet can open straight from the tap ---------- */
+var CARD=null;
+function makeCard(){
+  CARD=null;
+  function draw(){
+    var L=LOG[TODAY]||{}, d=PLAN[todayKey], vol=volumeOf(L), prs=prsOn(TODAY), sets=0, c=document.createElement("canvas"), g=c.getContext("2d"), j;
+    if(!g) return;
+    d.l.forEach(function(x){ sets+=x.sets; });
+    c.width=1080; c.height=1350;
+    var bg=g.createLinearGradient(0,0,0,1350); bg.addColorStop(0,"#020817"); bg.addColorStop(.55,"#0A2758"); bg.addColorStop(1,"#103A70");
+    g.fillStyle=bg; g.fillRect(0,0,1080,1350);
+    function glow(x,y,r,col){ var q=g.createRadialGradient(x,y,0,x,y,r); q.addColorStop(0,col); q.addColorStop(1,"rgba(0,0,0,0)"); g.fillStyle=q; g.fillRect(0,0,1080,1350); }
+    glow(260,240,640,"rgba(70,230,170,.26)"); glow(840,430,560,"rgba(60,150,255,.3)"); glow(940,0,460,"rgba(190,220,255,.16)");
+    for(j=0;j<90;j++){ g.fillStyle="rgba(255,255,255,"+(.25+Math.random()*.6).toFixed(2)+")"; g.beginPath(); g.arc(Math.random()*1080,Math.random()*640,Math.random()*1.7+.4,0,7); g.fill(); }
+    function rr(x,y,w,h,r){ g.beginPath(); g.moveTo(x+r,y); g.arcTo(x+w,y,x+w,y+h,r); g.arcTo(x+w,y+h,x,y+h,r); g.arcTo(x,y+h,x,y,r); g.arcTo(x,y,x+w,y,r); g.closePath(); }
+    g.fillStyle="#9FD3FF"; g.font="700 34px 'JetBrains Mono',monospace"; g.fillText($("clock").textContent.toUpperCase(),90,170);
+    g.fillStyle="#FFFFFF"; g.font="800 150px 'Bricolage Grotesque',sans-serif"; g.fillText(d.t+",",84,330); g.fillText("done.",84,470);
+    [["TIME",L.a?fmtDur((L.z||Date.now())-L.a):"–"],["SETS",String(sets)],["VOLUME",vol?fmtK(vol)+" lb":"–"],["PRS",String(prs.length)]].forEach(function(t,q){
+      var x=90+(q%2)*462, y=560+Math.floor(q/2)*250, f=g.createLinearGradient(0,y,0,y+220);
+      rr(x,y,438,220,40);
+      f.addColorStop(0,"rgba(150,195,255,.22)"); f.addColorStop(.5,"rgba(90,140,210,.08)"); f.addColorStop(1,"rgba(60,100,170,.14)");
+      g.fillStyle=f; g.fill(); g.strokeStyle="rgba(255,255,255,.3)"; g.lineWidth=2; g.stroke();
+      g.fillStyle="#8DA6C4"; g.font="700 28px 'JetBrains Mono',monospace"; g.fillText(t[0],x+40,y+70);
+      g.fillStyle="#FFFFFF"; g.font="800 84px 'Bricolage Grotesque',sans-serif"; g.fillText(t[1],x+40,y+172);
+    });
+    var y=1110;
+    g.font="600 34px Archivo,sans-serif";
+    prs.slice(0,2).forEach(function(p){ g.fillStyle="#F6CF6A"; g.fillText("PR",90,y); g.fillStyle="#EAF3FF"; g.fillText(p.n+"   "+p.v,160,y); y+=54; });
+    var st=streak();
+    g.font="700 28px 'JetBrains Mono',monospace";
+    if(st>1){ g.fillStyle="#FF9A3C"; g.fillText(st+" DAY STREAK",90,1236); }
+    g.fillStyle="rgba(255,255,255,.55)"; g.fillText("HOME PROGRAM",90,1290);
+    c.toBlob(function(b){ if(b) CARD=new File([b],"home-program-"+TODAY+".png",{type:"image/png"}); },"image/png");
+  }
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(draw,draw); else draw();
+}
+function shareCard(){
+  var btn=$("finShare");
+  if(!CARD){ btn.textContent="One sec"; setTimeout(function(){ btn.textContent="Share"; },900); return; }
+  if(navigator.canShare&&navigator.canShare({files:[CARD]})){ navigator.share({files:[CARD]}).catch(function(){}); return; }
+  var a=document.createElement("a");
+  a.href=URL.createObjectURL(CARD); a.download=CARD.name;
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },1500);
+}
+$("fin").addEventListener("click",function(e){ if(e.target.closest("#finShare")) shareCard(); });
+
+/* ---------- body weight: one number a day in hp.bw, with a trend line ---------- */
+var BWLOG=readJSON("hp.bw"), BWPTS=[];
+function bwHTML(){
+  var keys=Object.keys(BWLOG).filter(function(d){ return num(BWLOG[d])!=null; }).sort(), last=keys.length?BWLOG[keys[keys.length-1]]:"";
+  var h='<div class="bw-row"><div class="stp" data-f="bw"><button type="button" class="m" aria-label="Less">−</button>'+
+    '<label><input type="text" inputmode="decimal" autocomplete="off" id="bwIn" value="'+last+'" placeholder="lb" aria-label="Body weight in pounds"><span>lb today</span></label>'+
+    '<button type="button" class="p" aria-label="More">+</button></div><button class="btn" type="button" id="bwSave">'+(BWLOG[TODAY]!=null?"Update":"Save")+'</button></div>';
+  if(keys.length<2) return h+'<p class="sh-p bw-note">'+(keys.length?'One weigh-in so far. ':'')+'Weigh in a few mornings a week, same time, and the trend shows up here.</p>';
+  var pts=keys.slice(-60).map(function(d){ var p=d.split("-"); return {d:d,t:new Date(+p[0],p[1]-1,+p[2]).getTime(),v:BWLOG[d]}; });
+  var t0=pts[0].t, t1=pts[pts.length-1].t, vs=pts.map(function(p){ return p.v; }), lo=Math.min.apply(null,vs), hi=Math.max.apply(null,vs);
+  if(hi-lo<2){ var m=(hi+lo)/2; lo=m-1; hi=m+1; }
+  BWPTS=pts.map(function(p){ return {d:p.d,v:p.v,x:28+(t1>t0?(p.t-t0)/(t1-t0):1)*302,y:12+(hi-p.v)/(hi-lo)*92}; });
+  var e=BWPTS[BWPTS.length-1], cut=Date.now()-30*864e5, base=pts.filter(function(p){ return p.t>=cut; })[0]||pts[0], ch=Math.round((e.v-base.v)*10)/10;
+  return h+'<svg class="bw-c" viewBox="0 0 340 120" role="img" aria-label="Body weight, '+pts.length+' weigh-ins">'+
+    '<line class="bw-g" x1="28" x2="330" y1="12" y2="12"/><line class="bw-g" x1="28" x2="330" y1="104" y2="104"/>'+
+    '<text class="bw-a" x="0" y="15">'+Math.round(hi)+'</text><text class="bw-a" x="0" y="107">'+Math.round(lo)+'</text>'+
+    '<polyline class="spk-l" points="'+BWPTS.map(function(p){ return p.x.toFixed(1)+","+p.y.toFixed(1); }).join(" ")+'"/>'+
+    '<circle class="spk-d" r="4" cx="'+e.x.toFixed(1)+'" cy="'+e.y.toFixed(1)+'"/><circle class="spk-h" r="4" cx="0" cy="0" opacity="0"/></svg>'+
+    '<p class="hm-tip" id="bwTip"><b>'+e.v+' lb</b> latest · '+(ch>0?"+":"")+ch+' lb since '+shortDate(base.d)+'</p>';
+}
+function wireBW(){
+  var inp=$("bwIn"); if(!inp) return;
+  var st=inp.closest(".stp");
+  function bump(d){ var v=parseFloat(inp.value); if(!isNaN(v)){ inp.value=Math.round((v+d)*10)/10; replay(inp,"tw"); } }
+  st.querySelector(".m").onclick=function(){ bump(-.5); };
+  st.querySelector(".p").onclick=function(){ bump(.5); };
+  inp.addEventListener("focus",function(){ inp.select(); });
+  $("bwSave").onclick=function(){
+    var v=parseFloat(inp.value);
+    if(!(v>=50&&v<=700)){ inp.focus(); return; }
+    BWLOG[TODAY]=Math.round(v*10)/10; writeJSON("hp.bw",BWLOG);
+    var pan=$("prog").querySelector(".sh-panel"), y=pan.scrollTop;
+    renderProgress(); pan.scrollTop=y; buzz(10);
+  };
+  var sv=$("progBody").querySelector(".bw-c"); if(!sv) return;
+  var h=sv.querySelector(".spk-h"), tip=$("bwTip"), def=tip.innerHTML;
+  function at(ev){
+    var bx=sv.getBoundingClientRect(), px=(ev.clientX-bx.left)/bx.width*340, k=0;
+    BWPTS.forEach(function(p,q){ if(Math.abs(p.x-px)<Math.abs(BWPTS[k].x-px)) k=q; });
+    h.setAttribute("cx",BWPTS[k].x); h.setAttribute("cy",BWPTS[k].y); h.setAttribute("opacity",1);
+    tip.innerHTML='<b>'+BWPTS[k].v+' lb</b> · '+shortDate(BWPTS[k].d);
+  }
+  sv.addEventListener("pointermove",at); sv.addEventListener("pointerdown",at);
+  sv.addEventListener("pointerleave",function(){ h.setAttribute("opacity",0); tip.innerHTML=def; });
+}
 
 </script>
 <script>
