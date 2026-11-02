@@ -34,7 +34,7 @@ jobs:
             Thursday)  body="Upper" ;;
             Friday)    body="Lower" ;;
             Saturday)  body="Shape" ;;
-            Sunday)    body="Rest. The face and neck routine still happens." ;;
+            Sunday)    body="Rest. Face and neck too if today is a face day." ;;
             *) echo "Unexpected day: $day" >&2; exit 1 ;;
           esac
           echo "$day: $body"

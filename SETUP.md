@@ -31,6 +31,15 @@ State on this Mac: `~/.local/state/workout/last-open` holds the date the page wa
 
 GitHub Pages redeploys in about a minute. The phone picks up the new page the next time the app is opened with signal. No cache bump is needed for this.
 
+## The log, rest timer and progress
+
+- **Logging.** Every lift card has weight and reps steppers. Tapping a set records what the steppers say. The card shows last time's numbers, says when to add 5 lb (top of the range on both sets), shows the plates for a 45 lb bar on barbell lifts, and marks a PR (best estimated max, or reps, seconds or weight for bodyweight, hang and carry moves). How each lift is logged comes from its name: `BW`, `SECS`, `CARRY` and `BARBELL` near the top of the script.
+- **Storage.** Logged sets live in `localStorage` under `hp.log`, keyed by date, and are never cleared by the morning reset (the tick marks in `hp` still are). "Clear today's marks" removes today's logged sets too. Settings are in `hp.prefs`. Progress has Export and Import for a JSON backup; import only adds days that are not already on the phone and keeps only known lifts and numbers.
+- **Rest timer.** Starts when a set is ticked: 3 minutes after lifts matching `BIG` (presses, squats, deadlifts, rows, pull-ups, chin-ups, lunges, thrusts), 90 seconds otherwise. It counts to a fixed end time, so locking the phone does not lose it. Turn it or its chime off in Progress.
+- **Progress.** The flame at the top right: streak (a lifting day counts at half its lifting sets, Sunday at half of everything), this week, volume, PRs, a 16 week heatmap and a trend line per lift.
+- **Face and neck.** The block runs every other day by calendar date, counted from 2 Nov 2026 (`isFaceDate`). Off days hide it.
+- **Form videos.** `VID` maps each exercise's `form` phrase to a short YouTube video that plays inside the card (muted at first, via youtube-nocookie). A new exercise without an entry falls back to a YouTube search link. To swap a video, change its id in `VID`.
+
 ## Spot, the coach in the corner
 
 The orb at the bottom right of the page, and the **Ask Spot** button inside every exercise card. All of it lives in `index.html`, in the script block headed `Spot: the coach in the corner`. It has two brains:

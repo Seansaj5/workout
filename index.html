@@ -707,16 +707,354 @@
   @media (max-width:360px){.links{grid-template-columns:1fr;}}
   html.spot-open{overflow:hidden;}
 
+  /* ---------- ambient light that drifts behind everything ---------- */
+  .amb{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+  .amb i{position:absolute;width:76vmax;height:76vmax;border-radius:50%;will-change:transform;}
+  .amb i:nth-child(1){right:-34vmax;top:-44vmax;background:radial-gradient(closest-side,rgba(255,90,31,.15),transparent);animation:ambA 26s ease-in-out infinite alternate;}
+  .amb i:nth-child(2){left:-40vmax;top:22vh;background:radial-gradient(closest-side,rgba(61,214,192,.065),transparent);animation:ambB 34s ease-in-out infinite alternate;}
+  .amb i:nth-child(3){right:-26vmax;bottom:-50vmax;background:radial-gradient(closest-side,rgba(255,146,89,.07),transparent);animation:ambA 41s ease-in-out infinite alternate-reverse;}
+  @keyframes ambA{to{transform:translate3d(-13vmax,11vmax,0) scale(1.15);}}
+  @keyframes ambB{to{transform:translate3d(15vmax,-9vmax,0) scale(1.2);}}
+
+  /* ---------- streak button, session clock, day stats ---------- */
+  .bar-r{display:flex;align-items:center;gap:12px;}
+  .streak{
+    appearance:none;-webkit-appearance:none;border:0;margin:0;cursor:pointer;
+    display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px 0 10px;border-radius:100px;
+    background:rgba(255,255,255,.035);box-shadow:inset 0 0 0 1px var(--line-2);color:var(--fg-2);
+    font-family:var(--mono);font-weight:700;font-size:13px;letter-spacing:-.02em;
+    transition:transform .14s,box-shadow .25s,color .25s;
+  }
+  .streak svg{width:14px;height:14px;fill:var(--faint);transition:fill .3s;}
+  .streak.hot{color:var(--fg);box-shadow:inset 0 0 0 1px rgba(255,90,31,.55),0 6px 18px -8px rgba(255,90,31,.6);}
+  .streak.hot svg{fill:var(--hot);filter:drop-shadow(0 0 4px rgba(255,90,31,.8));}
+  .streak:active{transform:scale(.93);}
+  .sess{color:var(--fg-2);letter-spacing:.1em;font-variant-numeric:tabular-nums;}
+  .sess:not(:empty)::before{content:"·";margin-right:8px;color:var(--faint);}
+  .tb-sess{margin-left:2px;color:var(--fg-2);font-variant-numeric:tabular-nums;}
+  .stats{
+    position:relative;display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 18px;margin:14px 0 0;
+    font-family:var(--mono);font-weight:600;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+  }
+  .stats b{color:var(--fg);font-weight:700;font-size:15px;letter-spacing:-.03em;margin-right:6px;}
+  .stats .jw{display:inline-flex;align-items:center;gap:7px;color:var(--cool);}
+  .stats .jw::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--cool);box-shadow:0 0 8px rgba(61,214,192,.8);}
+  .hero .stats{animation:rise .7s var(--ease) .12s backwards;}
+  .hero.swap .stats{animation:heroIn .6s var(--ease) .18s backwards;}
+  .wd.fday::before{
+    content:"";position:absolute;top:7px;left:7px;width:4px;height:4px;
+    border-radius:50%;background:var(--cool);opacity:.8;
+  }
+  @media (max-width:370px){.clock{display:none;}}
+
+  /* ---------- set logger inside each lift ---------- */
+  .logr{margin:-2px 0 14px;}
+  .last{
+    display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+    font-family:var(--mono);font-weight:600;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);
+  }
+  .last b{color:var(--fg-2);font-weight:700;font-size:12.5px;letter-spacing:.01em;text-transform:none;white-space:nowrap;}
+  .nudge{display:flex;align-items:flex-start;gap:9px;margin:8px 0 0;font-size:14px;line-height:1.45;color:var(--fg-2);}
+  .nudge::before{content:"";flex:0 0 6px;height:6px;margin-top:7px;border-radius:50%;background:var(--muted);}
+  .nudge.up{color:var(--fg);}
+  .nudge.up::before{background:var(--hot);box-shadow:0 0 8px rgba(255,90,31,.8);}
+  .steps{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;}
+  .steps.one{grid-template-columns:1fr;}
+  .stp{
+    display:grid;grid-template-columns:46px minmax(0,1fr) 46px;align-items:center;height:58px;border-radius:14px;
+    background:var(--well);box-shadow:inset 0 0 0 1px var(--line-2);transition:box-shadow .2s;
+  }
+  .stp:focus-within{box-shadow:inset 0 0 0 1px var(--hot),0 0 0 3px rgba(255,90,31,.12);}
+  .stp button{
+    appearance:none;-webkit-appearance:none;border:0;margin:0;background:none;height:100%;cursor:pointer;
+    color:var(--fg-2);font-family:var(--text);font-size:23px;font-weight:500;line-height:1;border-radius:14px;
+    transition:background .2s,color .2s,transform .12s;
+  }
+  .stp button:active{background:rgba(255,255,255,.05);color:#fff;transform:scale(.9);}
+  .stp label{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0;cursor:text;}
+  .stp input{
+    width:100%;min-width:0;margin:0;padding:0;border:0;outline:0;background:none;-webkit-appearance:none;appearance:none;
+    text-align:center;color:var(--fg);font-family:var(--mono);font-weight:700;font-size:21px;line-height:1.1;letter-spacing:-.04em;
+  }
+  .stp label span{font-family:var(--mono);font-weight:600;font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-top:2px;}
+  .tw{animation:tw .25s var(--ease);}
+  @keyframes tw{50%{transform:scale(1.14);}}
+  .plates{display:flex;align-items:center;gap:2px;min-height:36px;margin-top:10px;padding:0 2px;}
+  .pl-sleeve{width:20px;height:5px;border-radius:2px;margin-right:2px;background:linear-gradient(180deg,#A3ACBA,#59626F);}
+  .pl{display:block;width:8px;border-radius:2.5px;background:linear-gradient(90deg,#2C3441,#4A5467 50%,#283039);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);}
+  .pl.p45{height:36px;background:linear-gradient(90deg,#8A2F10,#FF5A1F 50%,#7A2A0E);box-shadow:none;}
+  .pl.p35{height:32px;}
+  .pl.p25{height:27px;}
+  .pl.p10{height:21px;width:6px;}
+  .pl.p5{height:16px;width:5px;}
+  .pl.p2_5{height:12px;width:4px;}
+  .pl-note{margin-left:10px;font-family:var(--mono);font-weight:600;font-size:11px;letter-spacing:.04em;color:var(--muted);}
+  .set .prb{margin-left:8px;padding:2px 5px 1px;border-radius:4px;background:#0B1A17;color:var(--gold);font-size:9.5px;letter-spacing:.1em;}
+  .chip.up{color:var(--fg);border-color:var(--line-2);background:rgba(255,255,255,.04);}
+  .chip.pr{color:var(--gold);border-color:#5A4A1B;background:rgba(232,185,59,.07);}
+
+  /* ---------- rest timer pill ---------- */
+  .rest{
+    position:fixed;z-index:24;left:max(16px,env(safe-area-inset-left));bottom:calc(20px + env(safe-area-inset-bottom));
+    display:flex;align-items:center;gap:4px;height:56px;padding:0 6px 0 8px;border-radius:100px;
+    background:rgba(17,20,27,.95);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);
+    box-shadow:inset 0 0 0 1px var(--line-2),0 18px 40px -12px #000;
+    transform:translate3d(0,150%,0);opacity:0;visibility:hidden;
+    transition:transform .45s var(--ease),opacity .3s,visibility 0s .45s,box-shadow .3s;
+  }
+  .rest.on{transform:none;opacity:1;visibility:visible;transition-delay:0s;}
+  html.spot-open .rest,html.sheet-open .rest{opacity:0;pointer-events:none;}
+  .rg{position:relative;width:40px;height:40px;flex:0 0 auto;}
+  .rg svg{display:block;width:100%;height:100%;transform:rotate(-90deg);}
+  .rg circle{fill:none;stroke-width:4;}
+  .rg .rt{stroke:var(--well);}
+  .rg .ra{stroke:var(--hot);stroke-linecap:round;stroke-dasharray:100 100;transition:stroke-dashoffset .25s linear;filter:drop-shadow(0 0 4px rgba(255,90,31,.6));}
+  .rtx{display:flex;flex-direction:column;line-height:1;padding:0 6px 0 8px;min-width:66px;}
+  .rtx small{font-family:var(--mono);font-weight:700;font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);}
+  .rtx b{font-family:var(--mono);font-weight:700;font-size:21px;letter-spacing:-.04em;margin-top:4px;font-variant-numeric:tabular-nums;}
+  .rest button{
+    appearance:none;-webkit-appearance:none;border:0;margin:0;cursor:pointer;height:42px;min-width:42px;padding:0 12px;border-radius:100px;
+    display:grid;place-items:center;background:rgba(255,255,255,.05);color:var(--fg-2);
+    font-family:var(--mono);font-weight:700;font-size:12.5px;transition:transform .12s,background .2s;
+  }
+  .rest button:active{transform:scale(.92);background:rgba(255,255,255,.09);}
+  .rest button svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;}
+  .rest.go{box-shadow:inset 0 0 0 1px rgba(61,214,192,.7),0 0 34px -6px rgba(61,214,192,.6);animation:restGo .6s var(--spring);}
+  .rest.go .ra{stroke:var(--cool);filter:drop-shadow(0 0 5px rgba(61,214,192,.8));}
+  .rest.go .rtx b{color:var(--cool-2);}
+  .rest.go .rtx small{color:var(--cool);}
+  @keyframes restGo{40%{transform:scale(1.07);}}
+
+  /* ---------- sheets: progress and the finish card ---------- */
+  .sheet{position:fixed;inset:0;z-index:29;visibility:hidden;transition:visibility 0s .5s;}
+  .sheet.on{visibility:visible;transition-delay:0s;}
+  .sh-scrim{position:absolute;inset:0;background:rgba(2,3,5,.68);opacity:0;transition:opacity .35s;}
+  .sheet.on .sh-scrim{opacity:1;}
+  .sh-panel{
+    position:absolute;left:0;right:0;bottom:0;max-height:calc(100% - 24px - env(safe-area-inset-top));
+    overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
+    padding:8px 18px calc(30px + env(safe-area-inset-bottom));border-radius:26px 26px 0 0;
+    background:radial-gradient(420px 260px at 90% -6%,rgba(255,90,31,.12),transparent 70%),linear-gradient(180deg,#141822,#0C0F15 360px);
+    box-shadow:inset 0 0 0 1px var(--line),inset 0 1px 0 rgba(255,255,255,.07),0 -30px 60px -20px #000;
+    transform:translate3d(0,104%,0);transition:transform .5s var(--ease);
+  }
+  .sheet.on .sh-panel{transform:none;}
+  .fin .sh-panel{background:radial-gradient(460px 300px at 12% -8%,rgba(61,214,192,.16),transparent 70%),linear-gradient(180deg,#121A1C,#0C0F15 360px);}
+  html.sheet-open{overflow:hidden;}
+  .sh-grab{width:38px;height:4px;border-radius:2px;background:var(--line-2);margin:4px auto 12px;}
+  .sh-h{display:flex;align-items:center;justify-content:space-between;gap:12px;}
+  .sh-x{
+    appearance:none;-webkit-appearance:none;border:0;margin:0;cursor:pointer;width:40px;height:40px;border-radius:50%;
+    display:grid;place-items:center;background:rgba(255,255,255,.04);box-shadow:inset 0 0 0 1px var(--line-2);color:var(--fg-2);
+  }
+  .sh-x svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;}
+  .sh-sec{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;margin:30px 0 12px;
+    font-family:var(--mono);font-weight:700;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);
+  }
+  .sh-p{color:var(--muted);font-size:14px;line-height:1.55;margin:0;}
+  .tiles{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:16px;}
+  .tile{
+    position:relative;overflow:hidden;border-radius:17px;padding:14px 15px 13px;
+    background:linear-gradient(180deg,var(--panel-2),var(--panel));box-shadow:inset 0 0 0 1px var(--line),inset 0 1px 0 rgba(255,255,255,.045);
+  }
+  .tile.hot{box-shadow:inset 0 0 0 1px rgba(255,90,31,.5),inset 0 1px 0 rgba(255,255,255,.05);}
+  .tile.hot::before{content:"";position:absolute;right:-44px;top:-56px;width:160px;height:160px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,90,31,.24),transparent);}
+  .tl{position:relative;display:block;font-family:var(--mono);font-weight:700;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);}
+  .tv{position:relative;display:block;margin-top:9px;font-family:var(--display);font-weight:800;font-size:36px;line-height:1;letter-spacing:-.03em;}
+  .tv small{font-family:var(--mono);font-weight:700;font-size:12.5px;letter-spacing:0;color:var(--muted);margin-left:6px;}
+  .ts{position:relative;display:block;margin-top:7px;font-size:12.5px;color:var(--faint);}
+  .hm{display:grid;grid-template-columns:14px repeat(16,minmax(0,1fr));gap:3px;align-items:center;}
+  .hm .ml{height:14px;font-family:var(--mono);font-weight:600;font-size:9px;line-height:14px;letter-spacing:.04em;color:var(--faint);white-space:nowrap;}
+  .hm .dl{font-family:var(--mono);font-weight:600;font-size:9px;color:var(--faint);}
+  .hm i{display:block;aspect-ratio:1;border-radius:4px;cursor:pointer;}
+  .hm i.fut{background:none;box-shadow:inset 0 0 0 1px rgba(45,53,67,.35);cursor:default;}
+  .hm i.now{outline:1.5px solid var(--hot);outline-offset:1px;}
+  .hm i.sel{outline:1.5px solid #fff;outline-offset:1px;}
+  .hm i.l0,.hm-lg i.l0{background:var(--well);box-shadow:inset 0 0 0 1px var(--line);}
+  .hm i.l1,.hm-lg i.l1{background:rgba(61,214,192,.22);}
+  .hm i.l2,.hm-lg i.l2{background:rgba(61,214,192,.46);}
+  .hm i.l3,.hm-lg i.l3{background:rgba(61,214,192,.72);}
+  .hm i.l4,.hm-lg i.l4{background:var(--cool);}
+  .hm i.l4{box-shadow:0 0 10px -2px rgba(61,214,192,.7);}
+  .hm-lg{display:inline-flex;align-items:center;gap:3px;letter-spacing:.06em;text-transform:none;font-weight:600;color:var(--faint);}
+  .hm-lg i{display:block;width:10px;height:10px;border-radius:3px;}
+  .hm-lg i:first-of-type{margin-left:5px;}
+  .hm-lg i:last-of-type{margin-right:5px;}
+  .hm-tip{margin:12px 0 0;min-height:21px;font-size:13.5px;color:var(--muted);}
+  .hm-tip b{color:var(--fg);font-weight:600;}
+  .lf{display:grid;grid-template-columns:minmax(0,1fr) 96px 84px;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--line);}
+  .lf:first-child{border-top:0;}
+  .ln{display:block;font-weight:600;font-size:15px;line-height:1.3;}
+  .lm{display:block;margin-top:3px;font-family:var(--mono);font-weight:600;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .spk{display:block;width:96px;height:34px;overflow:visible;touch-action:pan-y;cursor:crosshair;}
+  .spk-l{fill:none;stroke:var(--hot);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+  .spk-d{fill:var(--hot);stroke:#0F131A;stroke-width:2;}
+  .spk-h{fill:#fff;stroke:#0F131A;stroke-width:2;}
+  .lv{text-align:right;font-family:var(--mono);}
+  .lv b{display:block;font-size:13.5px;font-weight:700;letter-spacing:-.02em;white-space:nowrap;}
+  .lv small{display:block;margin-top:3px;font-size:9.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);}
+  .opt{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0;border-top:1px solid var(--line);}
+  .opt > span{font-size:15px;font-weight:600;}
+  .opt small{display:block;margin-top:2px;font-size:12.5px;font-weight:400;line-height:1.45;color:var(--faint);}
+  .opt .seg{flex:0 0 128px;}
+  .opt .seg button{height:36px;font-size:13px;}
+  .bk{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0 10px;}
+  .fin-top{position:relative;padding:6px 0 2px;}
+  .fin-badge{
+    display:grid;place-items:center;width:60px;height:60px;border-radius:50%;color:#04110F;
+    background:linear-gradient(180deg,var(--cool-2),var(--cool));
+    box-shadow:0 0 0 7px rgba(61,214,192,.12),0 0 44px -4px rgba(61,214,192,.75);
+    animation:pop .7s var(--spring) .12s backwards;
+  }
+  .fin-badge .tick{width:28px;height:28px;}
+  .fin-k{display:block;margin-top:20px;font-family:var(--mono);font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--cool);}
+  .fin-t{margin-top:6px;font-size:clamp(46px,14vw,66px);line-height:.95;letter-spacing:-.035em;}
+  .fin-cmp{margin:16px 0 0;color:var(--fg-2);font-size:15px;}
+  .fin-cmp b{font-family:var(--mono);color:var(--cool-2);}
+  .fin-prs{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:9px;}
+  .fin-prs li{display:flex;align-items:center;gap:10px;font-weight:600;}
+  .fin-prs b{margin-left:auto;font-family:var(--mono);}
+  .fin-ok{width:100%;height:54px;margin-top:24px;font-size:15px;}
+  @keyframes pop{from{transform:scale(.3);opacity:0;}}
+  .fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:60;}
+  @media (min-width:720px){
+    .sh-panel{
+      left:50%;right:auto;bottom:auto;top:50%;width:600px;margin-left:-300px;max-height:min(88vh,880px);border-radius:26px;
+      padding:14px 26px 30px;opacity:0;transform:translate3d(0,-46%,0) scale(.97);transition:transform .4s var(--ease),opacity .25s;
+    }
+    .sheet.on .sh-panel{opacity:1;transform:translate3d(0,-50%,0);}
+    .sh-grab{display:none;}
+    .rest{left:28px;bottom:32px;}
+  }
+  @media (hover:hover){
+    .streak:hover{color:var(--fg);box-shadow:inset 0 0 0 1px var(--muted);}
+    .stp button:hover{color:#fff;}
+    .hm i:not(.fut):hover{outline:1.5px solid rgba(255,255,255,.6);outline-offset:1px;}
+  }
+
+  /* ---------- liquid glass ---------- */
+  @property --hx{syntax:"<percentage>";inherits:false;initial-value:22%;}
+  :root{
+    --gl-fill:linear-gradient(180deg,rgba(255,255,255,.085),rgba(255,255,255,.02) 58%,rgba(255,255,255,.045));
+    --gl-blur:blur(22px) saturate(185%);
+    --gl-edge:inset 0 1px 0 rgba(255,255,255,.22),inset 1px 0 0 rgba(255,255,255,.07),inset -1px 0 0 rgba(255,255,255,.035),inset 0 -1px 0 rgba(255,255,255,.07),inset 0 0 0 1px rgba(255,255,255,.055);
+    --gl-drop:0 22px 44px -26px rgba(0,0,0,.95);
+  }
+  .amb i:nth-child(1){background:radial-gradient(closest-side,rgba(255,90,31,.22),transparent);}
+  .amb i:nth-child(2){background:radial-gradient(closest-side,rgba(61,214,192,.11),transparent);}
+  .amb i:nth-child(3){background:radial-gradient(closest-side,rgba(232,185,59,.08),transparent);}
+  .week,.readout,ul.lifts li{
+    background:radial-gradient(130% 90% at var(--hx) -12%,rgba(255,255,255,.1),transparent 46%),var(--gl-fill);
+    -webkit-backdrop-filter:var(--gl-blur);backdrop-filter:var(--gl-blur);
+    box-shadow:var(--gl-edge),var(--gl-drop);
+  }
+  ul.lifts li.open{box-shadow:var(--gl-edge),0 30px 54px -26px #000;}
+  .pane{
+    background:radial-gradient(140% 70% at 20% -10%,rgba(61,214,192,.16),transparent 55%),var(--gl-fill);
+    -webkit-backdrop-filter:var(--gl-blur);backdrop-filter:var(--gl-blur);
+    box-shadow:var(--gl-edge),inset 0 0 0 1px rgba(61,214,192,.14),var(--gl-drop);
+  }
+  .pane.off ul.lifts{display:none;}
+  .pane ul.lifts li{background:radial-gradient(130% 90% at var(--hx) -12%,rgba(124,240,223,.09),transparent 46%),linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.015));}
+  .thumb{
+    background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.05));
+    -webkit-backdrop-filter:blur(6px) saturate(220%) brightness(1.2);backdrop-filter:blur(6px) saturate(220%) brightness(1.2);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.5),inset 0 -1px 0 rgba(255,255,255,.14),inset 0 0 0 1px rgba(255,124,72,.8),0 10px 26px -10px rgba(255,90,31,.75);
+    transition:transform .45s var(--ease),scale .35s var(--spring);
+  }
+  .week,.tb-week{touch-action:pan-y;user-select:none;-webkit-user-select:none;}
+  .week.scrub .thumb,.tb-week.scrub .thumb{transition:transform .08s linear,scale .35s var(--spring);scale:1.1 1.16;}
+  .set,.form,.ask,.reset,.streak,.sh-x,.focus span,.rest button,.btn.ghost{
+    background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.02));
+    box-shadow:var(--gl-edge);
+  }
+  .stp{background:rgba(0,0,0,.26);box-shadow:inset 0 1px 3px rgba(0,0,0,.45),inset 0 0 0 1px rgba(255,255,255,.06),0 1px 0 rgba(255,255,255,.06);}
+  .tile{background:radial-gradient(120% 80% at 15% -10%,rgba(255,255,255,.09),transparent 50%),var(--gl-fill);box-shadow:var(--gl-edge);}
+  .tile.hot{box-shadow:var(--gl-edge),inset 0 0 0 1px rgba(255,90,31,.45);}
+  .count{-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:inset 0 1px 0 rgba(255,255,255,.18),inset 0 0 0 1px rgba(61,214,192,.35);}
+  .rest{background:radial-gradient(120% 90% at 20% -10%,rgba(255,255,255,.12),transparent 50%),rgba(22,26,34,.55);-webkit-backdrop-filter:blur(26px) saturate(190%);backdrop-filter:blur(26px) saturate(190%);box-shadow:var(--gl-edge),0 18px 40px -12px #000;}
+  .sh-scrim{background:rgba(2,3,5,.45);}
+  .sh-panel{
+    background:radial-gradient(420px 260px at 90% -6%,rgba(255,90,31,.14),transparent 70%),linear-gradient(180deg,rgba(26,30,40,.66),rgba(12,14,19,.8));
+    -webkit-backdrop-filter:blur(30px) saturate(190%);backdrop-filter:blur(30px) saturate(190%);
+    box-shadow:var(--gl-edge),0 -30px 60px -20px #000;
+  }
+  .fin .sh-panel{background:radial-gradient(460px 300px at 12% -8%,rgba(61,214,192,.2),transparent 70%),linear-gradient(180deg,rgba(22,32,34,.66),rgba(12,14,19,.8));}
+
+  /* the compact bar becomes a floating glass capsule that carries a mini week */
+  .topbar{
+    left:max(10px,env(safe-area-inset-left));right:max(10px,env(safe-area-inset-right));top:calc(env(safe-area-inset-top) + 8px);
+    max-width:660px;margin:0 auto;padding-top:0;border-radius:24px;overflow:hidden;
+    background:radial-gradient(120% 100% at 15% -20%,rgba(255,255,255,.12),transparent 50%),rgba(18,21,28,.55);
+    -webkit-backdrop-filter:blur(26px) saturate(190%);backdrop-filter:blur(26px) saturate(190%);
+    box-shadow:var(--gl-edge),0 18px 40px -16px rgba(0,0,0,.9);
+    transform:translate3d(0,calc(-100% - 40px - env(safe-area-inset-top)),0) scale(.94);
+  }
+  .topbar.on{transform:none;}
+  .tb-in{padding:10px 16px 8px;}
+  .tb-week{position:relative;display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin:0 8px 8px;padding:3px;border-radius:15px;background:rgba(0,0,0,.24);box-shadow:inset 0 1px 3px rgba(0,0,0,.4),inset 0 0 0 1px rgba(255,255,255,.05);}
+  .tb-week .thumb{top:3px;bottom:3px;left:3px;width:calc((100% - 18px)/7);border-radius:12px;transform:translateX(calc(var(--i,0)*(100% + 2px)));}
+  .tb-week button{
+    position:relative;z-index:1;appearance:none;-webkit-appearance:none;border:0;margin:0;background:none;cursor:pointer;
+    display:flex;align-items:baseline;justify-content:center;gap:4px;padding:6px 0;
+    font-family:var(--mono);font-weight:700;font-size:9.5px;letter-spacing:.06em;color:var(--muted);
+  }
+  .tb-week button b{font-family:var(--display);font-weight:700;font-size:13.5px;letter-spacing:-.02em;color:var(--fg-2);}
+  .tb-week button[aria-pressed="true"]{color:var(--hot-2);}
+  .tb-week button[aria-pressed="true"] b{color:#fff;}
+  .tb-line{margin:0 18px 6px;border-radius:2px;overflow:hidden;}
+
+  /* form videos, played inside the card */
+  button.form{appearance:none;-webkit-appearance:none;border:0;margin:0;width:100%;cursor:pointer;text-align:left;font-family:var(--text);}
+  .thm{position:relative;display:grid;place-items:center;flex:0 0 auto;width:48px;height:30px;border-radius:8px;overflow:hidden;background:#1A1F29;box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);}
+  .thm img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.85;}
+  .thm .play{position:relative;width:18px;height:18px;}
+  .thm .play::after{border-left-width:6px;border-top-width:4px;border-bottom-width:4px;}
+  .vid{display:none;margin:12px 0 0;border-radius:15px;overflow:hidden;background:#000;box-shadow:var(--gl-edge),0 18px 36px -20px #000;}
+  .vid.on{display:block;animation:rise .45s var(--ease);}
+  .vid iframe{display:block;width:100%;aspect-ratio:16/9;border:0;}
+  .vid-x{display:flex;justify-content:space-between;gap:10px;padding:9px 13px;background:rgba(255,255,255,.04);font-size:12.5px;color:var(--muted);}
+  .vid-x a{color:var(--fg-2);text-decoration:none;}
+  .vid-off{padding:22px 16px;text-align:center;font-size:14px;color:var(--muted);}
+
+  /* scroll effects: cards rise into place and catch the light as they pass, the hero melts away */
+  @supports (animation-timeline:view()){
+    .main > ul.lifts > li{
+      animation:rise .6s var(--ease) backwards,cardView linear both;
+      animation-delay:calc(var(--i,0)*40ms + 220ms),0s;
+      animation-timeline:auto,view();
+      animation-range:normal,cover 0% cover 100%;
+    }
+    .swapping .main > ul.lifts > li{animation-delay:calc(var(--i,0)*34ms + 60ms),0s;}
+    .pane ul.lifts li,.tile{animation:cardView linear both;animation-timeline:view();animation-range:cover 0% cover 100%;}
+    .notes li{animation:noteIn linear both;animation-timeline:view();animation-range:entry 0% entry 90%;}
+    @keyframes cardView{0%{scale:.94;translate:0 30px;--hx:0%;}24%{scale:1;translate:0 0;}82%{scale:1;}100%{scale:.95;--hx:100%;}}
+    @keyframes noteIn{from{opacity:0;translate:-26px 0;}}
+  }
+  @supports (animation-timeline:scroll()){
+    @media (max-width:1039px){
+      .hero{animation:heroOut linear both;animation-timeline:scroll(root);animation-range:0 380px;}
+      @keyframes heroOut{to{opacity:.12;translate:0 -54px;scale:.94;filter:blur(4px);}}
+    }
+  }
+  @media (hover:hover){
+    ul.lifts li:hover,ul.lifts li.open:hover{box-shadow:var(--gl-edge),inset 0 0 0 1px rgba(255,255,255,.08),0 30px 54px -26px #000;}
+  }
+
   @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;}}
 </style>
 </head>
 <body>
 
+<div class="amb" aria-hidden="true"><i></i><i></i><i></i></div>
+
 <div class="topbar" id="topbar" aria-hidden="true">
   <div class="tb-in">
-    <i class="dot"></i><b id="tbTitle">Push</b><span class="tb-day" id="tbDay">Today</span>
+    <i class="dot"></i><b id="tbTitle">Push</b><span class="tb-day" id="tbDay">Today</span><span class="tb-day tb-sess" id="tbSess"></span>
     <span class="tb-n"><i id="tbDone">0</i><s>/ <i id="tbTotal">0</i></s></span>
   </div>
+  <div class="tb-week" id="tbWeek"><i class="thumb"></i></div>
   <div class="tb-line"><i id="tbFill"></i></div>
 </div>
 
@@ -725,15 +1063,19 @@
   <div class="side">
     <div class="bar">
       <div class="mark"><i class="dot"></i><span>Home Program</span></div>
-      <div class="clock" id="clock"></div>
+      <div class="bar-r">
+        <div class="clock" id="clock"></div>
+        <button class="streak" id="streakBtn" type="button" aria-haspopup="dialog" aria-label="Progress"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8.6 1C9 3.3 7.6 4.6 6.4 5.9 5.3 7.1 4.2 8.4 4.2 10.3A3.8 3.8 0 0 0 8 14.5a3.9 3.9 0 0 0 3.9-4.1c0-1.6-.7-2.6-1.4-3.5-.2 1-.8 1.7-1.5 2 .5-2.8-.3-5.6-.4-7.9z"/></svg><b id="streakN">0</b></button>
+      </div>
     </div>
 
     <div class="hero" id="hero">
       <div class="ghost-w" aria-hidden="true"><span class="ghost" id="ghost" data-n="01">01</span></div>
-      <span class="kicker" id="kick"><b></b><i id="kicker">Today</i></span>
+      <span class="kicker" id="kick"><b></b><i id="kicker">Today</i><span class="sess" id="sess"></span></span>
       <h1><span id="title">Push</span></h1>
       <div class="focus" id="focus"></div>
       <p class="blurb" id="blurb"></p>
+      <div class="stats" id="stats"></div>
     </div>
 
     <div class="week" id="week" role="group" aria-label="Day"><i class="thumb" aria-hidden="true"></i></div>
@@ -794,12 +1136,36 @@
     </section>
 
     <footer>
-      <span id="kit">Magnetic cable unit, 200lb stack, two barbells, dumbbells to 75, rack with pull-up bar, bench. Each cue names the pulley height. Set marks clear on their own each morning.</span>
+      <span id="kit">Magnetic cable unit, 200lb stack, two barbells, dumbbells to 75, rack with pull-up bar, bench, forearm machine. Each cue names the pulley height. Set marks clear on their own each morning; logged numbers stay.</span>
       <br><button class="reset" id="reset"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 8a5.5 5.5 0 1 0 1.7-4M2.5 2.5V5.2h2.7"/></svg><span id="resetLabel">Clear today's marks</span></button>
     </footer>
   </div>
 
 </div>
+
+<div class="rest" id="rest" role="timer" aria-label="Rest timer">
+  <span class="rg" aria-hidden="true"><svg viewBox="0 0 40 40"><circle class="rt" cx="20" cy="20" r="16"/><circle class="ra" id="restArc" cx="20" cy="20" r="16" pathLength="100"/></svg></span>
+  <span class="rtx"><small>Rest</small><b id="restT">3:00</b></span>
+  <button type="button" id="restAdd" aria-label="Add 30 seconds">+30</button>
+  <button type="button" id="restX" aria-label="Skip rest"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>
+</div>
+
+<div class="sheet" id="prog" role="dialog" aria-modal="true" aria-labelledby="progT">
+  <div class="sh-scrim" data-close></div>
+  <div class="sh-panel">
+    <div class="sh-grab"></div>
+    <div class="sh-h"><h2 id="progT">Progress</h2><button class="sh-x" type="button" data-close aria-label="Close"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15"/></svg></button></div>
+    <div id="progBody"></div>
+  </div>
+</div>
+
+<div class="sheet fin" id="fin" role="dialog" aria-modal="true" aria-labelledby="finT">
+  <div class="sh-scrim" data-close></div>
+  <div class="sh-panel"><div class="sh-grab"></div><div id="finBody"></div></div>
+</div>
+
+<canvas class="fx" id="fx" aria-hidden="true"></canvas>
+<input type="file" id="importFile" accept="application/json,.json" hidden>
 
 <button class="spot-fab" id="spotFab" type="button" aria-label="Ask Spot, your coach" aria-haspopup="dialog">
   <span class="orb" id="fabOrb"><i class="orb-ring"></i><i class="orb-core"><b></b><b></b></i></span>
@@ -853,8 +1219,6 @@
 function ex(nm,mus,reps,sets,cue,form,chips){
   return {nm:nm,mus:mus,reps:reps,sets:sets,cue:cue,form:form,chips:chips||[]};
 }
-// Mouth and jaw work runs every other day; the rest of the face block runs daily.
-function alt(x){ x.alt=true; return x; }
 
 const PLAN={
  mon:{t:"Push",n:"01",f:["Chest","Front delt","Side delt","Triceps"],
@@ -878,7 +1242,7 @@ const PLAN={
    ex("Cable rear delt fly","Rear delt","2 \u00d7 6-8",2,"Pulley at shoulder height, cables crossed, sweep wide and back. Heavy enough to stall by eight, never so heavy the traps take over.","cable rear delt fly form"),
    ex("Barbell curl","Biceps","2 \u00d7 6-8",2,"<b>Rest-pause the last set. Fail, rest 15 seconds, go again, twice.</b>","barbell curl form",[["int","Rest-pause"]]),
    ex("Incline dumbbell curl","Biceps","2 \u00d7 6-8",2,"Bench at 45, arms hanging straight down behind you. The stretch at the bottom is the entire point.","incline dumbbell curl form"),
-   ex("Barbell wrist curl","Forearms","2 \u00d7 6-8",2,"Forearms on the bench, hands off the edge, palms up. Let the bar roll to the fingertips, then curl it back. Slow.","barbell wrist curl form",[["grip","Forearms"]])
+   ex("Forearm workout","Forearms","2 \u00d7 6-8",2,"On the forearm machine. Set the weight, then pull the handle in with the forearms and wrists only, elbows still. Squeeze a second at the top, lower it slow.","forearm machine workout",[["grip","Forearms"]])
   ]},
  wed:{t:"Legs",n:"03",f:["Quads","Hamstrings","Calves","Abs"],
   b:"Squat pattern and hamstrings. The heaviest day of the week, eat before it.",
@@ -912,22 +1276,17 @@ const PLAN={
    ex("Seated calf raise","Calves","2 \u00d7 6-8",2,"Dumbbell on the knee, seated. Different angle than Wednesday, hits the soleus underneath.","seated calf raise form"),
    ex("Kneeling cable crunch","Abs","2 \u00d7 6-8",2,"Pulley high, rope behind the head, crunch ribs toward hips. The only ab move you can actually load.","kneeling cable crunch form")
   ]},
- sat:{t:"Shape",n:"06",f:["Side delt","Arms","Forearms","Neck","Abs"],
-  b:"Delts, arms, neck and grip. The day that changes how you look in a shirt fastest.",
+ sat:{t:"Shape",n:"06",f:["Side delt","Arms","Neck","Grip"],
+  b:"Five lifts, in and out in about twenty minutes. Delts, arms, neck and grip, then the rest of Saturday is yours.",
   l:[
    ex("Cable lateral raise","Side delt","2 \u00d7 6-8",2,"<b>Myo-reps on the final set.</b> Side delts are the highest return muscle you own for looking wider.","cable lateral raise form",[["int","Myo-reps"]]),
-   ex("Cable rear delt fly","Rear delt","2 \u00d7 6-8",2,"Fills in the shoulder from behind so it reads round instead of flat.","cable rear delt fly form"),
-   ex("Dumbbell shrug","Traps","2 \u00d7 6-8",2,"The 75s, two second hold at the top, no rolling. Strap these, traps handle more than fingers.","dumbbell shrug form",[["straps","Straps"]]),
-   ex("Close-grip bench","Triceps","2 \u00d7 6-8",2,"Hands just inside shoulder width, elbows tucked to the ribs.","close grip bench press form"),
-   ex("Cable overhead ext","Triceps","2 \u00d7 6-8",2,"Long head, which is most of the arm when seen from the side.","overhead cable tricep extension form"),
    ex("Hammer curl","Biceps","2 \u00d7 6-8",2,"Builds the brachialis underneath, which pushes the bicep up and thickens the whole arm.","hammer curl form"),
-   ex("Reverse curl","Forearms","2 \u00d7 6-8",2,"Palms down, bar or dumbbells. Hits the brachioradialis, the muscle that makes a forearm look thick from the front.","reverse curl forearm form",[["grip","Forearms"]]),
-   ex("Farmer's carry","Grip","2 \u00d7 40 steps",2,"The 75s, no straps ever. Walk tall, shoulders down. Best single thing you can do for grip.","farmers carry form",[["grip","Grip"]]),
+   ex("Cable overhead ext","Triceps","2 \u00d7 6-8",2,"Long head, which is most of the arm when seen from the side.","overhead cable tricep extension form"),
    ex("Neck extension &amp; flexion","Neck","2 \u00d7 15-20 ea",2,"Face down on the bench, towel-wrapped plate on the back of the head, then face up for the front. Start at five pounds. A thicker neck changes your whole frame.","neck extension flexion training"),
-   ex("Ab circuit","Abs","2 rounds",2,"Hanging leg raise, cable crunch, 45 second plank. Straight through, one minute between rounds.","ab circuit core workout")
+   ex("Farmer's carry","Grip","2 \u00d7 40 steps",2,"The 75s, no straps ever. Walk tall, shoulders down. Best single thing you can do for grip.","farmers carry form",[["grip","Grip"]])
   ]},
  sun:{t:"Rest",n:"07",f:["Recovery"],
-  b:"No lifting. The face and neck block still happens.",
+  b:"No lifting. The face and neck block still runs if today is a face day.",
   l:[
    ex("Walk","Recovery","20-30 min",1,"Easy pace. Moves blood without adding fatigue on top of the week.","zone 2 walking recovery"),
    ex("Sauna or red light","Recovery","Optional",1,"If you use them, today is the day they earn their keep.","sauna recovery benefits"),
@@ -939,21 +1298,75 @@ const PLAN={
 const FACE=[
  ex("Chin tucks","Deep neck","3 \u00d7 10",3,"Sit tall, slide the head straight back, hold five seconds. Kills forward head posture, which does more for a jawline than any facial move.","chin tuck exercise form"),
  ex("Neck isometrics","Neck","3 \u00d7 20s",3,"Palm to forehead, then the back of the head, then each side. Push around 70 percent, nothing moves.","neck isometric exercise"),
- alt(ex("Tongue to palate","Posture","2 min",1,"Whole tongue flat on the roof of the mouth, lips sealed, breathing through the nose. Then hold it as your default all day.","proper tongue posture")),
- alt(ex("Jaw-opening resistance","Jaw","2 \u00d7 10",2,"Fist under the chin, open slowly against light pressure. Gentle. Stop the second anything clicks.","jaw resistance exercise")),
- alt(ex("Mastic gum","Masseter","10 min cap",1,"Trains the muscle that actually widens the lower face. <b>Ten to fifteen minutes is the ceiling.</b> An hour of chewing buys jaw pain, not a jaw.","mastic gum jaw training",[["int","Capped"]])),
+ ex("Tongue to palate","Posture","2 min",1,"Whole tongue flat on the roof of the mouth, lips sealed, breathing through the nose. Then hold it as your default all day.","proper tongue posture"),
+ ex("Jaw-opening resistance","Jaw","2 \u00d7 10",2,"Fist under the chin, open slowly against light pressure. Gentle. Stop the second anything clicks.","jaw resistance exercise"),
+ ex("Mastic gum","Masseter","10 min cap",1,"Trains the muscle that actually widens the lower face. <b>Ten to fifteen minutes is the ceiling.</b> An hour of chewing buys jaw pain, not a jaw.","mastic gum jaw training",[["int","Capped"]]),
  ex("Orbicularis squeeze","Eye area","3 \u00d7 10",3,"Firm squint, hold five, release completely.","orbicularis oculi exercise"),
  ex("Under-eye drainage","Eye area","60s",1,"Ring finger tapping from the inner corner outward, then down toward the ear. Almost no pressure.","lymphatic drainage under eye"),
- alt(ex("Cheek and lip holds","Face","3 \u00d7 10",3,"Puff both cheeks, hold five, push the air side to side, finish with a hard lip press.","facial muscle exercise cheeks"))
+ ex("Cheek and lip holds","Face","3 \u00d7 10",3,"Puff both cheeks, hold five, push the air side to side, finish with a hard lip press.","facial muscle exercise cheeks")
 ];
 
+// Form videos that play inside the card: a short tutorial per exercise, keyed by its search phrase.
+const VID={
+ "barbell back squat form":"rrJIyZGlK8c",
+ "barbell bench press form":"lWFknlOTbyM",
+ "barbell curl form":"ZQWL7omZh94",
+ "barbell row form":"qXrTDQG1oUQ",
+ "bulgarian split squat form":"vgn7bSXkgkA",
+ "cable bicep curl form":"NFzTWp2qpiE",
+ "cable chest fly form":"4Y8QgiT2-OA",
+ "cable hip thrust form":"WieGZholDKI",
+ "cable lateral raise form":"-CAGLnWUkWA",
+ "cable pull through form":"IU-ERkjTKXA",
+ "cable rear delt fly form":"er15V96hG5U",
+ "cable tricep pushdown form":"8WL0m0vLAPo",
+ "chest supported dumbbell row form":"vmX58YYK3-8",
+ "chin tuck exercise form":"u8C5LgpK3r4",
+ "chin up form":"mRy9m2Q9_1I",
+ "conventional deadlift form":"r4MzxtBKyNE",
+ "dead hang bar grip":"2vspW4N4BMs",
+ "dumbbell lateral raise form":"pgrWjBfaFe8",
+ "dumbbell overhead tricep extension form":"-Vyt2QdsR7E",
+ "facial muscle exercise cheeks":"740YppZHMNM",
+ "farmers carry form":"NH7Xv-7NQNQ",
+ "forearm machine workout":"qvJ4jkSTGoM",
+ "front squat form":"uYumuL_G_V0",
+ "hammer curl form":"BRVDS6HVR9Q",
+ "hanging leg raise form":"_jLskVdzS4o",
+ "incline barbell bench press form":"5kyLUGVq_pk",
+ "incline dumbbell curl form":"HhHHBj3qTJ4",
+ "incline dumbbell press form":"IP4oeKh1Sd4",
+ "inverted row rack form":"GdyhjXlxE-U",
+ "jaw resistance exercise":"T-xFIHbo8qg",
+ "kneeling cable crunch form":"b9FJ4hIK3pI",
+ "lat pulldown form":"AOpi-p0cJkc",
+ "low to high cable fly upper chest":"eQ_NBB6OBH4",
+ "lymphatic drainage under eye":"JyY1Qi8D0zI",
+ "mastic gum jaw training":"MNuVYBYfbps",
+ "neck extension flexion training":"6k9VQNN8B5U",
+ "neck isometric exercise":"0kWF968uFXY",
+ "orbicularis oculi exercise":"C0-0MLDlEn4",
+ "overhead cable tricep extension form":"1657VVZi0Ms",
+ "proper tongue posture":"J42EMhxFyos",
+ "pull up form":"XB_7En-zf_M",
+ "reverse lunge form":"xrPteyQLGAo",
+ "romanian deadlift form":"xgusDooVfKU",
+ "sauna recovery benefits":"jhTFD7XUI14",
+ "seated calf raise form":"BxfKOyI8sUg",
+ "seated dumbbell shoulder press form":"hOTABpGvhBc",
+ "sleep muscle recovery":"TNHVCm9GLB4",
+ "standing calf raise form":"Km0QS46bTEA",
+ "training log progressive overload":"Caum5RM906A",
+ "zone 2 walking recovery":"-rMwrZCX64U"
+};
 const ORDER=["mon","tue","wed","thu","fri","sat","sun"];
 const LBL={mon:"Mon",tue:"Tue",wed:"Wed",thu:"Thu",fri:"Fri",sat:"Sat",sun:"Sun"};
 const todayKey=ORDER[(new Date().getDay()+6)%7];
 const stamp=new Date().toDateString();
-// Counted in calendar days from 2 Nov 2026, a jaw day, so the rhythm carries straight across weeks.
-const jawDay=(function(){ var t=new Date(); return Math.round((new Date(t.getFullYear(),t.getMonth(),t.getDate())-new Date(2026,10,2))/864e5)%2===0; })();
-const FACE_TODAY=jawDay?FACE:FACE.filter(function(x){ return !x.alt; });
+// The face and neck block runs every other day, counted in calendar days from 2 Nov 2026 (a face day), so the rhythm carries across weeks.
+function isFaceDate(t){ return Math.round((new Date(t.getFullYear(),t.getMonth(),t.getDate())-new Date(2026,10,2))/864e5)%2===0; }
+const faceDay=isFaceDate(new Date());
+const FACE_TODAY=faceDay?FACE:[];
 
 let mem={};
 const store={
@@ -972,7 +1385,7 @@ const store={
 };
 var marks=store.get();
 var view=todayKey;
-var wasFull=null;
+var wasFull=null, wasLift=null;
 
 var TICK='<svg class="tick" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.6l3.2 3.2L13 4.7"/></svg>';
 
@@ -994,10 +1407,194 @@ function sheen(el){
 }
 function buzz(ms){ try{ if(navigator.vibrate) navigator.vibrate(ms); }catch(e){} }
 
+/* ---------- the log: every set you record, kept for good (the tick marks still clear each morning) ---------- */
+var CALM=!!(window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches);
+function ymd(d){ return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()); }
+function shortDate(s){ var p=s.split("-"); return new Date(+p[0],p[1]-1,+p[2]).toLocaleDateString(undefined,{month:"short",day:"numeric"}); }
+const TODAY=ymd(new Date());
+var DATES={};
+function readJSON(k){ try{ var o=JSON.parse(localStorage.getItem(k)||"{}"); return o&&typeof o==="object"?o:{}; }catch(e){ return {}; } }
+function writeJSON(k,o){ try{ localStorage.setItem(k,JSON.stringify(o)); }catch(e){} }
+// hp.log = {"2026-11-02":{k:"mon", s:{"Barbell bench press":[[135,8],[135,7]]}, t/d: lifting sets total/done, ft/fd: face block, a/z: session start/end}}
+var LOG=readJSON("hp.log"), PREFS=readJSON("hp.prefs");
+function saveLog(){ writeJSON("hp.log",LOG); }
+function dayLog(){ return LOG[TODAY]||(LOG[TODAY]={k:todayKey,s:{}}); }
+
+// How a lift gets logged: weight and reps, reps only for bodyweight, seconds for the hang, weight a hand for the carry.
+var BW=/^(Pull-up|Chin-up|Inverted row|Hanging leg raise)$/, SECS=/^Dead hang$/, CARRY=/^Farmer/;
+var BARBELL=/^(Barbell |Incline barbell|Romanian deadlift|Deadlift|Front squat|Close-grip bench)/;
+var BIG=/bench|press|squat|deadlift|row|pull-up|chin-up|lunge|thrust/i;
+function nameOf(x){ return x.nm.replace(/&amp;/g,"&"); }
+function kindOf(x){ if(!/×/.test(x.reps)) return null; var n=nameOf(x); return BW.test(n)?"bw":SECS.test(n)?"sec":CARRY.test(n)?"carry":"wr"; }
+function rangeOf(x){ var m=/(\d+)-(\d+)/.exec(x.reps); return m?[+m[1],+m[2]]:[0,0]; }
+function restFor(x){ return BIG.test(nameOf(x))?180:90; }
+var EXN={};
+ORDER.forEach(function(d){ PLAN[d].l.forEach(function(x){ var k=kindOf(x), n=nameOf(x); if(k&&!EXN[n]) EXN[n]={x:x,k:k}; }); });
+
+// Loaded sets compare by estimated max (Epley), so 140 × 6 and 135 × 8 rank fairly.
+function score(k,v){ if(!v) return 0; var w=v[0]||0, r=v[1]||0; return k==="wr"?(w?w*(1+r/30):r):k==="carry"?w:r; }
+function fmtSet(k,v){ if(!v) return "–"; var w=v[0], r=v[1]==null?"–":v[1]; return k==="bw"?r+" reps":k==="sec"?r+" s":k==="carry"?w+" lb":(w!=null?w+" × "+r:r+" reps"); }
+function setsOf(d,n){ var e=LOG[d]; return e&&e.s&&e.s[n]?e.s[n].filter(Boolean):[]; }
+function history(n){ return Object.keys(LOG).sort().filter(function(d){ return d<TODAY&&setsOf(d,n).length; }).map(function(d){ return {d:d,sets:setsOf(d,n)}; }); }
+function bestOf(k,sets){ return sets.reduce(function(a,v){ return !a||score(k,v)>score(k,a)?v:a; },null); }
+function bestBefore(n,k,date){ var b=0; Object.keys(LOG).forEach(function(d){ if(d<date) setsOf(d,n).forEach(function(v){ b=Math.max(b,score(k,v)); }); }); return b; }
+function prIndex(n,k){
+  var prior=bestBefore(n,k,TODAY), s=(LOG[TODAY]&&LOG[TODAY].s[n])||[], bi=-1, bs=prior;
+  if(prior<=0) return -1;
+  s.forEach(function(v,j){ if(v&&score(k,v)>bs){ bs=score(k,v); bi=j; } });
+  return bi;
+}
+function prsOn(date){
+  var e=LOG[date], out=[];
+  if(e&&e.s) Object.keys(e.s).forEach(function(n){
+    var k=EXN[n]?EXN[n].k:"wr", prior=bestBefore(n,k,date), b=bestOf(k,setsOf(date,n));
+    if(b&&prior>0&&score(k,b)>prior) out.push({n:n,v:fmtSet(k,b)});
+  });
+  return out;
+}
+function volumeOf(e){
+  var v=0;
+  if(e&&e.s) Object.keys(e.s).forEach(function(n){
+    if(EXN[n]&&EXN[n].k!=="wr") return;
+    (e.s[n]||[]).forEach(function(u){ if(u&&u[0]&&u[1]) v+=u[0]*u[1]; });
+  });
+  return v;
+}
+function fmtK(v){ return v>=10000?(v/1000).toFixed(1).replace(/\.0$/,"")+"k":v.toLocaleString(); }
+function fmtDur(ms){ var t=Math.max(0,Math.floor(ms/1000)), h=Math.floor(t/3600), m=Math.floor(t%3600/60); return (h?h+":"+pad(m):m)+":"+pad(t%60); }
+
+// What to aim for today, read off last time.
+function nudge(x,k,last){
+  var top=rangeOf(x)[1], s=last.sets, full=s.length>=x.sets;
+  if(k==="wr"){
+    var w=s[0][0];
+    if(w&&top&&full&&s.every(function(v){ return v[0]===w&&v[1]>=top; })) return {w:w+5,txt:"Both sets hit "+top+" at "+w+" last time. Go "+(w+5)+"."};
+    return {txt:"Beat "+fmtSet(k,bestOf(k,s))+". One more rep counts."};
+  }
+  if(k==="bw"&&top&&full&&s.every(function(v){ return v[1]>=top; })) return {txt:top+" on both sets last time. Slow the lowering instead of adding weight."};
+  return {txt:"Beat "+fmtSet(k,bestOf(k,s))+(k==="carry"?" a hand.":".")};
+}
+function lastOf(x){ var h=history(nameOf(x)); return h[h.length-1]; }
+function upChip(x,k){ var last=k==="wr"&&lastOf(x), nd=last&&nudge(x,k,last); return nd&&nd.w?'<span class="chip up">↑ '+nd.w+'</span>':''; }
+function stepHTML(f,u){
+  return '<div class="stp" data-f="'+f+'"><button type="button" class="m" aria-label="Less">−</button>'+
+    '<label><input type="text" inputmode="decimal" autocomplete="off" enterkeyhint="done" aria-label="'+u+'"><span>'+u+'</span></label>'+
+    '<button type="button" class="p" aria-label="More">+</button></div>';
+}
+function loggerHTML(x,k){
+  var last=lastOf(x), nd=last&&nudge(x,k,last);
+  return '<div class="logr">'+
+    (last
+      ? '<div class="last"><span>Last · '+shortDate(last.d)+'</span><b>'+last.sets.map(function(v){ return fmtSet(k,v); }).join("  ·  ")+'</b></div>'+
+        '<p class="nudge'+(nd.w?' up':'')+'">'+nd.txt+'</p>'
+      : '<div class="last"><span>First time logging this one</span></div>')+
+    '<div class="steps'+(k==="wr"?'':' one')+'">'+
+      (k==="wr"||k==="carry"?stepHTML("w",k==="carry"?"lb a hand":"lb"):'')+
+      (k!=="carry"?stepHTML("r",k==="sec"?"seconds":"reps"):'')+
+    '</div>'+
+    (BARBELL.test(nameOf(x))?'<div class="plates"></div>':'')+
+  '</div>';
+}
+// Plates for one side of a 45 lb bar.
+function platesHTML(w){
+  if(isNaN(w)) return '';
+  if(w<45) return '<span class="pl-note">Lighter than the 45 lb bar</span>';
+  var side=(w-45)/2, out=[];
+  [45,35,25,10,5,2.5].forEach(function(p){ while(side>=p-1e-6){ out.push(p); side-=p; } });
+  if(side>.01) return '<span class="pl-note">Needs plates under 2.5</span>';
+  return '<span class="pl-sleeve"></span>'+out.map(function(p){ return '<i class="pl p'+String(p).replace(".","_")+'"></i>'; }).join("")+
+    '<span class="pl-note">'+(out.length?out.join(" + ")+" a side":"Empty bar")+'</span>';
+}
+function defaults(x,k,s){
+  var n=nameOf(x), t=(LOG[TODAY]&&LOG[TODAY].s[n])||[], last=lastOf(x), nd=last&&nudge(x,k,last), j;
+  for(j=s-1;j>=0;j--) if(t[j]) return t[j].slice();
+  if(nd&&nd.w) return [nd.w,rangeOf(x)[0]];
+  if(last) return last.sets[Math.min(s,last.sets.length-1)].slice();
+  return [BARBELL.test(n)?45:null,k==="sec"?30:k==="carry"?null:(rangeOf(x)[1]||8)];
+}
+function wireLogger(li,x,k,day,i){
+  var s=0; while(s<x.sets&&marks[key(day,i,s)]) s++;
+  var v=defaults(x,k,s), w=li.querySelector('.stp[data-f="w"] input'), r=li.querySelector('.stp[data-f="r"] input'), pl=li.querySelector(".plates");
+  if(w) w.value=v[0]==null?"":v[0];
+  if(r) r.value=v[1]==null?"":v[1];
+  function plates(){ if(pl) pl.innerHTML=platesHTML(parseFloat(w.value)); }
+  plates();
+  [].forEach.call(li.querySelectorAll(".stp"),function(st){
+    var inp=st.querySelector("input"), step=st.dataset.f==="w"||k==="sec"?5:1;
+    function bump(d){
+      var cur=parseFloat(inp.value);
+      if(isNaN(cur)) cur=st.dataset.f==="w"&&pl?45-d:0;
+      inp.value=Math.max(0,Math.round((cur+d)*4)/4);
+      plates(); buzz(4); replay(inp,"tw");
+    }
+    st.querySelector(".m").onclick=function(){ bump(-step); };
+    st.querySelector(".p").onclick=function(){ bump(step); };
+    inp.addEventListener("input",plates);
+    inp.addEventListener("focus",function(){ inp.select(); });
+    inp.addEventListener("keydown",function(e){ if(e.key==="Enter") inp.blur(); });
+  });
+}
+function readSteps(li){
+  function val(f){ var el=li.querySelector('.stp[data-f="'+f+'"] input'), n=el?parseFloat(el.value):NaN; return isNaN(n)?null:Math.max(0,n); }
+  var r=val("r");
+  return [val("w"),r==null?null:Math.round(r)];
+}
+function fmtShort(k,v){ return k==="wr"&&v[0]!=null?v[0]+" × "+(v[1]==null?"–":v[1]):fmtSet(k,v); }
+function relabel(li,x,k,day,i){
+  var n=nameOf(x), s=(LOG[TODAY]&&LOG[TODAY].s[n])||[], pi=prIndex(n,k);
+  [].forEach.call(li.querySelectorAll(".sets .set"),function(b,j){
+    var on=!!marks[key(day,i,j)];
+    b.innerHTML=TICK+'<span>'+(on&&s[j]?fmtShort(k,s[j]):"Set "+(j+1))+'</span>'+(on&&j===pi?'<i class="prb">PR</i>':'');
+  });
+}
+function logSet(li,x,k,s,on,b){
+  var n=nameOf(x), L=dayLog(), arr=L.s[n]||(L.s[n]=[]), was=prIndex(n,k);
+  arr[s]=on?readSteps(li):null;
+  while(arr.length&&!arr[arr.length-1]) arr.pop();
+  if(!arr.length) delete L.s[n];
+  saveLog();
+  if(on&&prIndex(n,k)===s&&was!==s){
+    var r=b.getBoundingClientRect();
+    FX.burst(r.left+r.width/2,r.top+r.height/2,48,9);
+    buzz([12,40,12,40,26]);
+  }
+}
+function startSession(){ var L=dayLog(); if(!L.a){ L.a=Date.now(); saveLog(); } tickClock(); }
+function tickClock(){
+  var L=LOG[TODAY], t=L&&L.a&&view===todayKey?fmtDur((L.z||Date.now())-L.a):"";
+  if($("sess").textContent!==t){ $("sess").textContent=t; $("tbSess").textContent=t; }
+}
+function recordDay(){
+  var t=0,d=0,ft=0,fd=0;
+  PLAN[todayKey].l.forEach(function(x,i){ t+=x.sets; d+=countDone(todayKey,i,x.sets); });
+  FACE_TODAY.forEach(function(x,i){ ft+=x.sets; fd+=countDone("face",i,x.sets); });
+  if(!LOG[TODAY]&&!d&&!fd) return;
+  var L=dayLog(); L.k=todayKey; L.t=t; L.d=d; L.ft=ft; L.fd=fd; saveLog();
+}
+function ratio(e){ var tot=e?(e.t||0)+(e.ft||0):0; return tot?((e.d||0)+(e.fd||0))/tot:0; }
+// A lifting day counts once half its lifting sets are ticked; Sunday once half of everything on it is.
+function counts(e){ if(!e) return false; return e.k==="sun"||!e.t?ratio(e)>=.5:(e.d||0)/e.t>=.5; }
+function streak(){
+  var n=0, d=new Date();
+  if(!counts(LOG[ymd(d)])) d.setDate(d.getDate()-1);
+  while(counts(LOG[ymd(d)])){ n++; d.setDate(d.getDate()-1); }
+  return n;
+}
+function bestStreak(){
+  var best=0, run=0, prev=null;
+  Object.keys(LOG).sort().forEach(function(k){
+    if(!counts(LOG[k])){ prev=null; return; }
+    var p=k.split("-");
+    run=prev===ymd(new Date(+p[0],p[1]-1,+p[2]-1))?run+1:1; prev=k; best=Math.max(best,run);
+  });
+  return best;
+}
+
 function buildList(root,items,day){
   root.innerHTML="";
   items.forEach(function(x,i){
     var li=document.createElement("li");
+    var lk=day==="face"?null:kindOf(x);
     var had=countDone(day,i,x.sets);
     if(had===x.sets) li.className="done";
     li.style.setProperty("--i",i);
@@ -1007,14 +1604,16 @@ function buildList(root,items,day){
       '<button class="head" type="button" aria-expanded="false">'+
         '<span class="idx"><span class="num">'+pad(i+1)+'</span>'+TICK+'</span>'+
         '<span class="ttl"><span class="nm">'+x.nm+'</span>'+
-        '<span class="meta"><span class="mus">'+x.mus+'</span>'+chipHTML(x.chips)+'</span></span>'+
+        '<span class="meta"><span class="mus">'+x.mus+'</span>'+chipHTML(x.chips)+(lk?upChip(x,lk):'')+'</span></span>'+
         '<span class="rx"><span class="reps">'+repsHTML(x.reps)+'</span>'+
         '<span class="pips" role="img" aria-label="'+x.sets+(x.sets===1?" set":" sets")+'">'+pips+'</span></span>'+
       '</button>'+
-      '<div class="body"><div class="clip"><div class="inner"><p class="cue">'+x.cue+'</p>'+
+      '<div class="body"><div class="clip"><div class="inner"><p class="cue">'+x.cue+'</p>'+(lk?loggerHTML(x,lk):'')+
       '<div class="sets" style="--n:'+x.sets+'"></div>'+
-      '<div class="links"><a class="form" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query='+
-      encodeURIComponent(x.form)+'"><span class="play"></span>Watch form</a>'+
+      (VID[x.form]?'<div class="vid" data-v="'+VID[x.form]+'"></div>':'')+
+      '<div class="links">'+(VID[x.form]
+        ? '<button class="form" type="button"><span class="thm"><img src="https://i.ytimg.com/vi/'+VID[x.form]+'/mqdefault.jpg" alt="" loading="lazy" decoding="async" onerror="this.remove()"><span class="play"></span></span><span class="fl">Watch form</span></button>'
+        : '<a class="form" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query='+encodeURIComponent(x.form)+'"><span class="play"></span>Watch form</a>')+
       '<button class="ask" type="button"><span class="orb still" aria-hidden="true"><i class="orb-ring"></i><i class="orb-core"></i></span>Ask Spot</button></div>'+
       '</div></div></div>';
 
@@ -1039,6 +1638,8 @@ function buildList(root,items,day){
           var on=!!marks[k];
           b.setAttribute("aria-pressed",String(on));
           pipEls[s].classList.toggle("on",on);
+          if(lk){ logSet(li,x,lk,s,on,b); relabel(li,x,lk,day,i); }
+          if(on&&day!=="face"){ audio(); startSession(); if(lk) Rest.start(restFor(x)); }
           var after=countDone(day,i,x.sets)===x.sets;
           li.classList.toggle("done",after);
           if(on){
@@ -1054,22 +1655,41 @@ function buildList(root,items,day){
         sw.appendChild(b);
       })(s);
     }
+    if(lk){ relabel(li,x,lk,day,i); wireLogger(li,x,lk,day,i); }
     li.querySelector(".ask").onclick=function(){
       if(window.Spot) Spot.ask("Tell me about "+li.querySelector(".nm").textContent);
     };
+    var fb=li.querySelector("button.form");
+    if(fb) fb.onclick=function(){ playVid(li); };
     var head=li.querySelector(".head");
     head.onclick=function(){
       var open=li.classList.toggle("open");
       head.setAttribute("aria-expanded",String(open));
+      if(!open) playVid(li,false);
     };
     root.appendChild(li);
   });
 }
 
+function playVid(li,on){
+  var v=li.querySelector(".vid"), fb=li.querySelector("button.form");
+  if(!v) return;
+  if(on==null) on=!v.classList.contains("on");
+  if(on){
+    var id=v.dataset.v;
+    v.innerHTML=navigator.onLine===false
+      ? '<p class="vid-off">Videos need signal. The cue above has the key points.</p>'
+      : '<iframe src="https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&mute=1&playsinline=1&rel=0&modestbranding=1" title="Form video" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>'+
+        '<div class="vid-x"><span>Muted to start. Tap the video for sound.</span><a href="https://www.youtube.com/watch?v='+id+'" target="_blank" rel="noopener">YouTube</a></div>';
+  } else v.innerHTML="";
+  v.classList.toggle("on",on);
+  if(fb) fb.querySelector(".fl").textContent=on?"Hide video":"Watch form";
+}
+
 function buildSegs(){
   var root=$("segs"), html="";
   PLAN[view].l.forEach(function(x){ html+='<span class="sg" style="flex-grow:'+x.sets+'"><i></i></span>'; });
-  html+='<span class="sg-gap"></span>';
+  if(FACE_TODAY.length) html+='<span class="sg-gap"></span>';
   FACE_TODAY.forEach(function(x){ html+='<span class="sg" style="flex-grow:'+x.sets+'"><i></i></span>'; });
   root.innerHTML=html;
 }
@@ -1095,8 +1715,8 @@ function meter(quiet){
   $("arc").style.strokeDashoffset=100-pct;
   $("arc").style.opacity=pct>0?1:0;
   $("lf").textContent=ld+"/"+lt;
-  $("fc").textContent=fd+"/"+ft;
-  $("fcount").textContent=fd+" / "+ft;
+  $("fc").textContent=ft?fd+"/"+ft:"Off";
+  $("fcount").textContent=ft?fd+" / "+ft:"Off";
   $("fcount").classList.toggle("full",ft>0&&fd===ft);
   $("rdlab").textContent=full?"Complete":"Sets";
   $("readout").classList.toggle("full",full);
@@ -1113,6 +1733,51 @@ function meter(quiet){
 
   if(full&&wasFull===false&&!quiet){ sheen($("readout")); buzz([14,50,14,50,30]); }
   wasFull=full;
+  var liftDone=view===todayKey&&todayKey!=="sun"&&lt>0&&ld===lt;
+  if(liftDone&&wasLift===false&&!quiet) setTimeout(finishDay,500);
+  wasLift=liftDone;
+  recordDay();
+  var st=streak();
+  $("streakN").textContent=st;
+  $("streakBtn").classList.toggle("hot",st>0);
+  $("streakBtn").setAttribute("aria-label","Progress, "+st+" day streak");
+}
+
+function go(k){
+  if(k===view) return;
+  document.documentElement.style.setProperty("--dir",ORDER.indexOf(k)>ORDER.indexOf(view)?1:-1);
+  view=k;
+  buzz(6);
+  render(true);
+}
+// Drag along a week strip and the glass thumb follows the finger, switching days as it crosses them.
+var scrubbed=false;
+function scrubber(el,pad,gap){
+  var drag=null;
+  function pos(x){ var r=el.getBoundingClientRect(), w=(r.width-2*pad-6*gap)/7; return Math.max(0,Math.min(6,(x-r.left-pad-w/2)/(w+gap))); }
+  el.addEventListener("pointerdown",function(e){ if(e.button>0) return; drag={x0:e.clientX,id:e.pointerId,on:false}; });
+  el.addEventListener("pointermove",function(e){
+    if(!drag||e.pointerId!==drag.id) return;
+    if(!drag.on){
+      if(Math.abs(e.clientX-drag.x0)<8) return;
+      drag.on=scrubbed=true;
+      try{ el.setPointerCapture(e.pointerId); }catch(err){}
+      el.classList.add("scrub");
+    }
+    var p=pos(e.clientX);
+    el.style.setProperty("--i",p);
+    go(ORDER[Math.round(p)]);
+  });
+  function end(){
+    if(!drag) return;
+    var was=drag.on; drag=null;
+    if(!was) return;
+    el.classList.remove("scrub");
+    el.style.setProperty("--i",ORDER.indexOf(view));
+    setTimeout(function(){ scrubbed=false; $("week").style.setProperty("--i",ORDER.indexOf(view)); $("tbWeek").style.setProperty("--i",ORDER.indexOf(view)); },60);
+  }
+  el.addEventListener("pointerup",end);
+  el.addEventListener("pointercancel",end);
 }
 
 function render(animate){
@@ -1129,8 +1794,11 @@ function render(animate){
   $("focus").innerHTML=d.f.map(function(f){ return "<span>"+f+"</span>"; }).join("");
   buildList($("lifts"),d.l,view);
   buildSegs();
-  $("week").style.setProperty("--i",ORDER.indexOf(view));
-  [].forEach.call(document.querySelectorAll("#week .wd"),function(b){
+  if(!scrubbed){
+    $("week").style.setProperty("--i",ORDER.indexOf(view));
+    $("tbWeek").style.setProperty("--i",ORDER.indexOf(view));
+  }
+  [].forEach.call(document.querySelectorAll("#week .wd, #tbWeek button"),function(b){
     b.setAttribute("aria-pressed",String(b.dataset.k===view));
   });
   if(animate){
@@ -1138,7 +1806,10 @@ function render(animate){
     replay($("hero"),"swap");
   }
   wasFull=null;
+  wasLift=null;
   meter(true);
+  heroStats();
+  tickClock();
 }
 
 (function(){
@@ -1147,19 +1818,38 @@ function render(animate){
     var dt=new Date(now.getFullYear(),now.getMonth(),now.getDate()-back+i);
     var b=document.createElement("button");
     b.type="button";
-    b.className="wd"+(k===todayKey?" istoday":"");
+    DATES[k]=dt;
+    b.className="wd"+(k===todayKey?" istoday":"")+(isFaceDate(dt)?" fday":"");
     b.dataset.k=k;
     b.setAttribute("aria-label",dt.toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"})+", "+PLAN[k].t);
     b.innerHTML='<span class="d">'+LBL[k]+'</span><span class="n">'+dt.getDate()+'</span><span class="bar2"><i></i></span>';
-    b.onclick=function(){
-      if(k===view) return;
-      document.documentElement.style.setProperty("--dir",ORDER.indexOf(k)>ORDER.indexOf(view)?1:-1);
-      view=k;
-      buzz(6);
-      render(true);
-    };
+    b.onclick=function(){ if(!scrubbed) go(k); };
     week.appendChild(b);
+    var m=document.createElement("button");
+    m.type="button";
+    m.tabIndex=-1;
+    m.dataset.k=k;
+    m.innerHTML=LBL[k].charAt(0)+'<b>'+dt.getDate()+'</b>';
+    m.onclick=function(){ if(!scrubbed) go(k); };
+    $("tbWeek").appendChild(m);
   });
+})();
+
+scrubber($("week"),4,4);
+scrubber($("tbWeek"),3,2);
+// Swipe the hero sideways for the next or previous day.
+(function(){
+  var hero=$("hero"), x0=null, y0=0, t0=0;
+  hero.addEventListener("touchstart",function(e){
+    if(e.target.closest(".focus")){ x0=null; return; }
+    x0=e.touches[0].clientX; y0=e.touches[0].clientY; t0=Date.now();
+  },{passive:true});
+  hero.addEventListener("touchend",function(e){
+    if(x0==null) return;
+    var t=e.changedTouches[0], dx=t.clientX-x0, dy=t.clientY-y0, j=ORDER.indexOf(view)+(dx<0?1:-1);
+    x0=null;
+    if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.6&&Date.now()-t0<700&&j>=0&&j<7) go(ORDER[j]);
+  },{passive:true});
 })();
 
 $("clock").textContent=
@@ -1168,6 +1858,8 @@ $("clock").textContent=
 $("reset").onclick=function(){
   marks={};
   store.set(marks);
+  if(LOG[TODAY]){ delete LOG[TODAY]; saveLog(); }
+  Rest.hide();
   buildList($("face"),FACE_TODAY,"face");
   render();
   var l=$("resetLabel"), t=l.textContent;
@@ -1182,7 +1874,7 @@ if("IntersectionObserver" in window){
     $("topbar").classList.toggle("on",!e.isIntersecting&&e.boundingClientRect.top<0);
   }).observe($("readout"));
 }
-$("topbar").onclick=function(){ window.scrollTo({top:0,behavior:"smooth"}); };
+$("topbar").onclick=function(e){ if(!e.target.closest(".tb-week")) window.scrollTo({top:0,behavior:"smooth"}); };
 
 // Lower sections ease in the first time they scroll into view. Armed only for what starts below the fold.
 if("IntersectionObserver" in window){
@@ -1202,9 +1894,10 @@ document.addEventListener("visibilitychange",function(){
   if(!document.hidden&&new Date().toDateString()!==stamp) location.reload();
 });
 
-$("fsub").textContent=jawDay
-  ? "Neck and eyes every day, mouth and jaw every other day. Today is a jaw day."
-  : "Neck and eyes today. Mouth and jaw run every other day, back tomorrow.";
+$("fsub").textContent=faceDay
+  ? "Every other day, rest days included. Eight minutes in the mirror."
+  : "Off today. The block runs every other day, back tomorrow.";
+$("face").closest(".pane").classList.toggle("off",!faceDay);
 buildList($("face"),FACE_TODAY,"face");
 render();
 // Let the dial and bars sweep up from zero on first paint.
@@ -1217,6 +1910,292 @@ render();
     arc.style.strokeDashoffset=off;
   }); });
 })();
+
+/* ---------- hero line: how long today takes ---------- */
+function heroStats(){
+  var d=PLAN[view], sets=0, sec=0, lifts=0;
+  d.l.forEach(function(x){ if(!/×|round/.test(x.reps)) return; var r=restFor(x); lifts++; sets+=x.sets; sec+=60+x.sets*45+(x.sets-1)*r; });
+  $("stats").innerHTML=(lifts
+      ? '<span><b>~'+Math.max(5,Math.round(sec/300)*5)+'</b>min</span><span><b>'+sets+'</b>sets</span><span><b>'+lifts+'</b>lifts</span>'
+      : '<span>No lifting</span>')+
+    (isFaceDate(DATES[view]||new Date())?'<span class="jw">Face day</span>':'');
+}
+setInterval(tickClock,1000);
+
+/* ---------- sound: two soft notes when rest is up (unlocked by the first tapped set) ---------- */
+var AC=null;
+function audio(){ try{ var C=window.AudioContext||window.webkitAudioContext; if(!AC&&C) AC=new C(); if(AC&&AC.state==="suspended") AC.resume(); }catch(e){} return AC; }
+function chime(){
+  if(PREFS.sound===false) return;
+  var ac=audio(); if(!ac) return;
+  var t=ac.currentTime+.02;
+  [[880,0],[1318.5,.17]].forEach(function(n){
+    var o=ac.createOscillator(), g=ac.createGain();
+    o.type="sine"; o.frequency.value=n[0];
+    g.gain.setValueAtTime(.0001,t+n[1]);
+    g.gain.exponentialRampToValueAtTime(.22,t+n[1]+.02);
+    g.gain.exponentialRampToValueAtTime(.0001,t+n[1]+.55);
+    o.connect(g); g.connect(ac.destination); o.start(t+n[1]); o.stop(t+n[1]+.6);
+  });
+}
+
+/* ---------- rest timer: counts from a fixed end time, so a locked phone does not lose it ---------- */
+var Rest=(function(){
+  var el=$("rest"), arc=$("restArc"), tx=$("restT"), end=0, dur=1, iv=0, hideT=0;
+  function paint(){
+    var left=end-Date.now();
+    if(left<=0){ done(); return; }
+    var sec=Math.ceil(left/1000);
+    tx.textContent=Math.floor(sec/60)+":"+pad(sec%60);
+    arc.style.strokeDashoffset=100-left/dur*100;
+  }
+  function start(sec){
+    if(PREFS.rest===false) return;
+    clearTimeout(hideT); clearInterval(iv);
+    dur=sec*1000; end=Date.now()+dur;
+    el.classList.remove("go"); el.classList.add("on");
+    paint(); iv=setInterval(paint,250);
+  }
+  function done(){
+    clearInterval(iv);
+    tx.textContent="Go"; arc.style.strokeDashoffset=0;
+    if(!el.classList.contains("go")){ el.classList.add("go"); if(!document.hidden){ chime(); buzz([30,60,30]); } }
+    clearTimeout(hideT); hideT=setTimeout(hide,8000);
+  }
+  function hide(){ clearInterval(iv); clearTimeout(hideT); el.classList.remove("on","go"); }
+  $("restAdd").onclick=function(){ if(el.classList.contains("go")) start(30); else { end+=30000; dur+=30000; paint(); } };
+  $("restX").onclick=hide;
+  document.addEventListener("visibilitychange",function(){ if(!document.hidden&&el.classList.contains("on")&&!el.classList.contains("go")) paint(); });
+  return {start:start,hide:hide};
+})();
+
+/* ---------- confetti for PRs and finished sessions ---------- */
+var FX=(function(){
+  var cv=$("fx"), cx=cv.getContext&&cv.getContext("2d"), parts=[], run=false, dpr=1;
+  var COLS=["#FF5A1F","#FF9259","#3DD6C0","#7CF0DF","#E8B93B","#EDEFF3"];
+  function burst(x,y,n,power){
+    if(CALM||!cx) return;
+    if(!run){ dpr=Math.min(2,window.devicePixelRatio||1); cv.width=innerWidth*dpr; cv.height=innerHeight*dpr; }
+    for(var j=0;j<n;j++){
+      var a=-Math.PI/2+(Math.random()-.5)*Math.PI*1.15, v=power*(.45+Math.random()*.75);
+      parts.push({x:x,y:y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,r:Math.random()*6.3,vr:(Math.random()-.5)*.4,w:4+Math.random()*5,h:7+Math.random()*7,c:COLS[j%COLS.length],t:0,max:90+Math.random()*60});
+    }
+    if(!run){ run=true; requestAnimationFrame(step); }
+  }
+  function step(){
+    cx.setTransform(dpr,0,0,dpr,0,0);
+    cx.clearRect(0,0,innerWidth,innerHeight);
+    parts=parts.filter(function(p){ return p.t<p.max&&p.y<innerHeight+40; });
+    parts.forEach(function(p){
+      p.t++; p.vy+=.32; p.vx*=.985; p.vy*=.985; p.x+=p.vx; p.y+=p.vy; p.r+=p.vr;
+      cx.save(); cx.globalAlpha=Math.min(1,(p.max-p.t)/30); cx.translate(p.x,p.y); cx.rotate(p.r); cx.scale(1,Math.cos(p.t*.18));
+      cx.fillStyle=p.c; cx.fillRect(-p.w/2,-p.h/2,p.w,p.h); cx.restore();
+    });
+    if(parts.length) requestAnimationFrame(step); else { run=false; cx.clearRect(0,0,innerWidth,innerHeight); }
+  }
+  return {burst:burst};
+})();
+
+/* ---------- sheets ---------- */
+var sheetFrom=null;
+function openSheet(id){
+  sheetFrom=document.activeElement;
+  var el=$(id);
+  el.classList.add("on");
+  document.documentElement.classList.add("sheet-open");
+  setTimeout(function(){ var f=el.querySelector(".sh-x,.fin-ok"); if(f) f.focus({preventScroll:true}); },80);
+}
+function closeSheet(el){
+  el.classList.remove("on");
+  if(!document.querySelector(".sheet.on")) document.documentElement.classList.remove("sheet-open");
+  if(sheetFrom&&sheetFrom.focus) sheetFrom.focus({preventScroll:true});
+}
+[].forEach.call(document.querySelectorAll(".sheet"),function(sh){
+  sh.addEventListener("click",function(e){ if(e.target.closest("[data-close]")) closeSheet(sh); });
+});
+document.addEventListener("keydown",function(e){ if(e.key==="Escape"){ var o=document.querySelector(".sheet.on"); if(o) closeSheet(o); } });
+
+function tile(l,v,s,c){ return '<div class="tile'+(c?" "+c:"")+'"><span class="tl">'+l+'</span><span class="tv">'+v+'</span>'+(s?'<span class="ts">'+s+'</span>':'')+'</div>'; }
+
+/* ---------- finish card ---------- */
+function finishDay(){
+  var L=dayLog();
+  if(!L.z){ L.z=Date.now(); saveLog(); tickClock(); }
+  Rest.hide();
+  var d=PLAN[todayKey], sets=0, fl=0, fd=0;
+  d.l.forEach(function(x){ sets+=x.sets; });
+  FACE_TODAY.forEach(function(x,i){ fl+=x.sets; fd+=countDone("face",i,x.sets); });
+  var vol=volumeOf(L), prs=prsOn(TODAY);
+  var prev=Object.keys(LOG).sort().reverse().filter(function(k){ return k<TODAY&&LOG[k].k===todayKey&&volumeOf(LOG[k]); })[0];
+  var cmp=prev&&vol?Math.round((vol/volumeOf(LOG[prev])-1)*100):null;
+  $("finBody").innerHTML=
+    '<div class="fin-top"><span class="fin-badge">'+TICK+'</span><span class="fin-k">'+$("clock").textContent+'</span><h2 class="fin-t" id="finT">'+d.t+', done.</h2></div>'+
+    '<div class="tiles">'+
+      tile("Time",L.a?fmtDur(L.z-L.a):"–")+tile("Sets",sets)+
+      tile("Volume",vol?fmtK(vol)+'<small>lb</small>':"–")+tile("PRs",prs.length,"",prs.length?"hot":"")+
+    '</div>'+
+    (cmp!=null?'<p class="fin-cmp"><b>'+(cmp>=0?"+":"")+cmp+'%</b> volume against last '+d.t+', '+shortDate(prev)+'.</p>':'')+
+    (prs.length?'<ul class="fin-prs">'+prs.map(function(p){ return '<li><span class="chip pr">PR</span>'+p.n+'<b>'+p.v+'</b></li>'; }).join("")+'</ul>':'')+
+    (fd<fl?'<p class="fin-cmp">Face and neck still to go: '+fd+' of '+fl+' done.</p>':'')+
+    '<button class="btn fin-ok" type="button" data-close>Done</button>';
+  openSheet("fin");
+  setTimeout(function(){ FX.burst(innerWidth/2,innerHeight*.45,150,15); },260);
+  buzz([20,60,20,60,40]);
+}
+
+/* ---------- progress ---------- */
+var HEAT=[], PROWS=[];
+function heatHTML(){
+  var W=16, now=new Date(), back=(now.getDay()+6)%7, s0=new Date(now.getFullYear(),now.getMonth(),now.getDate()-back-(W-1)*7);
+  var h='<div class="hm"><span></span>', lastM=-1, c, r, d, e, q;
+  HEAT=[];
+  for(c=0;c<W;c++){
+    d=new Date(s0.getFullYear(),s0.getMonth(),s0.getDate()+c*7);
+    h+='<span class="ml">'+(d.getMonth()!==lastM&&c<W-2?d.toLocaleDateString(undefined,{month:"short"}):"")+'</span>';
+    lastM=d.getMonth();
+  }
+  for(r=0;r<7;r++){
+    h+='<span class="dl">'+(r%2?"":"MTWTFSS"[r])+'</span>';
+    for(c=0;c<W;c++){
+      d=new Date(s0.getFullYear(),s0.getMonth(),s0.getDate()+c*7+r);
+      if(d>now){ h+='<i class="fut"></i>'; continue; }
+      e=LOG[ymd(d)]; q=ratio(e);
+      HEAT.push({d:d,e:e});
+      h+='<i class="l'+(!q?0:q<.34?1:q<.67?2:q<1?3:4)+(ymd(d)===TODAY?" now":"")+'" data-h="'+(HEAT.length-1)+'"></i>';
+    }
+  }
+  return h+'</div>';
+}
+function heatTip(cell){
+  var o=HEAT[+cell.dataset.h], e=o.e, sel=$("progBody").querySelector(".hm i.sel");
+  if(sel) sel.classList.remove("sel");
+  cell.classList.add("sel");
+  var tot=e?(e.t||0)+(e.ft||0):0, vol=volumeOf(e);
+  $("hmTip").innerHTML='<b>'+o.d.toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"})+'</b> · '+
+    (tot?(PLAN[e.k]?PLAN[e.k].t+' · ':'')+((e.d||0)+(e.fd||0))+' of '+tot+' sets'+(vol?' · '+fmtK(vol)+' lb':''):'Nothing logged');
+}
+function sparkXY(r){
+  var n=r.pts.length, ys=r.pts.map(function(p){ return p.y; }), lo=Math.min.apply(null,ys), hi=Math.max.apply(null,ys);
+  return r.pts.map(function(p,j){ return [n>1?5+j/(n-1)*86:48,hi>lo?29-(p.y-lo)/(hi-lo)*24:17]; });
+}
+function liftsHTML(){
+  PROWS=[];
+  Object.keys(EXN).forEach(function(n){
+    var k=EXN[n].k, pts=[];
+    Object.keys(LOG).sort().forEach(function(d){ var b=bestOf(k,setsOf(d,n)); if(b) pts.push({d:d,v:b,y:score(k,b)}); });
+    if(pts.length) PROWS.push({n:n,k:k,pts:pts,mus:EXN[n].x.mus,pr:bestOf(k,pts.map(function(p){ return p.v; }))});
+  });
+  PROWS.sort(function(a,b){ return a.pts[a.pts.length-1].d<b.pts[b.pts.length-1].d?1:-1; });
+  if(!PROWS.length) return '<p class="sh-p">Open a lift, set the weight and reps, then tap the set. Every lift you log lands here with its trend line.</p>';
+  return '<div class="lfs">'+PROWS.map(function(r,j){
+    var xy=sparkXY(r), l=r.pts[r.pts.length-1], e=xy[xy.length-1];
+    return '<div class="lf" data-r="'+j+'"><div><span class="ln">'+r.n+'</span><span class="lm">'+r.mus+' · PR '+fmtSet(r.k,r.pr)+'</span></div>'+
+      '<svg class="spk" viewBox="0 0 96 34" role="img" aria-label="'+r.n+', '+r.pts.length+' sessions">'+
+        (xy.length>1?'<polyline class="spk-l" points="'+xy.map(function(p){ return p[0].toFixed(1)+","+p[1].toFixed(1); }).join(" ")+'"/>':'')+
+        '<circle class="spk-d" r="4" cx="'+e[0].toFixed(1)+'" cy="'+e[1].toFixed(1)+'"/><circle class="spk-h" r="4" cx="0" cy="0" opacity="0"/></svg>'+
+      '<div class="lv"><b>'+fmtSet(r.k,l.v)+'</b><small>'+shortDate(l.d)+'</small></div></div>';
+  }).join("")+'</div>';
+}
+function opt(p,l,s){
+  var on=PREFS[p]!==false;
+  return '<div class="opt"><span>'+l+'<small>'+s+'</small></span><div class="seg" data-pref="'+p+'" role="group" aria-label="'+l+'">'+
+    '<button type="button" data-v="1" aria-pressed="'+on+'">On</button><button type="button" data-v="0" aria-pressed="'+!on+'">Off</button></div></div>';
+}
+function renderProgress(){
+  var now=new Date(), back=(now.getDay()+6)%7, sess=0, vol=0, prs=0, j, d, e;
+  for(j=0;j<=back;j++){ d=new Date(now.getFullYear(),now.getMonth(),now.getDate()-back+j); e=LOG[ymd(d)]; if(e&&e.k!=="sun"&&counts(e)) sess++; vol+=volumeOf(e); }
+  for(j=0;j<30;j++){ d=ymd(new Date(now.getFullYear(),now.getMonth(),now.getDate()-j)); if(LOG[d]) prs+=prsOn(d).length; }
+  var st=streak(), best=Math.max(st,bestStreak());
+  $("progBody").innerHTML=
+    '<div class="tiles">'+
+      tile("Streak",st+'<small>'+(st===1?"day":"days")+'</small>',"Best "+best,st?"hot":"")+
+      tile("This week",sess+'<small>/ 6</small>',"Lifting days done")+
+      tile("Volume",vol?fmtK(vol)+'<small>lb</small>':"0","This week, weight × reps")+
+      tile("PRs",prs,"Last 30 days")+
+    '</div>'+
+    '<div class="sh-sec"><span>Last 16 weeks</span><span class="hm-lg" aria-hidden="true">Less<i class="l0"></i><i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="l4"></i>More</span></div>'+
+    heatHTML()+'<p class="hm-tip" id="hmTip">Share of each day’s sets ticked. Tap a day.</p>'+
+    '<div class="sh-sec"><span>Lifts · best set each session</span></div>'+liftsHTML()+
+    '<div class="sh-sec"><span>Settings</span></div>'+
+    opt("rest","Rest timer","Starts when you tick a set: 3 min after big lifts, 90 s after the rest.")+
+    opt("sound","Chime when rest ends","Plays only with the ringer on.")+
+    '<div class="sh-sec"><span>Backup</span></div>'+
+    '<p class="sh-p">The log lives on this phone only. Export it once in a while.</p>'+
+    '<div class="bk"><button class="btn ghost" type="button" id="expBtn">Export log</button><button class="btn ghost" type="button" id="impBtn">Import</button></div>'+
+    '<p class="sh-p" id="bkS" aria-live="polite"></p>';
+  [].forEach.call($("progBody").querySelectorAll(".lf"),function(row){
+    var r=PROWS[+row.dataset.r], sv=row.querySelector(".spk"), h=sv.querySelector(".spk-h"), lv=row.querySelector(".lv"), def=lv.innerHTML, xy=sparkXY(r);
+    function at(ev){
+      var bx=sv.getBoundingClientRect(), px=(ev.clientX-bx.left)/bx.width*96, k=0;
+      xy.forEach(function(p,q){ if(Math.abs(p[0]-px)<Math.abs(xy[k][0]-px)) k=q; });
+      h.setAttribute("cx",xy[k][0]); h.setAttribute("cy",xy[k][1]); h.setAttribute("opacity",1);
+      lv.innerHTML='<b>'+fmtSet(r.k,r.pts[k].v)+'</b><small>'+shortDate(r.pts[k].d)+'</small>';
+    }
+    sv.addEventListener("pointermove",at);
+    sv.addEventListener("pointerdown",at);
+    sv.addEventListener("pointerleave",function(){ h.setAttribute("opacity",0); lv.innerHTML=def; });
+  });
+}
+$("progBody").addEventListener("pointerover",function(e){ var c=e.target.closest(".hm i[data-h]"); if(c&&e.pointerType==="mouse") heatTip(c); });
+$("progBody").addEventListener("click",function(e){
+  var c=e.target.closest(".hm i[data-h]");
+  if(c){ heatTip(c); return; }
+  var b=e.target.closest("button"); if(!b) return;
+  var sg=b.closest(".seg[data-pref]");
+  if(sg){
+    PREFS[sg.dataset.pref]=b.dataset.v==="1";
+    writeJSON("hp.prefs",PREFS);
+    [].forEach.call(sg.children,function(o){ o.setAttribute("aria-pressed",String(o===b)); });
+    if(PREFS.rest===false) Rest.hide();
+    if(sg.dataset.pref==="sound"&&PREFS.sound){ audio(); chime(); }
+    return;
+  }
+  if(b.id==="expBtn") exportLog();
+  if(b.id==="impBtn") $("importFile").click();
+});
+$("streakBtn").onclick=function(){ renderProgress(); openSheet("prog"); };
+
+function exportLog(){
+  try{
+    var a=document.createElement("a");
+    a.href=URL.createObjectURL(new Blob([JSON.stringify({app:"home-program",v:1,log:LOG})],{type:"application/json"}));
+    a.download="home-program-log-"+TODAY+".json";
+    document.body.appendChild(a); a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },1500);
+    $("bkS").textContent="Exported "+Object.keys(LOG).length+" days.";
+  }catch(err){ $("bkS").textContent="This browser would not save the file."; }
+}
+// Imported files are untrusted: keep only known lifts and plain numbers, and never overwrite a day already here.
+function num(v){ return typeof v==="number"&&isFinite(v)?v:null; }
+function cleanDay(e){
+  var o={k:ORDER.indexOf(e.k)>=0?e.k:"mon",s:{}};
+  ["t","d","ft","fd","a","z"].forEach(function(f){ if(num(e[f])!=null) o[f]=e[f]; });
+  if(e.s&&typeof e.s==="object") Object.keys(e.s).forEach(function(n){
+    if(EXN[n]&&Array.isArray(e.s[n])) o.s[n]=e.s[n].map(function(v){ return Array.isArray(v)?[num(v[0]),num(v[1])]:null; });
+  });
+  return o;
+}
+$("importFile").onchange=function(){
+  var f=this.files&&this.files[0], input=this;
+  if(!f) return;
+  var rd=new FileReader();
+  rd.onload=function(){
+    var msg;
+    try{
+      var o=JSON.parse(rd.result), lg=o&&o.log, n=0;
+      if(!lg||typeof lg!=="object") throw 0;
+      Object.keys(lg).forEach(function(d){
+        if(/^\d{4}-\d\d-\d\d$/.test(d)&&lg[d]&&typeof lg[d]==="object"&&!LOG[d]){ LOG[d]=cleanDay(lg[d]); n++; }
+      });
+      saveLog(); render();
+      msg="Added "+n+" day"+(n===1?"":"s")+". Days already on this phone were kept.";
+    }catch(err){ msg="That file is not a Home Program log."; }
+    renderProgress();
+    $("bkS").textContent=msg;
+    input.value="";
+  };
+  rd.readAsText(f);
+};
 </script>
 <script>
 /* Spot: the coach in the corner.
@@ -1364,7 +2343,7 @@ render();
   function chipped(kind,label){
     var out=[];
     LIST.forEach(function(e){ e.at.forEach(function(a){
-      if(a.x.chips.some(function(c){ return c[0]===kind&&(!label||c[1]===label); })) out.push(e.name+" ("+(a.day==="face"?(a.x.alt?"every other day":"daily"):LBL[a.day])+")");
+      if(a.x.chips.some(function(c){ return c[0]===kind&&(!label||c[1]===label); })) out.push(e.name+" ("+(a.day==="face"?"every other day":LBL[a.day])+")");
     }); });
     return out;
   }
@@ -1385,8 +2364,8 @@ render();
     {re:/ grinders?| to failure | failure | rir /,a:function(){ return A("A **grinder** is a rep that slows right down and takes everything you have. **Failure** is when the next rep will not go. Your plan takes every working set there, except barbell presses and squats, which stop one rep short of a miss because nobody is spotting you. The orange-chip techniques push past failure on purpose, on the last set only."); }},
     {re:/ (progressive )?overload | log | logging | track(ing)? | progress(ion)? scheme /,a:function(){ var r=rule(/log/i); return A((r?ruleLine(r)+"\n":"")+"That is progressive overload: once you hit the top of a rep range on every set, add a little weight and start again at the bottom of the range."); }},
     {re:/ eat(ing)? | food | diet | calories | protein | bulk(ing)? | nutrition /,a:function(){ var r=rule(/eat/i); return A((r?ruleLine(r):"Eat enough to grow.")+"\nThat is as far as the plan goes. Specific numbers are a question for the Claude brain, or better, someone who knows your situation.",[{t:"cfg",label:"Connect Claude"}]); }},
-    {re:/ rest (time|times|period|periods|between)| how long (to |should i )?rest | rest between /,a:function(){ return A("Rest times are not written into your plan. General guide: 2 to 3 minutes or more on the heavy compounds (bench, squat, deadlift, rows), 60 to 90 seconds on isolation work. The orange-chip techniques use the 15 second rests their cues spell out."); }},
-    {re:/ (how much|what|which) weights? | how heavy | what load /,a:function(){ return A("Your plan prescribes rep ranges, not weights. Pick a load where the last rep of the set is hard but clean inside the range. When you hit the top of the range on every set, add weight. That only works if you log it."); }},
+    {re:/ rest (time|times|period|periods|between)| how long (to |should i )?rest | rest between /,a:function(){ return A("The rest timer handles it. It starts when you tick a set: 3 minutes after the big lifts (presses, squats, deadlifts, rows, pull-ups and chin-ups), 90 seconds after isolation work. Tap +30 if you need longer. The orange-chip techniques use the 15 second rests their cues spell out."); }},
+    {re:/ (how much|what|which) weights? | how heavy | what load /,a:function(){ return A("Your plan prescribes rep ranges, not weights. Pick a load where the last rep of the set is hard but clean inside the range. When you hit the top of the range on every set, add weight. That only works if you log it, so log each set in the card: it remembers last time and says when to go up."); }},
     {re:/ chips? | colou?rs? | orange | gold | teal /,a:function(){ return A("**The chips.**\n- **Gold**: bring straps. "+chipped("straps").join(", ")+".\n- **Orange**: an intensity technique on the last set only (myo-reps, rest-pause, slow eccentric).\n- **Teal**: direct grip or forearm work, so it goes late in the session."); }},
     {re:/ ea | each side | per side /,a:function(){ return A("**ea** means each side: do the reps on one leg or arm, then match them on the other. It counts as one set."); }},
     {re:/ pulleys? | pulley height /,a:function(){ return A("Every cable cue names where the pulley goes: on the floor, at chest or shoulder height, or high. The height sets the line of pull, which is what decides the part of the muscle that does the work. Open the card and the cue says which."); }},
@@ -1395,13 +2374,13 @@ render();
 
   /* ---------- on-device brain: answers ---------- */
   function A(text,acts,kind){ return {text:text,acts:acts||[],kind:kind||"note"}; }
-  function where(day,x){ return day==="face"?(x&&x.alt?"Face & Neck, every other day ("+(jawDay?"today":"tomorrow")+")":"Face & Neck, every day"):DAYNAME[day]+" ("+PLAN[day].t+")"; }
-  function formLink(x){ return "https://www.youtube.com/results?search_query="+encodeURIComponent(x.form); }
+  function where(day){ return day==="face"?"Face & Neck, every other day ("+(faceDay?"today":"tomorrow")+")":DAYNAME[day]+" ("+PLAN[day].t+")"; }
+  function formLink(x){ return VID[x.form]?"https://www.youtube.com/watch?v="+VID[x.form]:"https://www.youtube.com/results?search_query="+encodeURIComponent(x.form); }
 
   function exerciseAnswer(e){
     var first=e.at[0].x, lines=["**"+e.name+"** · "+plain(first.mus)], labels=[];
     e.at.forEach(function(a){
-      lines.push((e.at.length>1?"- ":"")+where(a.day,a.x)+": **"+a.x.reps+"**. "+bold(a.x.cue));
+      lines.push((e.at.length>1?"- ":"")+where(a.day)+": **"+a.x.reps+"**. "+bold(a.x.cue));
       a.x.chips.forEach(function(c){ if(labels.indexOf(c[1])<0) labels.push(c[1]); });
     });
     labels.forEach(function(l){ if(TECH[l]) lines.push("**"+l+":** "+TECH[l]); });
@@ -1415,7 +2394,7 @@ render();
     var rows=[], sets=0, sessions={}, daily=[];
     LIST.forEach(function(e){ e.at.forEach(function(a){
       if(m.mus.indexOf(plain(a.x.mus))<0) return;
-      if(a.day==="face"){ if(!day) daily.push(e.name+", "+a.x.reps+(a.x.alt?" (every other day)":"")); return; }
+      if(a.day==="face"){ if(!day) daily.push(e.name+", "+a.x.reps); return; }
       if(day&&a.day!==day) return;
       rows.push({d:ORDER.indexOf(a.day),s:"- "+LBL[a.day]+": "+e.name+", "+a.x.reps});
       sets+=a.x.sets; sessions[a.day]=1;
@@ -1426,7 +2405,7 @@ render();
     if(rows.length) out.push("**"+m.title+"** · **"+sets+" sets** "+(day?"on "+DAYNAME[day]:"a week over "+n+" session"+(n===1?"":"s")));
     else out.push("**"+m.title+"**");
     out=out.concat(rows.map(function(r){ return r.s; }));
-    if(daily.length) out.push("In the face and neck block:\n"+daily.map(function(d){ return "- "+d; }).join("\n"));
+    if(daily.length) out.push("In the face and neck block, every other day:\n"+daily.map(function(d){ return "- "+d; }).join("\n"));
     return A(out.join("\n"),[],"muscle");
   }
   function volumeAnswer(){
@@ -1440,7 +2419,7 @@ render();
     var d=PLAN[day], sets=0;
     var rows=d.l.map(function(x){ sets+=x.sets; return "- "+plain(x.nm)+", "+x.reps; });
     var lifting=d.l.some(function(x){ return /×/.test(x.reps); });
-    return A("**"+DAYNAME[day]+" · "+d.t+"**"+(day===todayKey?" (today)":"")+"\n"+d.b+"\n"+rows.join("\n")+"\n"+(lifting?"**"+sets+" sets**, plus":"Plus")+" the face and neck block.",
+    return A("**"+DAYNAME[day]+" · "+d.t+"**"+(day===todayKey?" (today)":"")+"\n"+d.b+"\n"+rows.join("\n")+"\n"+(lifting?"**"+sets+" sets**, plus":"Plus")+" the face and neck block on face days.",
       day!==view?[{t:"day",label:"Show "+DAYNAME[day],day:day}]:[],"day");
   }
   function progressAnswer(){
@@ -1486,7 +2465,7 @@ render();
     if(/ rules? /.test(qn)) return A("**The rules.**\n"+RULES.map(function(r){ return "- "+ruleLine(r); }).join("\n"));
     if(/ equipment | gear | kit | what do i have | home gym /.test(qn)&&KIT) return A(KIT);
     if(/ techniques? | intensity /.test(qn)) return A("Three intensity techniques, one per exercise, last set only:\n- **Myo-reps:** "+chipped("int","Myo-reps").join(", ")+"\n- **Rest-pause:** "+chipped("int","Rest-pause").join(", ")+"\n- **Slow eccentric:** "+chipped("int","Slow eccentric").join(", "));
-    if(/ week | program | programme | split | plan | schedule /.test(qn)) return A("**The week.**\n"+ORDER.map(function(d){ return "- "+LBL[d]+": **"+PLAN[d].t+"**, "+PLAN[d].f.join(", ").toLowerCase(); }).join("\n")+"\nThe face and neck block runs every day: neck and eyes daily, mouth and jaw every other day.");
+    if(/ week | program | programme | split | plan | schedule /.test(qn)) return A("**The week.**\n"+ORDER.map(function(d){ return "- "+LBL[d]+": **"+PLAN[d].t+"**, "+PLAN[d].f.join(", ").toLowerCase(); }).join("\n")+"\nThe face and neck block runs every other day.");
     return A("That one is past my on-device brain. I answer from the plan itself: any lift, muscle, day, technique or rule."+(cfg.k?"":"\nFor open questions, connect the Claude brain."),cfg.k?[]:[{t:"cfg",label:"Connect Claude"}],"miss");
   }
 
@@ -1514,8 +2493,8 @@ render();
       PLAN[d].l.forEach(function(x,i){ p.push((i+1)+". "+plain(x.nm)+" | "+plain(x.mus)+" | "+x.reps+(x.chips.length?" | tags: "+x.chips.map(function(c){ return c[1]; }).join(", "):"")+" | cue: "+plain(x.cue)); });
       p.push("");
     });
-    p.push("Face & Neck block, every day including rest days. Items marked every other day are mouth and jaw work that alternates by calendar day.");
-    FACE.forEach(function(x,i){ p.push((i+1)+". "+plain(x.nm)+" | "+plain(x.mus)+" | "+x.reps+(x.alt?" | every other day":"")+" | cue: "+plain(x.cue)); });
+    p.push("Face & Neck block, every other day by calendar date, rest days included:");
+    FACE.forEach(function(x,i){ p.push((i+1)+". "+plain(x.nm)+" | "+plain(x.mus)+" | "+x.reps+" | cue: "+plain(x.cue)); });
     p.push("","Straps (a gold tag means bring them):");
     STRAPS.forEach(function(s){ p.push("- "+s.t+" "+s.body); });
     p.push("","Rules:");
@@ -1527,7 +2506,7 @@ render();
   function nowContext(){
     var d=PLAN[todayKey], done=[], part=[], total=0, got=0;
     d.l.forEach(function(x,i){ var c=countDone(todayKey,i,x.sets); total+=x.sets; got+=c; if(c===x.sets) done.push(plain(x.nm)); else if(c) part.push(plain(x.nm)+" ("+c+"/"+x.sets+")"); });
-    return "Right now: it is "+DAYNAME[todayKey]+", so today's session is "+d.t+". They are looking at the "+PLAN[view].t+" page. Lifting sets ticked today: "+got+" of "+total+"."+(done.length?" Finished: "+done.join(", ")+".":"")+(part.length?" In progress: "+part.join(", ")+".":"");
+    return "Right now: it is "+DAYNAME[todayKey]+", so today's session is "+d.t+". Today is "+(faceDay?"a face day":"an off day for the face and neck block")+". They are looking at the "+PLAN[view].t+" page. Lifting sets ticked today: "+got+" of "+total+"."+(done.length?" Finished: "+done.join(", ")+".":"")+(part.length?" In progress: "+part.join(", ")+".":"");
   }
   function history(){
     var h=chat.slice(-10);

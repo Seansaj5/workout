@@ -43,7 +43,7 @@ session_name() {
     Thursday)  echo "Workout: Upper" ;;
     Friday)    echo "Workout: Lower" ;;
     Saturday)  echo "Workout: Shape" ;;
-    Sunday)    echo "Rest day, face and neck only" ;;
+    Sunday)    echo "Rest day" ;;
     *) return 1 ;;
   esac
 }
