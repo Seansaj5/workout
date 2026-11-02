@@ -1438,6 +1438,35 @@
   .pane{background:var(--gl-spec) padding-box,linear-gradient(180deg,rgba(60,230,180,.14),rgba(40,160,150,.06) 46%,rgba(10,70,70,.04) 54%,rgba(30,130,120,.09)) padding-box,linear-gradient(rgba(8,44,62,.5),rgba(8,44,62,.5)) padding-box,linear-gradient(135deg,rgba(160,255,220,.46),rgba(255,255,255,.08) 30%,rgba(255,255,255,.03) 55%,rgba(120,240,200,.24) 85%,rgba(255,255,255,.36)) border-box;}
   .pane ul.lifts li{background:var(--gl-spec) padding-box,var(--gl-fill) padding-box,linear-gradient(rgba(10,30,62,.32),rgba(10,30,62,.32)) padding-box,var(--gl-rim) border-box;}
 
+  /* ================= Round five: the Aero look back on top of the smooth version ================= */
+  /* glossy bubbles with a rainbow-tinted rim */
+  .amb b{opacity:.9;
+    background:radial-gradient(circle at 30% 26%,rgba(255,255,255,.95) 0 5%,rgba(255,255,255,.35) 9%,rgba(255,255,255,0) 22%),
+      radial-gradient(circle at 70% 78%,rgba(255,255,255,.4) 0 3%,rgba(255,255,255,0) 12%),
+      radial-gradient(circle,rgba(120,200,255,.05) 0 52%,rgba(140,230,255,.16) 72%,rgba(200,255,240,.5) 91%,rgba(255,255,255,.12) 100%);
+    box-shadow:0 0 18px rgba(90,200,255,.22),inset 0 0 8px rgba(160,255,230,.2);}
+  .amb b::before{content:"";position:absolute;inset:0;border-radius:50%;opacity:.55;
+    background:conic-gradient(from 40deg,#7FF2FF,#9CFFB4,#FFF3A0,#8FD0FF,#7FF2FF);
+    -webkit-mask:radial-gradient(closest-side,transparent 82%,#000 93%,transparent 100%);mask:radial-gradient(closest-side,transparent 82%,#000 93%,transparent 100%);}
+  @keyframes bubble{0%{transform:translate3d(0,0,0);opacity:0;}8%{opacity:.9;}50%{transform:translate3d(2.2vw,-60vh,0);}100%{transform:translate3d(-1.5vw,-125vh,0);opacity:.15;}}
+  /* the Aero gloss: a curved shine across the top of every glass card */
+  :root{--gl-gloss:radial-gradient(150% 54px at 50% -6px,rgba(255,255,255,.14),rgba(255,255,255,.05) 86%,rgba(255,255,255,0) 87%);}
+  .week,.readout,.main section,footer,.tile,.bd,.wm-rest,ul.lifts li{background:var(--gl-spec) padding-box,var(--gl-gloss) padding-box,var(--gl-fill) padding-box,var(--gl-tint) padding-box,var(--gl-rim) border-box;}
+  .pane ul.lifts li{background:var(--gl-spec) padding-box,var(--gl-gloss) padding-box,var(--gl-fill) padding-box,linear-gradient(rgba(10,30,62,.32),rgba(10,30,62,.32)) padding-box,var(--gl-rim) border-box;}
+  .pane{background:var(--gl-spec) padding-box,radial-gradient(150% 64px at 50% -6px,rgba(220,255,240,.13),rgba(220,255,240,.04) 86%,rgba(220,255,240,0) 87%) padding-box,linear-gradient(180deg,rgba(60,230,180,.14),rgba(40,160,150,.06) 46%,rgba(10,70,70,.04) 54%,rgba(30,130,120,.09)) padding-box,linear-gradient(rgba(8,44,62,.5),rgba(8,44,62,.5)) padding-box,linear-gradient(135deg,rgba(160,255,220,.46),rgba(255,255,255,.08) 30%,rgba(255,255,255,.03) 55%,rgba(120,240,200,.24) 85%,rgba(255,255,255,.36)) border-box;}
+  /* the dock lens: a glass capsule that sits under the open page and can be dragged across the dock */
+  .dock{touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;}
+  .dock .lens{position:absolute;top:5px;bottom:5px;left:6px;width:calc((100% - 24px)/4);border-radius:29px;pointer-events:none;
+    translate:calc(var(--di,0)*(100% + 4px)) 0;will-change:translate,scale;
+    background:radial-gradient(130% 55% at 50% 0,rgba(255,255,255,.3),rgba(255,255,255,.07) 80%,rgba(255,255,255,0) 81%),linear-gradient(180deg,rgba(150,215,255,.16),rgba(80,170,255,.1));
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.55),inset 0 0 0 1px rgba(170,225,255,.32),inset 0 -7px 12px -6px rgba(120,235,255,.4),0 0 20px -4px rgba(90,190,255,.55);
+    transition:translate .5s var(--spring),scale .35s var(--spring),opacity .3s;}
+  .dock .lens.off{opacity:0;}
+  .dk-drag .dock .lens{opacity:1;scale:1.05 1.08;transition:scale .35s var(--spring),opacity .2s;}
+  .dk.on{background:none;}
+  .ai{transition:transform .45s var(--spring),filter .3s,scale .45s var(--spring),translate .45s var(--spring);}
+  .dk-drag .ai,.dock.hov .ai{transition:transform .45s var(--spring),filter .3s;}
+
   @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;}}
 </style>
 </head>
@@ -1449,7 +1478,7 @@
   <i class="gl" style="--x:16%;--y:9vh;--d:6s;--w:-1s"></i><i class="gl" style="--x:62%;--y:5vh;--d:8s;--w:-5s"></i><i class="gl" style="--x:38%;--y:21vh;--d:7s;--w:-3s"></i><i class="gl" style="--x:86%;--y:27vh;--d:9s;--w:-7s"></i><i class="ss" style="--x:80%;--y:7vh;--d:14s;--w:-4s"></i><i class="ss" style="--x:52%;--y:2vh;--d:23s;--w:-15s"></i>
   <canvas id="landC"></canvas>
   <u style="--x:9%;--y:13vh;--d:9s;--w:-2s"></u><u style="--x:24%;--y:7vh;--d:11s;--w:-7s"></u><u style="--x:41%;--y:16vh;--d:8s;--w:-4s"></u><u style="--x:63%;--y:10vh;--d:12s;--w:-9s"></u><u style="--x:78%;--y:18vh;--d:10s;--w:-1s"></u><u style="--x:91%;--y:8vh;--d:9.5s;--w:-6s"></u>
-  <b style="--x:4%;--s:30px;--d:26s;--w:-3s"></b><b style="--x:14%;--s:18px;--d:19s;--w:-11s"></b><b style="--x:23%;--s:46px;--d:31s;--w:-20s"></b><b style="--x:35%;--s:22px;--d:23s;--w:-6s"></b><b style="--x:47%;--s:58px;--d:36s;--w:-27s"></b><b style="--x:58%;--s:16px;--d:18s;--w:-14s"></b><b style="--x:66%;--s:34px;--d:27s;--w:-2s"></b><b style="--x:77%;--s:24px;--d:21s;--w:-17s"></b><b style="--x:86%;--s:52px;--d:33s;--w:-9s"></b><b style="--x:93%;--s:20px;--d:24s;--w:-22s"></b>
+  <b style="--x:4%;--s:30px;--d:26s;--w:-3s"></b><b style="--x:14%;--s:18px;--d:19s;--w:-11s"></b><b style="--x:23%;--s:46px;--d:31s;--w:-20s"></b><b style="--x:35%;--s:22px;--d:23s;--w:-6s"></b><b style="--x:47%;--s:58px;--d:36s;--w:-27s"></b><b style="--x:58%;--s:16px;--d:18s;--w:-14s"></b><b style="--x:66%;--s:34px;--d:27s;--w:-2s"></b><b style="--x:77%;--s:24px;--d:21s;--w:-17s"></b><b style="--x:86%;--s:52px;--d:33s;--w:-9s"></b><b style="--x:93%;--s:20px;--d:24s;--w:-22s"></b><b style="--x:30%;--s:84px;--d:44s;--w:-30s"></b><b style="--x:72%;--s:70px;--d:40s;--w:-8s"></b>
 </div>
 
 <div class="topbar" id="topbar" aria-hidden="true">
@@ -1548,6 +1577,7 @@
 </div>
 
 <nav class="dock" id="dock" aria-label="Quick actions">
+  <i class="lens off" aria-hidden="true"></i>
   <button class="dk on" id="dkToday" type="button"><span class="ai ai-blue" aria-hidden="true"><svg viewBox="0 0 24 24"><defs><linearGradient id="aiPg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#D6E7FA"/></linearGradient></defs><rect x="4" y="5" width="16" height="15.5" rx="3.2" fill="url(#aiPg)"/><path d="M4 8.2A3.2 3.2 0 0 1 7.2 5h9.6A3.2 3.2 0 0 1 20 8.2V10H4z" fill="#F25C4A"/><rect x="7.6" y="3" width="2" height="4.4" rx="1" fill="#fff"/><rect x="14.4" y="3" width="2" height="4.4" rx="1" fill="#fff"/><text class="ai-date" id="dkDate" x="12" y="18.2" text-anchor="middle"></text></svg></span><span>Today</span></button>
   <button class="dk" id="dkGo" type="button"><span class="ai ai-green" aria-hidden="true"><svg viewBox="0 0 24 24"><path class="g-play" d="M7.8 6.3v11.4c0 .9 1 1.4 1.7.9l8.4-5.7c.6-.4.6-1.3 0-1.7L9.5 5.4C8.8 4.9 7.8 5.4 7.8 6.3z" fill="#fff"/><path class="g-done" d="M6 12.5l4 4 8-8.5" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span id="dkGoL">Workout</span></button>
   <button class="dk" id="dkProg" type="button"><span class="ai ai-gold" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4.5" y="12.5" width="4" height="7" rx="1.4" fill="#fff"/><rect x="10" y="9" width="4" height="10.5" rx="1.4" fill="#fff"/><rect x="15.5" y="5" width="4" height="14.5" rx="1.4" fill="#fff"/></svg></span><span>Progress</span></button>
@@ -2831,70 +2861,61 @@ $("wm").addEventListener("click",function(e){
     g.fillStyle=q; g.fillRect(x-r,y-r,2*r,2*r);
   }
   function paintSky(){
-    var o=fit(sky), g=o.g, w=o.w, h=o.h, R=rng(11), i, x, y, t, a, p;
+    var o=fit(sky), g=o.g, w=o.w, h=o.h, R=rng(11), M=Math.max(w,h), i, x, y, t, a, r, c;
     var bg=g.createLinearGradient(0,0,0,h);
-    bg.addColorStop(0,"#020716"); bg.addColorStop(.28,"#051338"); bg.addColorStop(.58,"#0A2656"); bg.addColorStop(.82,"#0E3366"); bg.addColorStop(1,"#113B70");
+    bg.addColorStop(0,"#020A1E"); bg.addColorStop(.3,"#04173F"); bg.addColorStop(.6,"#082C5E"); bg.addColorStop(.84,"#0A3D6C"); bg.addColorStop(1,"#0B4A72");
     g.fillStyle=bg; g.fillRect(0,0,w,h);
-    // the galaxy: a band from low left to high right, soft blue and teal clouds along it
-    function band(t){ return [w*(-.1+1.2*t),h*(.52-.44*t)]; }
-    for(i=0;i<16;i++){
-      p=band(R()); t=R();
-      glow(g,p[0]+(R()-.5)*w*.2,p[1]+(R()-.5)*h*.06,Math.max(w,h)*(.12+R()*.16),t<.3?"40,200,210":t<.55?"90,110,255":"60,140,255",.03+R()*.04);
-    }
-    // stars, some crowded into the band, thinning toward the hills
-    var n=Math.round(w*h/1200);
+    // a scatter of stars up top, thinning out by the middle
+    var n=Math.round(w*h/2400);
     for(i=0;i<n;i++){
-      if(R()<.45){ p=band(R()); x=p[0]+(R()+R()+R()-1.5)*w*.14; y=p[1]+(R()+R()+R()-1.5)*h*.08; }
-      else { x=R()*w; y=R()*h*.86; }
-      a=(.3+R()*.7)*Math.max(0,1-y/(h*.88));
-      if(a<=0) continue;
-      t=R(); g.globalAlpha=a; g.fillStyle=t<.1?"#FFE7C4":t<.38?"#BFD8FF":"#FFFFFF";
-      g.beginPath(); g.arc(x,y,.3+Math.pow(R(),3)*1.25,0,TAU); g.fill();
+      x=R()*w; y=Math.pow(R(),1.5)*h*.62; a=(.25+R()*.65)*(1-y/(h*.64));
+      t=R(); g.globalAlpha=a; g.fillStyle=t<.35?"#BFE6FF":"#FFFFFF";
+      g.beginPath(); g.arc(x,y,.3+Math.pow(R(),3)*1.1,0,TAU); g.fill();
     }
     g.globalAlpha=1;
-    for(i=0;i<9;i++){
-      x=R()*w; y=R()*h*.55;
-      glow(g,x,y,7+R()*7,"170,210,255",.32);
-      g.fillStyle="#fff"; g.beginPath(); g.arc(x,y,1+R()*.6,0,TAU); g.fill();
-    }
-    // the moon: faint rays, a halo, a glossy disc
-    var mx=w*.8, my=Math.min(h*.075,70), mr=Math.max(15,Math.min(w,h)*.042), rl=Math.max(w,h)*.95;
-    var rg=g.createRadialGradient(mx,my,mr,mx,my,rl);
-    rg.addColorStop(0,"rgba(170,210,255,.09)"); rg.addColorStop(.3,"rgba(170,210,255,.03)"); rg.addColorStop(1,"rgba(170,210,255,0)");
+    // the light: an aqua glow at the top right with a lens streak and a couple of flare rings
+    var lx=w*.82, ly=Math.min(h*.075,66);
+    var rg=g.createRadialGradient(lx,ly,10,lx,ly,M*.95);
+    rg.addColorStop(0,"rgba(150,225,255,.08)"); rg.addColorStop(.3,"rgba(150,225,255,.025)"); rg.addColorStop(1,"rgba(150,225,255,0)");
     g.fillStyle=rg;
-    for(i=0;i<20;i++){
-      t=i/20*TAU+R()*.15; a=.02+R()*.03;
-      g.beginPath(); g.moveTo(mx,my); g.arc(mx,my,rl,t-a,t+a); g.closePath(); g.fill();
-    }
-    glow(g,mx,my,mr*8,"110,160,255",.15);
-    glow(g,mx,my,mr*2.8,"190,220,255",.2);
-    var md=g.createRadialGradient(mx-mr*.35,my-mr*.4,mr*.1,mx,my,mr);
-    md.addColorStop(0,"#F2F8FF"); md.addColorStop(.6,"#C4D9F4"); md.addColorStop(1,"#86A8D6");
-    g.save(); g.shadowColor="rgba(150,200,255,.85)"; g.shadowBlur=mr*1.5;
-    g.fillStyle=md; g.beginPath(); g.arc(mx,my,mr,0,TAU); g.fill(); g.restore();
-    g.fillStyle="rgba(110,140,190,.2)";
-    [[.28,-.05,.26],[-.28,.22,.22],[.12,.42,.15],[-.05,-.35,.12]].forEach(function(c){ g.beginPath(); g.arc(mx+c[0]*mr,my+c[1]*mr,c[2]*mr,0,TAU); g.fill(); });
-    var gs=g.createLinearGradient(0,my-mr,0,my+mr*.1);
-    gs.addColorStop(0,"rgba(255,255,255,.6)"); gs.addColorStop(1,"rgba(255,255,255,0)");
-    g.fillStyle=gs; g.beginPath(); g.ellipse(mx,my-mr*.42,mr*.66,mr*.46,0,0,TAU); g.fill();
-    // Aero swooshes: three lit curves across the middle, a faint band between two of them
-    function curve(y0,ax,ay,bx,by,y1){ g.beginPath(); g.moveTo(-w*.05,h*y0); g.bezierCurveTo(w*ax,h*ay,w*bx,h*by,w*1.05,h*y1); }
-    function stroke(c){
-      var q=g.createLinearGradient(0,0,w,0);
-      q.addColorStop(0,"rgba("+c[0]+",0)"); q.addColorStop(.3,"rgba("+c[0]+","+c[2]+")"); q.addColorStop(.68,"rgba("+c[1]+","+c[2]*.75+")"); q.addColorStop(1,"rgba("+c[1]+",0)");
-      return q;
-    }
-    var A=[.56,.25,.47,.5,.62,.42], B=[.625,.28,.53,.6,.67,.475], C=[.59,.27,.5,.55,.645,.448];
-    var fill=g.createLinearGradient(0,0,w,0);
-    fill.addColorStop(0,"rgba(80,170,255,0)"); fill.addColorStop(.4,"rgba(80,170,255,.09)"); fill.addColorStop(.72,"rgba(80,230,200,.06)"); fill.addColorStop(1,"rgba(80,230,200,0)");
-    curve.apply(null,A); g.lineTo(w*1.05,h*B[5]); g.bezierCurveTo(w*B[3],h*B[4],w*B[1],h*B[2],-w*.05,h*B[0]); g.closePath(); g.fillStyle=fill; g.fill();
-    [[A,["168,236,255","126,240,200",.6]],[C,["168,236,255","126,240,200",.28]],[B,["120,190,255","160,230,255",.5]]].forEach(function(l){
-      g.save(); g.strokeStyle=stroke(l[1]); g.shadowColor="rgba(120,220,255,.9)"; g.shadowBlur=12;
-      g.lineWidth=5; g.globalAlpha=.3; curve.apply(null,l[0]); g.stroke();
-      g.shadowBlur=4; g.lineWidth=1.3; g.globalAlpha=1; curve.apply(null,l[0]); g.stroke(); g.restore();
+    for(i=0;i<20;i++){ t=i/20*TAU+R()*.15; a=.02+R()*.03; g.beginPath(); g.moveTo(lx,ly); g.arc(lx,ly,M*.95,t-a,t+a); g.closePath(); g.fill(); }
+    glow(g,lx,ly,M*.55,"40,130,255",.16);
+    glow(g,lx,ly,M*.2,"90,210,255",.2);
+    glow(g,lx,ly,26,"225,250,255",.75);
+    var sl=Math.min(w*.3,160), sk=g.createLinearGradient(lx-sl,0,lx+sl,0);
+    sk.addColorStop(0,"rgba(140,225,255,0)"); sk.addColorStop(.5,"rgba(215,245,255,.45)"); sk.addColorStop(1,"rgba(140,225,255,0)");
+    g.fillStyle=sk; g.fillRect(lx-sl,ly-.75,sl*2,1.5);
+    [[.22,9,"140,230,255",.22],[.4,22,"110,240,200",.1],[.58,5,"210,245,255",.3]].forEach(function(f){
+      x=lx+(w*.3-lx)*f[0]; y=ly+(h*.38-ly)*f[0];
+      g.strokeStyle="rgba("+f[2]+","+f[3]+")"; g.lineWidth=1.2; g.beginPath(); g.arc(x,y,f[1],0,TAU); g.stroke();
+      glow(g,x,y,f[1],f[2],f[3]*.5);
     });
-    // a little sheen of light on the brightest curve
-    glow(g,w*.34,h*.525,Math.max(w,h)*.07,"200,245,255",.16);
+    // Aero light ribbons: bundles of fine strands that twist across the sky, a soft glow down each one
+    function edge(E,t,B){ return E.map(function(v,j){ return (v+(B[j]-v)*t)*(j%2?h:w); }); }
+    function path(P){ g.beginPath(); g.moveTo(P[0],P[1]); g.bezierCurveTo(P[2],P[3],P[4],P[5],P[6],P[7]); }
+    function ribbon(A,B,stops,strands,alpha,lit){
+      var q=g.createLinearGradient(0,0,w,0);
+      stops.forEach(function(s){ q.addColorStop(s[0],s[1]); });
+      g.save(); g.strokeStyle=q; g.lineCap="round";
+      var mid=edge(A,.5,B);
+      [[M*.09,.035],[M*.05,.05],[M*.022,.07]].forEach(function(s){ g.globalAlpha=alpha*s[1]/.07*.6; g.lineWidth=s[0]; path(mid); g.stroke(); });
+      g.lineWidth=1;
+      for(var k=0;k<=strands;k++){ t=k/strands; g.globalAlpha=alpha*(.35+.65*Math.sin(Math.PI*t)); path(edge(A,t,B)); g.stroke(); }
+      if(lit){ g.globalAlpha=1; g.shadowColor="rgba(150,240,255,.95)"; g.shadowBlur=10; g.lineWidth=1.4; path(edge(A,0,B)); g.stroke(); }
+      g.restore();
+    }
+    var aqua=[[0,"rgba(120,240,200,0)"],[.22,"rgba(120,245,205,.9)"],[.55,"rgba(90,220,255,1)"],[.85,"rgba(110,170,255,.8)"],[1,"rgba(110,170,255,0)"]];
+    var blue=[[0,"rgba(90,160,255,0)"],[.3,"rgba(110,180,255,.85)"],[.7,"rgba(150,225,255,1)"],[1,"rgba(150,225,255,0)"]];
+    ribbon([-.1,.3,.25,.17,.6,.37,1.1,.13],[-.1,.37,.3,.3,.55,.22,1.1,.22],blue,26,.22,false);
+    ribbon([-.1,.6,.3,.4,.62,.63,1.1,.3],[-.1,.73,.32,.58,.6,.44,1.1,.41],aqua,44,.3,true);
+    ribbon([-.1,.85,.35,.72,.65,.86,1.1,.67],[-.1,.9,.4,.83,.7,.74,1.1,.74],aqua,24,.2,false);
+    // bokeh: soft discs of out-of-focus light with brighter rims
+    for(i=0;i<28;i++){
+      x=R()*w; y=h*(.1+R()*.75); r=4+Math.pow(R(),2)*34; t=R(); c=t<.4?"110,240,200":t<.75?"110,190,255":"180,235,255";
+      var b=g.createRadialGradient(x,y,0,x,y,r);
+      b.addColorStop(0,"rgba("+c+","+(.04+R()*.05)+")"); b.addColorStop(.8,"rgba("+c+","+(.06+R()*.06)+")"); b.addColorStop(.93,"rgba("+c+",.16)"); b.addColorStop(1,"rgba("+c+",0)");
+      g.fillStyle=b; g.beginPath(); g.arc(x,y,r,0,TAU); g.fill();
+    }
     // haze over the horizon
     var hz=g.createLinearGradient(0,h*.6,0,h);
     hz.addColorStop(0,"rgba(40,170,200,0)"); hz.addColorStop(1,"rgba(40,170,200,.14)");
@@ -2920,9 +2941,9 @@ $("wm").addEventListener("click",function(e){
     hill(function(){ g.beginPath(); g.moveTo(-w*.2,h*.66); g.bezierCurveTo(w*.2,h*.4,w*.45,h*.22,w*.72,h*.24); g.bezierCurveTo(w*.92,h*.26,w*1.05,h*.34,w*1.2,h*.44); },
       ["#14425A","#0B2838","#061722"],"110,200,255",.32);
     hill(function(){ g.beginPath(); g.moveTo(-w*.2,h*.5); g.bezierCurveTo(w*.02,h*.42,w*.24,h*.4,w*.46,h*.5); g.bezierCurveTo(w*.66,h*.6,w*.9,h*.74,w*1.2,h*.86); },
-      ["#10403F","#0A2829","#041314"],"110,240,200",.45);
+      ["#0F4338","#0A2A26","#041411"],"120,250,190",.55);
     hill(function(){ g.beginPath(); g.moveTo(w*.38,h*1.02); g.bezierCurveTo(w*.6,h*.8,w*.84,h*.7,w*1.2,h*.72); },
-      ["#0C302A","#061C18","#020B0A"],"150,255,210",.36);
+      ["#0D3628","#061E16","#020B08"],"160,255,170",.5);
   }
   function paint(){
     var w=sky.clientWidth, h=sky.clientHeight;
@@ -3003,12 +3024,83 @@ function updateDock(k){
   $("dkGo").classList.toggle("ready",lifting&&!!liftsLeft());
   $("dkGo").classList.toggle("done",lifting&&!liftsLeft());
   $("dkToday").classList.toggle("on",k===todayKey);
+  if(dockHome) dockHome();
 }
+var dockHome=null;
 $("dkDate").textContent=+TODAY.slice(8);
 [].forEach.call(document.querySelectorAll(".dk"),function(b){
   b.addEventListener("click",function(){ b.classList.remove("pop"); void b.offsetWidth; b.classList.add("pop"); });
   b.addEventListener("animationend",function(e){ if(e.animationName==="aiPop") b.classList.remove("pop"); });
 });
+// Drag along the dock and a glass lens rides under the finger, the icons swelling as it passes like the old
+// Mac dock; let go to open the one under it. With a mouse, the icons swell as the pointer moves over them.
+(function(){
+  var dock=$("dock"), lens=dock.querySelector(".lens"), btns=[].slice.call(dock.querySelectorAll(".dk")), tiles=btns.map(function(b){ return b.querySelector(".ai"); });
+  var drag=null, hx=null, raf=0, box=null, ended=0;
+  function measure(){ box={left:dock.getBoundingClientRect().left+dock.clientLeft+6,w:(dock.clientWidth-24)/4}; }
+  function at(x){ return Math.max(0,Math.min(3,(x-box.left-box.w/2)/(box.w+4))); }
+  function swell(p){
+    tiles.forEach(function(t,i){
+      var d=p==null?9:i-p, k=Math.exp(-d*d/.55);
+      t.style.scale=p==null?"":(1+.3*k).toFixed(3);
+      t.style.translate=p==null?"":"0 "+(-7*k).toFixed(1)+"px";
+    });
+  }
+  function frame(){
+    raf=0;
+    if(drag&&drag.on){
+      var p=at(drag.x), i=Math.round(p);
+      lens.style.translate=(p*(box.w+4)).toFixed(1)+"px 0";
+      if(i!==drag.i){ drag.i=i; buzz(4); }
+      swell(p);
+    } else if(hx!=null) swell(at(hx));
+  }
+  dockHome=function(){
+    var i=btns.findIndex(function(b){ return b.classList.contains("on"); });
+    if(drag&&drag.on) return;
+    lens.classList.toggle("off",i<0);
+    if(i>=0) dock.style.setProperty("--di",i);
+  };
+  dock.addEventListener("pointerdown",function(e){ if(e.button>0) return; measure(); drag={x0:e.clientX,x:e.clientX,id:e.pointerId,on:false,i:-1}; });
+  dock.addEventListener("pointermove",function(e){
+    if(drag&&e.pointerId===drag.id){
+      drag.x=e.clientX;
+      if(!drag.on){
+        if(Math.abs(e.clientX-drag.x0)<8) return;
+        drag.on=true; hx=null;
+        try{ dock.setPointerCapture(e.pointerId); }catch(err){}
+        document.documentElement.classList.add("dk-drag");
+        lens.classList.remove("off");
+      }
+    } else if(e.pointerType==="mouse"&&!e.buttons&&!CALM){
+      if(hx==null){ measure(); dock.classList.add("hov"); }
+      hx=e.clientX;
+    } else return;
+    if(!raf) raf=requestAnimationFrame(frame);
+  });
+  function end(e,go){
+    if(!drag) return;
+    var d=drag; drag=null;
+    if(!d.on) return;
+    if(raf){ cancelAnimationFrame(raf); raf=0; }
+    document.documentElement.classList.remove("dk-drag");
+    var i=Math.round(at(d.x));
+    lens.style.translate="";
+    swell(null);
+    if(go){
+      dock.style.setProperty("--di",i);
+      btns[i].click();
+      ended=Date.now();
+      setTimeout(dockHome,600);
+    } else dockHome();
+  }
+  dock.addEventListener("pointerup",function(e){ end(e,true); });
+  dock.addEventListener("pointercancel",function(e){ end(e,false); });
+  dock.addEventListener("pointerleave",function(){ if(hx==null) return; hx=null; dock.classList.remove("hov"); swell(null); });
+  // the finger lifting after a drag also sends a click; the drag already chose, so swallow it
+  dock.addEventListener("click",function(e){ if(Date.now()-ended<400){ e.stopPropagation(); e.preventDefault(); } },true);
+  dockHome();
+})();
 
 /* ---------- share card: drawn when the finish card opens, so the share sheet can open straight from the tap ---------- */
 var CARD=null;
