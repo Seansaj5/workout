@@ -31,6 +31,19 @@ State on this Mac: `~/.local/state/workout/last-open` holds the date the page wa
 
 GitHub Pages redeploys in about a minute. The phone picks up the new page the next time the app is opened with signal. No cache bump is needed for this.
 
+## Spot, the coach in the corner
+
+The orb at the bottom right of the page, and the **Ask Spot** button inside every exercise card. All of it lives in `index.html`, in the script block headed `Spot: the coach in the corner`. It has two brains:
+
+- **On-device.** Answers from the plan itself: `PLAN`, `FACE`, and the Straps and Rules text on the page. Free, instant, works in the basement. Edit the plan and its answers follow, nothing else to update. The only hand-written knowledge is the short glossary (`TECH` and `GLOSS`): myo-reps, rest-pause, ramp sets and so on.
+- **Claude.** Real AI for open questions. It needs signal and your own Anthropic API key, pasted into Spot's settings (the sliders icon). With no key, no signal, or any error, Spot answers on-device instead and says why.
+
+The key never goes in this repo. It is stored in that browser's `localStorage` under `hp.spot`, sent only to `api.anthropic.com`, and billed to your Anthropic account, so use a dedicated key with a low spend limit. Each phone or browser needs the key pasted once. Clearing site data, or "Remove key from this device", deletes it.
+
+- The default model is the first entry in `MODELS` (`claude-opus-5`); the settings let you pick another per device.
+- The whole program is sent as a cached system prompt, built by `prompt()`. Keep it free of dates or anything else that changes between requests, or the cache stops working; per-request context belongs in `nowContext()`.
+- Spot's answers are written into the page as escaped text with a tiny markdown subset (`fmt()`). Keep it that way: model output must never reach `innerHTML` unescaped.
+
 ## Bump the service worker cache
 
 Only needed when you change the icons, `manifest.json`, the Google Fonts link (copy the new `<link>` URL into `FONT_CSS` in `sw.js` as well) or `sw.js` itself. Change the constant at the top of `sw.js`:

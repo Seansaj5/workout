@@ -6,6 +6,7 @@
 <title>Home Program</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#08090C">
+<meta name="color-scheme" content="dark">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <meta name="mobile-web-app-capable" content="yes">
@@ -20,229 +21,832 @@
     --bg:#08090C;
     --panel:#11141B;
     --panel-2:#171B24;
+    --well:#0B0E14;
     --line:#212733;
     --line-2:#2D3543;
     --fg:#EDEFF3;
+    --fg-2:#AEB6C3;
     --muted:#7B8593;
+    --faint:#5F6A79;
     --hot:#FF5A1F;
+    --hot-2:#FF9259;
     --hot-dim:#8A2F10;
     --cool:#3DD6C0;
+    --cool-2:#7CF0DF;
+    --cool-dim:#1F7A6C;
     --gold:#E8B93B;
+    --display:'Bricolage Grotesque',system-ui,sans-serif;
+    --text:'Archivo',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
+    --ease:cubic-bezier(.22,.8,.24,1);
+    --spring:cubic-bezier(.3,1.55,.5,1);
+    --dir:1;
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-  html{background:var(--bg);}
+  html{background:var(--bg);scrollbar-color:var(--line-2) var(--bg);}
   body{
     margin:0;color:var(--fg);background:var(--bg);
-    font-family:'Archivo',system-ui,sans-serif;font-size:16px;line-height:1.5;
-    -webkit-text-size-adjust:100%;
+    font-family:var(--text);font-size:16px;line-height:1.5;
+    -webkit-text-size-adjust:100%;-webkit-font-smoothing:antialiased;
   }
+  i,s,em{font-style:normal;text-decoration:none;}
+  button{font:inherit;color:inherit;}
+  ::selection{background:rgba(255,90,31,.32);color:#fff;}
+  :focus-visible{outline:2px solid var(--hot);outline-offset:2px;}
+
+  /* Atmosphere: warm light from the top right, a trace of teal opposite, film grain over everything. */
   body::before{
     content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
     background:
-      radial-gradient(900px 420px at 78% -8%, rgba(255,90,31,.14), transparent 62%),
-      radial-gradient(700px 380px at 8% 6%, rgba(61,214,192,.07), transparent 60%);
+      radial-gradient(1000px 520px at 88% -12%, rgba(255,90,31,.2), transparent 62%),
+      radial-gradient(720px 420px at -6% 2%, rgba(61,214,192,.075), transparent 60%),
+      radial-gradient(900px 560px at 50% 120%, rgba(255,90,31,.05), transparent 62%);
   }
-  .wrap{position:relative;z-index:1;max-width:680px;margin:0 auto;padding:0 16px 96px;}
+  body::after{
+    content:"";position:fixed;top:0;left:0;right:0;height:100vh;height:100lvh;pointer-events:none;z-index:30;opacity:.055;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  .wrap{position:relative;z-index:1;max-width:680px;margin:0 auto;padding:0 18px 96px;overflow-x:clip;}
   /* Installed on iOS the page runs under the translucent status bar; pad by the safe area (zero everywhere else). */
   .wrap{padding-top:env(safe-area-inset-top);padding-bottom:calc(96px + env(safe-area-inset-bottom));}
 
-  .bar{display:flex;align-items:center;justify-content:space-between;padding:18px 0 6px;}
-  .mark{display:flex;align-items:center;gap:9px;}
-  .dot{width:9px;height:9px;border-radius:50%;background:var(--hot);box-shadow:0 0 0 3px rgba(255,90,31,.16),0 0 16px rgba(255,90,31,.7);}
-  .mark span{font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;letter-spacing:.01em;}
-  .clock{font-family:'JetBrains Mono';font-weight:600;font-size:12px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;}
+  /* ---------- brand bar ---------- */
+  .bar{display:flex;align-items:center;justify-content:space-between;padding:18px 0 6px;position:relative;z-index:2;}
+  .mark{display:flex;align-items:center;gap:10px;}
+  .dot{flex:0 0 auto;width:9px;height:9px;border-radius:50%;background:var(--hot);box-shadow:0 0 0 3px rgba(255,90,31,.16),0 0 16px rgba(255,90,31,.7);}
+  .mark span{font-family:var(--display);font-weight:800;font-size:16px;letter-spacing:.01em;}
+  .clock{font-family:var(--mono);font-weight:600;font-size:11.5px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;}
 
-  .hero{position:relative;padding:26px 0 8px;}
+  /* ---------- hero ---------- */
+  .hero{position:relative;padding:34px 0 4px;}
+  .hero::before{
+    content:"";position:absolute;left:-18px;right:-18px;top:-80px;bottom:-10px;pointer-events:none;
+    background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+    background-size:34px 34px;background-position:right 18px top 0;opacity:.5;
+    -webkit-mask-image:radial-gradient(78% 86% at 86% 8%,#000,transparent 72%);
+    mask-image:radial-gradient(78% 86% at 86% 8%,#000,transparent 72%);
+  }
+  .ghost-w{position:absolute;right:-8px;top:6px;pointer-events:none;user-select:none;-webkit-user-select:none;}
   .ghost{
-    position:absolute;right:-8px;top:-4px;pointer-events:none;
-    font-family:'Bricolage Grotesque';font-weight:800;
-    font-size:clamp(130px,38vw,210px);line-height:.72;
+    display:block;position:relative;
+    font-family:var(--display);font-weight:800;
+    font-size:clamp(150px,43vw,230px);line-height:.74;letter-spacing:-.045em;padding:0 .07em 0 0;
     color:transparent;-webkit-text-stroke:1.5px var(--line-2);
-    opacity:.65;user-select:none;
+    -webkit-mask-image:linear-gradient(180deg,#000 30%,transparent 97%);
+    mask-image:linear-gradient(180deg,#000 30%,transparent 97%);
+  }
+  .ghost::after{
+    content:attr(data-n);position:absolute;left:0;top:0;
+    -webkit-text-stroke:1.5px var(--hot);
+    -webkit-mask-image:radial-gradient(78% 72% at 94% 2%,#000,transparent 70%);
+    mask-image:radial-gradient(78% 72% at 94% 2%,#000,transparent 70%);
+    opacity:.9;
   }
   .kicker{
     position:relative;display:inline-flex;align-items:center;gap:8px;
-    font-family:'JetBrains Mono';font-weight:700;font-size:11.5px;
-    letter-spacing:.2em;text-transform:uppercase;color:var(--hot);
+    font-family:var(--mono);font-weight:700;font-size:11.5px;
+    letter-spacing:.22em;text-transform:uppercase;color:var(--hot);
   }
-  .kicker b{width:6px;height:6px;border-radius:50%;background:var(--hot);animation:pulse 2.4s ease-in-out infinite;}
+  .kicker b{width:6px;height:6px;border-radius:50%;background:var(--hot);box-shadow:0 0 10px rgba(255,90,31,.8);animation:pulse 2.4s ease-in-out infinite;}
+  .kicker.away{color:var(--muted);}
+  .kicker.away b{background:var(--muted);box-shadow:none;animation:none;}
   @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.28;}}
   h1{
-    position:relative;margin:10px 0 0;
-    font-family:'Bricolage Grotesque';font-weight:800;
-    font-size:clamp(50px,15vw,84px);line-height:.88;letter-spacing:-.035em;
+    position:relative;margin:8px 0 0 -3px;
+    font-family:var(--display);font-weight:800;
+    font-size:clamp(68px,24.5vw,116px);line-height:.86;letter-spacing:-.022em;
   }
-  .focus{position:relative;display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;}
+  /* The gradient ink lives on an inner span: Safari can drop background-clip:text on an element that is itself animating. */
+  h1 span{
+    display:inline-block;padding:0 .04em .14em 0;margin-bottom:-.14em;
+    background:linear-gradient(180deg,#FFFFFF 18%,#A9B1BF 96%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+  }
+  /* One row that scrolls sideways: the hero keeps the same height on every day, so the week strip never jumps under a thumb. */
+  .focus{
+    position:relative;display:flex;flex-wrap:nowrap;gap:6px;margin:20px -18px 0 0;padding-right:18px;
+    overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+    -webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 24px),transparent);
+    mask-image:linear-gradient(90deg,#000 calc(100% - 24px),transparent);
+  }
+  .focus::-webkit-scrollbar{display:none;}
   .focus span{
-    font-family:'JetBrains Mono';font-weight:600;font-size:11px;
-    letter-spacing:.11em;text-transform:uppercase;color:var(--muted);
-    border:1px solid var(--line);border-radius:100px;padding:4px 10px;
+    font-family:var(--mono);font-weight:600;font-size:10.5px;
+    letter-spacing:.12em;text-transform:uppercase;color:var(--fg-2);
+    background:rgba(255,255,255,.028);box-shadow:inset 0 0 0 1px var(--line-2);
+    border-radius:100px;padding:5px 11px;white-space:nowrap;flex:0 0 auto;
   }
-  .blurb{position:relative;color:var(--muted);font-size:15px;margin:16px 0 0;max-width:44ch;}
+  .blurb{position:relative;color:#8E98A7;font-size:15.5px;line-height:1.5;margin:16px 0 0;max-width:40ch;min-height:3em;}
 
-  .week{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin:24px 0 0;}
+  .hero.swap .kicker,.hero.swap h1,.hero.swap .focus,.hero.swap .blurb{animation:heroIn .6s var(--ease) backwards;}
+  .hero.swap h1{animation-delay:.04s;}
+  .hero.swap .focus{animation-delay:.1s;}
+  .hero.swap .blurb{animation-delay:.15s;}
+  .hero.swap .ghost{animation:ghostIn .8s var(--ease) backwards;}
+  @keyframes heroIn{from{opacity:0;transform:translate3d(calc(var(--dir)*22px),0,0);}to{opacity:1;transform:none;}}
+  @keyframes ghostIn{from{opacity:0;transform:translate3d(calc(var(--dir)*54px),0,0);}to{opacity:1;transform:none;}}
+  @keyframes rise{from{opacity:0;transform:translate3d(0,16px,0);}to{opacity:1;transform:none;}}
+
+  @supports (animation-timeline:scroll()){
+    .ghost-w{animation:drift linear both;animation-timeline:scroll(root);animation-range:0 420px;}
+    @keyframes drift{to{transform:translate3d(0,70px,0);opacity:.25;}}
+  }
+
+  /* ---------- week: a segmented control with a sliding thumb ---------- */
+  .week{
+    position:relative;display:grid;grid-template-columns:repeat(7,1fr);gap:4px;
+    margin:28px 0 0;padding:4px;border-radius:19px;
+    background:linear-gradient(180deg,rgba(19,23,31,.92),rgba(12,15,21,.92));
+    box-shadow:inset 0 0 0 1px var(--line),inset 0 1px 0 rgba(255,255,255,.045);
+    animation:rise .7s var(--ease) .12s backwards;
+  }
+  .thumb{
+    position:absolute;top:4px;bottom:4px;left:4px;width:calc((100% - 32px)/7);border-radius:15px;
+    background:linear-gradient(180deg,#262C3B,#191D28);
+    box-shadow:inset 0 0 0 1px rgba(255,90,31,.9),inset 0 1px 0 1px rgba(255,255,255,.07),0 10px 24px -10px rgba(255,90,31,.6);
+    transform:translateX(calc(var(--i,0)*(100% + 4px)));
+    transition:transform .45s var(--ease);
+  }
   .wd{
-    position:relative;background:var(--panel);border:1px solid var(--line);
-    border-radius:10px;padding:9px 0 8px;cursor:pointer;overflow:hidden;
-    display:flex;flex-direction:column;align-items:center;gap:6px;
-    transition:border-color .16s,background .16s,transform .12s;
+    position:relative;z-index:1;appearance:none;-webkit-appearance:none;background:none;border:0;margin:0;
+    border-radius:15px;padding:10px 0 10px;cursor:pointer;
+    display:flex;flex-direction:column;align-items:center;gap:2px;
+    transition:transform .15s;
   }
-  .wd:hover{border-color:var(--line-2);transform:translateY(-1px);}
-  .wd:focus-visible{outline:2px solid var(--hot);outline-offset:2px;}
-  .wd .d{font-family:'JetBrains Mono';font-weight:700;font-size:11px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;}
-  .wd .bar2{width:20px;height:3px;border-radius:2px;background:var(--line-2);overflow:hidden;}
+  .wd:active{transform:scale(.94);}
+  .wd .d{font-family:var(--mono);font-weight:700;font-size:9.5px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;transition:color .3s;}
+  .wd .n{font-family:var(--display);font-weight:700;font-size:19px;line-height:1.15;letter-spacing:-.02em;color:var(--fg-2);transition:color .3s;}
+  .wd .bar2{width:18px;height:3px;border-radius:2px;background:var(--line-2);overflow:hidden;margin-top:4px;}
   .wd .bar2 i{display:block;height:100%;width:0;background:var(--cool);transition:width .4s ease;}
-  .wd[aria-pressed="true"]{background:var(--panel-2);border-color:var(--hot);}
-  .wd[aria-pressed="true"] .d{color:var(--fg);}
+  .wd[aria-pressed="true"] .d{color:var(--hot-2);}
+  .wd[aria-pressed="true"] .n{color:#fff;}
+  .wd[aria-pressed="true"] .bar2{background:#3A4354;}
   .wd.istoday::after{
-    content:"";position:absolute;top:5px;right:5px;width:4px;height:4px;
-    border-radius:50%;background:var(--hot);
+    content:"";position:absolute;top:7px;right:7px;width:4px;height:4px;
+    border-radius:50%;background:var(--hot);box-shadow:0 0 6px rgba(255,90,31,.9);
   }
 
+  /* ---------- readout: the instrument ---------- */
   .readout{
-    display:flex;align-items:center;gap:14px;margin:18px 0 2px;
-    background:var(--panel);border:1px solid var(--line);border-radius:12px;
-    padding:13px 15px;
-  }
-  .readout .big{font-family:'JetBrains Mono';font-weight:700;font-size:22px;letter-spacing:-.02em;}
-  .readout .big s{text-decoration:none;color:var(--muted);font-size:15px;}
-  .readout .track{flex:1;height:6px;background:#0C0F15;border-radius:4px;overflow:hidden;border:1px solid var(--line);}
-  .readout .fill{height:100%;width:0;border-radius:4px;background:linear-gradient(90deg,var(--hot-dim),var(--hot));transition:width .4s cubic-bezier(.3,.9,.3,1);}
-  .readout.full .fill{background:linear-gradient(90deg,#1F7A6C,var(--cool));}
-  .readout .lab{font-family:'JetBrains Mono';font-weight:600;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);}
-
-  ul.lifts{list-style:none;margin:16px 0 0;padding:0;}
-  ul.lifts li{
+    position:relative;display:flex;align-items:center;gap:16px;overflow:hidden;
+    margin:12px 0 0;padding:16px 17px 16px 15px;border-radius:19px;
     background:linear-gradient(180deg,var(--panel-2),var(--panel));
-    border:1px solid var(--line);border-radius:13px;margin-bottom:9px;
-    overflow:hidden;position:relative;
-    transition:border-color .18s,box-shadow .18s;
+    box-shadow:inset 0 0 0 1px var(--line),inset 0 1px 0 rgba(255,255,255,.05),0 26px 50px -34px #000;
+    animation:rise .7s var(--ease) .18s backwards;
+  }
+  .readout::before,.readout::after{
+    content:"";position:absolute;left:-46px;top:-46px;width:190px;height:190px;border-radius:50%;pointer-events:none;
+    background:radial-gradient(closest-side,rgba(255,90,31,.17),transparent);transition:opacity .5s;
+  }
+  .readout::after{background:radial-gradient(closest-side,rgba(61,214,192,.2),transparent);opacity:0;}
+  .readout.full::before{opacity:0;}
+  .readout.full::after{opacity:1;}
+  .dial{position:relative;flex:0 0 auto;width:74px;height:74px;}
+  .dial svg{display:block;width:100%;height:100%;transform:rotate(-90deg);overflow:visible;}
+  .dial circle{fill:none;}
+  .dial .trk{stroke:var(--well);stroke-width:7;}
+  .dial .rim{stroke:var(--line);stroke-width:1;}
+  .dial .arc{
+    stroke:url(#gHot);stroke-width:7;stroke-linecap:round;
+    stroke-dasharray:100 100;stroke-dashoffset:100;opacity:0;
+    transition:stroke-dashoffset .8s var(--ease),opacity .2s;
+    filter:drop-shadow(0 0 5px rgba(255,90,31,.55));
+  }
+  .readout.full .arc{stroke:url(#gCool);filter:drop-shadow(0 0 7px rgba(61,214,192,.65));}
+  .pct{
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    font-family:var(--mono);font-weight:700;font-size:18px;letter-spacing:-.05em;
+  }
+  .pct i{font-size:10px;color:var(--muted);margin:4px 0 0 1px;letter-spacing:0;}
+  .rd{position:relative;flex:1;min-width:0;}
+  .rd-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px;}
+  .big{font-family:var(--mono);font-weight:700;font-size:27px;letter-spacing:-.05em;line-height:1;display:inline-flex;align-items:baseline;}
+  .big i{display:inline-block;}
+  .big s{color:var(--muted);font-size:15px;letter-spacing:-.02em;margin-left:5px;}
+  .lab{font-family:var(--mono);font-weight:700;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);transition:color .3s;}
+  .readout.full .lab{color:var(--cool);}
+  .segs{display:flex;gap:2px;height:8px;margin-top:13px;}
+  .sg{position:relative;flex:1 1 0;min-width:3px;border-radius:2.5px;background:var(--well);box-shadow:inset 0 0 0 1px var(--line);overflow:hidden;}
+  .sg i{position:absolute;inset:0;transform-origin:0 50%;transform:scaleX(0);background:linear-gradient(90deg,var(--hot-dim),var(--hot));transition:transform .5s var(--ease);}
+  .sg.ok i{background:linear-gradient(90deg,#2BB9A4,var(--cool-2));}
+  .sg-gap{flex:0 0 5px;}
+  .rd-sub{
+    display:flex;justify-content:space-between;gap:10px;margin-top:10px;
+    font-family:var(--mono);font-weight:600;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);
+  }
+  .rd-sub b{color:var(--fg-2);font-weight:700;margin-left:6px;letter-spacing:.04em;}
+  .bump{animation:bump .4s var(--ease);}
+  @keyframes bump{0%{transform:scale(1);}35%{transform:scale(1.22);color:var(--cool-2);}100%{transform:scale(1);}}
+
+  /* ---------- exercise cards ---------- */
+  ul.lifts{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:9px;}
+  ul.lifts li{
+    position:relative;border-radius:17px;overflow:hidden;
+    background:linear-gradient(180deg,var(--panel-2),var(--panel));
+    box-shadow:inset 0 0 0 1px var(--line),inset 0 1px 0 rgba(255,255,255,.045);
+    transition:box-shadow .35s;
+    animation:rise .6s var(--ease) backwards;animation-delay:calc(var(--i,0)*40ms + 220ms);
+  }
+  .swapping ul.lifts li{animation-delay:calc(var(--i,0)*34ms + 60ms);}
+  /* hot gradient ring, faded in when the card opens */
+  ul.lifts li::after{
+    content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;
+    background:linear-gradient(150deg,rgba(255,90,31,.85),rgba(255,90,31,.16) 32%,rgba(255,255,255,.05) 60%,rgba(255,255,255,.03));
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor;mask-composite:exclude;
+    opacity:0;transition:opacity .35s;
+  }
+  ul.lifts li.open{box-shadow:inset 0 0 0 1px var(--line-2),inset 0 1px 0 rgba(255,255,255,.06),0 24px 44px -28px #000;}
+  ul.lifts li.open::after{opacity:1;}
+  .head{
+    position:relative;appearance:none;-webkit-appearance:none;background:none;border:0;margin:0;
+    width:100%;text-align:left;cursor:pointer;border-radius:17px;
+    display:grid;grid-template-columns:28px minmax(0,1fr) auto;align-items:center;column-gap:12px;
+    padding:15px 16px 15px 14px;
   }
   ul.lifts li::before{
-    content:"";position:absolute;left:0;top:0;bottom:0;width:2px;
-    background:var(--line-2);transition:background .25s;
+    content:"";position:absolute;left:-150px;top:-100px;width:300px;height:200px;border-radius:50%;pointer-events:none;
+    background:radial-gradient(closest-side,rgba(255,90,31,.15),transparent);
+    opacity:0;transition:opacity .35s;
   }
-  ul.lifts li.open{border-color:var(--line-2);box-shadow:0 10px 30px -18px rgba(0,0,0,.9);}
-  ul.lifts li.done::before{background:var(--cool);}
-  ul.lifts li.done .nm{color:var(--muted);}
-  .head{display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;padding:14px 15px;cursor:pointer;}
-  .nm{font-weight:600;font-size:16.5px;line-height:1.25;transition:color .2s;}
+  ul.lifts li.open::before{opacity:1;}
+  .head:focus-visible{outline-offset:-3px;}
+  .idx{
+    position:relative;width:28px;height:28px;border-radius:50%;
+    display:grid;place-items:center;
+    font-family:var(--mono);font-weight:700;font-size:10.5px;letter-spacing:.02em;color:var(--muted);
+    background:var(--well);box-shadow:inset 0 0 0 1px var(--line-2);
+    transition:background .3s,color .3s,box-shadow .3s;
+  }
+  .idx .num{transition:opacity .2s,transform .3s;}
+  .tick{fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;}
+  .idx .tick{position:absolute;width:13px;height:13px;color:#04110F;opacity:0;transform:scale(.3) rotate(-30deg);transition:opacity .2s,transform .45s var(--spring);}
+  li.open .idx{color:var(--hot-2);box-shadow:inset 0 0 0 1px rgba(255,90,31,.65);}
+  li.done .idx{background:linear-gradient(180deg,var(--cool-2),var(--cool));box-shadow:0 0 14px -2px rgba(61,214,192,.55);}
+  li.done .idx .num{opacity:0;transform:scale(.5);}
+  li.done .idx .tick{opacity:1;transform:none;}
+  .ttl{display:block;min-width:0;}
+  .nm{display:block;font-weight:600;font-size:16.5px;line-height:1.25;letter-spacing:-.005em;transition:color .3s;}
   .meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:7px;}
-  .mus{font-family:'JetBrains Mono';font-weight:600;font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);}
+  .mus{font-family:var(--mono);font-weight:600;font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);}
   .chip{
-    font-family:'JetBrains Mono';font-weight:700;font-size:10px;
+    font-family:var(--mono);font-weight:700;font-size:9.5px;
     letter-spacing:.11em;text-transform:uppercase;
-    padding:3px 7px;border-radius:4px;border:1px solid;
+    padding:3px 7px;border-radius:5px;border:1px solid;
   }
   .chip.straps{color:var(--gold);border-color:#5A4A1B;background:rgba(232,185,59,.07);}
   .chip.grip{color:var(--cool);border-color:#1F4B44;background:rgba(61,214,192,.07);}
-  .chip.int{color:var(--hot);border-color:#5C2B14;background:rgba(255,90,31,.08);}
-  .reps{
-    font-family:'JetBrains Mono';font-weight:700;font-size:15px;
-    white-space:nowrap;text-align:right;letter-spacing:-.02em;
-  }
-  .reps em{display:block;font-style:normal;font-size:9.5px;letter-spacing:.14em;color:var(--muted);margin-top:3px;text-transform:uppercase;}
+  .chip.int{color:var(--hot-2);border-color:#5C2B14;background:rgba(255,90,31,.09);}
+  .rx{display:flex;flex-direction:column;align-items:flex-end;gap:9px;}
+  .reps{font-family:var(--mono);font-weight:700;font-size:15px;white-space:nowrap;letter-spacing:-.03em;transition:color .3s;}
+  .reps .c{color:var(--muted);font-weight:600;}
+  .reps .c i{margin:0 .38em;color:var(--faint);}
+  .pips{display:flex;gap:3px;}
+  .pips i{width:13px;height:4px;border-radius:2px;background:var(--line-2);transition:background .25s,box-shadow .25s,transform .4s var(--spring);}
+  .pips i.on{background:var(--cool);box-shadow:0 0 8px rgba(61,214,192,.6);}
+  li.done .nm{color:var(--muted);}
+  li.done .reps,li.done .reps .c{color:var(--faint);}
 
-  .body{max-height:0;overflow:hidden;transition:max-height .32s cubic-bezier(.4,0,.2,1);}
-  li.open .body{max-height:560px;}
-  .inner{padding:2px 15px 15px;}
-  .cue{color:var(--muted);font-size:14.5px;line-height:1.6;margin:0 0 15px;padding-top:13px;border-top:1px solid var(--line);}
-  .cue b{color:var(--hot);font-weight:600;}
-  .row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
-  .sets{display:flex;gap:6px;flex-wrap:wrap;}
-  .sets button{
-    min-width:40px;height:34px;padding:0 5px;border-radius:8px;
-    background:#0C0F15;border:1px solid var(--line-2);color:var(--muted);
-    font-family:'JetBrains Mono';font-weight:700;font-size:12px;
-    cursor:pointer;transition:all .16s;
+  .body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s var(--ease);}
+  li.open .body{grid-template-rows:1fr;}
+  .clip{min-height:0;overflow:hidden;visibility:hidden;transition:visibility 0s .4s;}
+  li.open .clip{visibility:visible;transition-delay:0s;}
+  .inner{padding:0 16px 16px;opacity:0;transform:translate3d(0,-6px,0);transition:opacity .3s,transform .4s var(--ease);}
+  li.open .inner{opacity:1;transform:none;transition-delay:.06s;}
+  .cue{
+    color:var(--fg-2);font-size:15px;line-height:1.6;margin:0 0 16px;
+    padding:14px 0 0;border-top:1px solid var(--line);
   }
-  .sets button:hover{border-color:var(--muted);color:var(--fg);}
-  .sets button[aria-pressed="true"]{background:var(--cool);border-color:var(--cool);color:#06100E;}
+  .cue b{color:var(--hot-2);font-weight:600;}
+  .sets{display:grid;grid-template-columns:repeat(var(--n,3),minmax(0,1fr));gap:8px;}
+  .set{
+    position:relative;overflow:hidden;appearance:none;-webkit-appearance:none;border:0;margin:0;
+    height:50px;border-radius:13px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    background:var(--well);box-shadow:inset 0 0 0 1px var(--line-2),inset 0 1px 0 rgba(255,255,255,.03);
+    color:var(--fg-2);
+    font-family:var(--mono);font-weight:700;font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+    transition:transform .14s,background .25s,color .25s,box-shadow .25s;
+  }
+  .set:active{transform:scale(.95);}
+  .set .tick{width:0;height:14px;margin-right:0;opacity:0;transform:scale(.4);transition:width .3s var(--ease),margin .3s var(--ease),opacity .2s,transform .45s var(--spring);}
+  .set .l1{display:none;}
+  .set[aria-pressed="true"]{
+    background:linear-gradient(180deg,#5BEAD5,#2FC4AE);color:#04110F;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 8px 20px -10px rgba(61,214,192,.75);
+  }
+  .set[aria-pressed="true"] .tick{width:14px;margin-right:7px;opacity:1;transform:none;}
+  .set[aria-pressed="true"] .l0{display:none;}
+  .set[aria-pressed="true"] .l1{display:inline;}
+  .set .rip{
+    position:absolute;left:50%;top:50%;width:60px;height:60px;margin:-30px 0 0 -30px;border-radius:50%;pointer-events:none;
+    background:radial-gradient(closest-side,rgba(255,255,255,.55),rgba(255,255,255,0));
+    opacity:0;animation:ripple .6s var(--ease) forwards;
+  }
+  @keyframes ripple{from{opacity:.9;transform:scale(.2);}to{opacity:0;transform:scale(3.2);}}
   .form{
-    display:inline-flex;align-items:center;gap:8px;text-decoration:none;
-    color:var(--fg);background:#0C0F15;border:1px solid var(--line-2);
-    border-radius:8px;padding:8px 13px;font-size:13.5px;font-weight:500;
-    transition:border-color .16s,color .16s;
+    display:flex;align-items:center;gap:10px;text-decoration:none;
+    color:var(--fg-2);border-radius:13px;padding:11px 14px 11px 12px;font-size:14px;font-weight:500;
+    box-shadow:inset 0 0 0 1px var(--line);
+    transition:box-shadow .2s,color .2s,background .2s;
   }
-  .form:hover{border-color:var(--hot);color:var(--hot);}
-  .play{width:16px;height:16px;border-radius:50%;background:var(--hot);display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;}
-  .play::after{content:"";border-left:5px solid #08090C;border-top:3.5px solid transparent;border-bottom:3.5px solid transparent;margin-left:2px;}
+  .form:active{background:rgba(255,255,255,.03);}
+  .play{width:22px;height:22px;border-radius:50%;background:var(--hot);display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;box-shadow:0 0 12px -2px rgba(255,90,31,.7);}
+  .play::after{content:"";border-left:7px solid #08090C;border-top:4.5px solid transparent;border-bottom:4.5px solid transparent;margin-left:2px;}
 
-  .pane{margin-top:34px;border-radius:15px;padding:20px 17px;border:1px solid var(--line);background:var(--panel);}
-  .pane.cool{border-color:#1C3F3A;background:linear-gradient(180deg,rgba(61,214,192,.05),transparent 60%),var(--panel);}
+  /* sheen that sweeps a card or the readout when it completes */
+  .sheen{
+    position:absolute;top:0;bottom:0;left:0;width:45%;pointer-events:none;z-index:3;
+    background:linear-gradient(100deg,transparent,rgba(124,240,223,.16) 40%,rgba(255,255,255,.26) 50%,rgba(124,240,223,.16) 60%,transparent);
+    transform:translateX(-140%) skewX(-16deg);
+    animation:sheen 1s cubic-bezier(.45,.05,.35,1) forwards;
+  }
+  @keyframes sheen{to{transform:translateX(330%) skewX(-16deg);}}
+
+  /* ---------- face & neck ---------- */
+  .pane{
+    position:relative;margin-top:44px;border-radius:24px;padding:22px 14px 14px;overflow:hidden;
+    background:linear-gradient(180deg,rgba(61,214,192,.075),rgba(61,214,192,0) 300px),var(--panel);
+    box-shadow:inset 0 0 0 1px #1C3F3A,inset 0 1px 0 rgba(124,240,223,.14);
+  }
+  .pane::before{
+    content:"";position:absolute;right:-70px;top:-90px;width:270px;height:270px;border-radius:50%;pointer-events:none;
+    background:radial-gradient(closest-side,rgba(61,214,192,.17),transparent);
+  }
+  .pane-h{position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 5px;}
+  .pane .sub{position:relative;padding:0 5px;}
   .pane.cool h2{color:var(--cool);}
-  .pane.cool ul.lifts li::before{background:#1F4B44;}
-  .pane.cool ul.lifts li.done::before{background:var(--cool);}
-  h2{font-family:'Bricolage Grotesque';font-weight:800;font-size:25px;letter-spacing:-.025em;margin:0 0 4px;}
-  .sub{color:var(--muted);font-size:14.5px;margin:0 0 6px;max-width:48ch;}
-  section{margin-top:34px;}
-  .notes{padding-left:18px;color:var(--muted);font-size:15px;max-width:52ch;margin:14px 0 0;}
-  .notes li{margin-bottom:12px;}
-  .notes b{color:var(--fg);font-weight:600;}
+  .count{
+    font-family:var(--mono);font-weight:700;font-size:12px;letter-spacing:.02em;white-space:nowrap;
+    color:var(--cool);padding:6px 11px;border-radius:100px;
+    background:rgba(61,214,192,.08);box-shadow:inset 0 0 0 1px #1F4B44;
+    transition:background .3s,color .3s,box-shadow .3s;
+  }
+  .count.full{background:var(--cool);color:#04110F;box-shadow:0 0 18px -4px rgba(61,214,192,.7);}
+  .pane ul.lifts{position:relative;margin-top:16px;}
+  .pane ul.lifts li{background:linear-gradient(180deg,rgba(21,27,34,.92),rgba(12,15,20,.92));animation:none;}
+  .pane ul.lifts li::after{background:linear-gradient(150deg,rgba(61,214,192,.8),rgba(61,214,192,.14) 32%,rgba(255,255,255,.05) 60%,rgba(255,255,255,.03));}
+  .pane ul.lifts li::before{background:radial-gradient(closest-side,rgba(61,214,192,.13),transparent);}
+  .pane li.open .idx{color:var(--cool);box-shadow:inset 0 0 0 1px rgba(61,214,192,.6);}
 
-  footer{margin-top:44px;padding-top:18px;border-top:1px solid var(--line);color:#5A6472;font-size:13px;}
-  .reset{background:none;border:none;color:#5A6472;font-size:13px;text-decoration:underline;cursor:pointer;padding:0;margin-top:10px;font-family:inherit;}
-  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+  /* ---------- notes ---------- */
+  h2{font-family:var(--display);font-weight:800;font-size:29px;line-height:1.1;letter-spacing:-.03em;margin:0;}
+  .sub{color:var(--muted);font-size:14.5px;margin:6px 0 0;max-width:48ch;}
+  section{margin-top:46px;}
+  .sec-h{display:flex;align-items:center;gap:16px;}
+  .sec-h::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--line-2),transparent);}
+  .notes{list-style:none;counter-reset:n;margin:12px 0 0;padding:0;}
+  .notes li{
+    counter-increment:n;position:relative;padding:15px 0 15px 44px;
+    border-top:1px solid var(--line);color:#8E98A7;font-size:15px;line-height:1.55;
+  }
+  .notes li:first-child{border-top:0;}
+  .notes li::before{
+    content:counter(n,decimal-leading-zero);position:absolute;left:0;top:17px;
+    font-family:var(--mono);font-weight:700;font-size:12px;letter-spacing:.04em;color:var(--hot);
+  }
+  .gold .notes li::before{color:var(--gold);}
+  .notes b{display:block;color:var(--fg);font-weight:600;font-size:16px;margin-bottom:2px;}
+
+  footer{margin-top:48px;padding-top:20px;border-top:1px solid var(--line);color:var(--faint);font-size:13px;line-height:1.65;}
+  .reset{
+    appearance:none;-webkit-appearance:none;display:inline-flex;align-items:center;gap:8px;
+    margin-top:16px;padding:10px 15px 10px 12px;border-radius:100px;background:none;border:0;
+    box-shadow:inset 0 0 0 1px var(--line-2);color:var(--fg-2);font-size:13px;font-weight:500;cursor:pointer;
+    transition:box-shadow .2s,color .2s,transform .14s;
+  }
+  .reset:active{transform:scale(.96);}
+  .reset svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+
+  /* ---------- compact bar that drops in once the readout scrolls away ---------- */
+  .topbar{
+    position:fixed;left:0;right:0;top:0;z-index:20;cursor:pointer;
+    padding-top:env(safe-area-inset-top);
+    /* Near-opaque on purpose: the blur is a bonus, the bar has to stay readable without it (Reduce Transparency, older devices). */
+    background:rgba(9,10,14,.92);
+    -webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);
+    box-shadow:0 1px 0 rgba(255,255,255,.06),0 18px 30px -24px #000;
+    transform:translate3d(0,-110%,0);visibility:hidden;
+    transition:transform .4s var(--ease),visibility 0s .4s;
+  }
+  .topbar.on{transform:none;visibility:visible;transition-delay:0s;}
+  .tb-in{max-width:680px;margin:0 auto;padding:11px 18px 12px;display:flex;align-items:baseline;gap:10px;}
+  .tb-in .dot{align-self:center;}
+  .tb-in b{font-family:var(--display);font-weight:800;font-size:19px;letter-spacing:-.02em;line-height:1;}
+  .tb-day{font-family:var(--mono);font-weight:700;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);}
+  .tb-n{margin-left:auto;font-family:var(--mono);font-weight:700;font-size:15px;letter-spacing:-.03em;}
+  .tb-n s{color:var(--muted);font-size:12px;margin-left:3px;}
+  .tb-line{height:2px;background:rgba(255,255,255,.05);}
+  .tb-line i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--hot-dim),var(--hot));box-shadow:0 0 10px rgba(255,90,31,.8);transition:width .5s var(--ease);}
+  .topbar.full .tb-line i{background:linear-gradient(90deg,var(--cool-dim),var(--cool));box-shadow:0 0 10px rgba(61,214,192,.8);}
+
+  .pre{opacity:0;transform:translate3d(0,22px,0);}
+  .reveal{transition:opacity .8s var(--ease),transform .8s var(--ease);}
+  .bar,.hero .kicker,.hero h1,.hero .focus,.hero .blurb{animation:rise .7s var(--ease) backwards;}
+  .hero h1{animation-delay:.04s;}
+  .hero .focus{animation-delay:.08s;}
+  .hero .blurb{animation-delay:.1s;}
+
+  @media (hover:hover){
+    .wd:hover .n{color:#fff;}
+    ul.lifts li:hover{box-shadow:inset 0 0 0 1px var(--line-2),inset 0 1px 0 rgba(255,255,255,.06);}
+    ul.lifts li.open:hover{box-shadow:inset 0 0 0 1px var(--line-2),inset 0 1px 0 rgba(255,255,255,.06),0 24px 44px -28px #000;}
+    .set:hover{box-shadow:inset 0 0 0 1px var(--muted),inset 0 1px 0 rgba(255,255,255,.03);color:var(--fg);}
+    .set[aria-pressed="true"]:hover{box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 8px 20px -10px rgba(61,214,192,.75);color:#04110F;}
+    .form:hover{box-shadow:inset 0 0 0 1px var(--hot);color:var(--fg);}
+    .reset:hover{box-shadow:inset 0 0 0 1px var(--muted);color:var(--fg);}
+  }
+
+  /* ---------- wide screens: the day stays put, the work scrolls ---------- */
+  @media (min-width:1040px){
+    .wrap{max-width:1160px;display:grid;grid-template-columns:minmax(0,430px) minmax(0,1fr);column-gap:76px;align-items:start;padding-left:36px;padding-right:36px;}
+    .main{padding-top:100px;}
+    ul.lifts:first-child{margin-top:0;}
+    .topbar{display:none;}
+    .hero{padding-top:44px;}
+    .hero::before{right:-150px;left:-40px;-webkit-mask-image:radial-gradient(52% 62% at 66% 26%,#000,transparent 100%);mask-image:radial-gradient(52% 62% at 66% 26%,#000,transparent 100%);}
+    h1{font-size:112px;}
+    .ghost{font-size:230px;}
+    .pane{padding:26px 18px 18px;}
+  }
+  @media (min-width:1040px) and (min-height:720px){
+    .side{position:sticky;top:0;padding-bottom:28px;}
+  }
+
+
+  /* ---------- Spot: the coach in the corner ---------- */
+  .orb{--s:56px;position:relative;display:block;flex:0 0 auto;width:var(--s);height:var(--s);border-radius:50%;}
+  .orb::before{
+    content:"";position:absolute;inset:0;border-radius:50%;
+    background:radial-gradient(circle at 50% 28%,#272D3D,#0C0F15 72%);
+    box-shadow:inset 0 0 0 1px var(--line-2),inset 0 1px 0 rgba(255,255,255,.1);
+  }
+  .orb-ring{
+    position:absolute;inset:7%;border-radius:50%;
+    background:conic-gradient(from 0deg,rgba(255,90,31,0) 0 48%,rgba(255,90,31,.22) 66%,var(--hot) 94%,#FFD9C2 100%);
+    -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 2.7px),#000 calc(100% - 2.2px));
+    mask:radial-gradient(farthest-side,transparent calc(100% - 2.7px),#000 calc(100% - 2.2px));
+    animation:orbSpin 4.6s linear infinite;
+  }
+  .orb-core{
+    position:absolute;inset:27%;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;gap:17%;
+    background:radial-gradient(circle at 38% 30%,#FFE6D6,var(--hot-2) 32%,var(--hot) 60%,#B33407);
+    box-shadow:0 0 calc(var(--s)*.32) rgba(255,90,31,.7),inset 0 calc(var(--s)*-.05) calc(var(--s)*.1) rgba(110,28,0,.55);
+    animation:orbBreathe 3.8s ease-in-out infinite;
+  }
+  .orb-core b{display:block;width:13%;height:36%;border-radius:45%;background:#1C0B04;animation:orbBlink 5.6s infinite;}
+  .orb.busy .orb-ring{animation-duration:.85s;}
+  .orb.busy .orb-core{animation-duration:.85s;}
+  .orb.busy .orb-core b{animation:orbScan 1.1s ease-in-out infinite;}
+  .orb.still .orb-ring,.orb.still .orb-core,.orb.still .orb-core b{animation:none;}
+  @keyframes orbSpin{to{transform:rotate(360deg);}}
+  @keyframes orbBreathe{0%,100%{transform:scale(1);}50%{transform:scale(1.07);}}
+  @keyframes orbBlink{0%,92%,100%{transform:scaleY(1);}96%{transform:scaleY(.1);}}
+  @keyframes orbScan{0%,100%{transform:translateX(-55%);}50%{transform:translateX(55%);}}
+
+  .spot-fab{
+    position:fixed;z-index:25;right:max(16px,env(safe-area-inset-right));bottom:calc(16px + env(safe-area-inset-bottom));
+    appearance:none;-webkit-appearance:none;border:0;padding:0;margin:0;background:none;border-radius:50%;cursor:pointer;
+    transition:transform .4s var(--spring),opacity .25s;
+    animation:fabIn .9s var(--spring) 1s backwards;
+  }
+  .spot-fab .orb::before{box-shadow:inset 0 0 0 1px var(--line-2),inset 0 1px 0 rgba(255,255,255,.1),0 14px 28px -8px rgba(0,0,0,.9),0 0 30px -4px rgba(255,90,31,.55);}
+  .spot-fab:active{transform:scale(.9);}
+  .spot-open .spot-fab{transform:scale(.3);opacity:0;pointer-events:none;}
+  @keyframes fabIn{from{opacity:0;transform:scale(.2) rotate(-90deg);}to{opacity:1;transform:none;}}
+  .spot-hint{
+    position:absolute;right:calc(100% + 10px);top:50%;white-space:nowrap;pointer-events:none;
+    font-family:var(--mono);font-weight:700;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg);
+    padding:9px 12px;border-radius:100px;background:rgba(17,20,27,.96);
+    box-shadow:inset 0 0 0 1px var(--line-2),0 10px 24px -10px #000;
+    opacity:0;transform:translate3d(8px,-50%,0);transition:opacity .4s,transform .4s var(--ease);
+  }
+  .spot-fab.hint .spot-hint{opacity:1;transform:translate3d(0,-50%,0);}
+
+  .spot{position:fixed;left:0;top:0;width:100%;height:100%;z-index:28;visibility:hidden;pointer-events:none;transition:visibility 0s .5s;}
+  .spot.on{visibility:visible;pointer-events:auto;transition-delay:0s;}
+  .spot-scrim{
+    position:absolute;inset:0;background:rgba(4,5,8,.66);opacity:0;transition:opacity .35s;
+    -webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);
+  }
+  .spot.on .spot-scrim{opacity:1;}
+  .spot-panel{
+    position:absolute;left:0;right:0;bottom:0;margin:0 auto;max-width:560px;height:min(88%,680px);
+    display:flex;flex-direction:column;overflow:hidden;border-radius:26px 26px 0 0;
+    background:linear-gradient(180deg,#161A24,#0C0F15 60%);
+    box-shadow:inset 0 0 0 1px var(--line-2),inset 0 1px 0 rgba(255,255,255,.09),0 -30px 80px -20px #000;
+    transform:translate3d(0,104%,0);transition:transform .5s var(--ease);
+  }
+  .spot.on .spot-panel{transform:none;}
+  .spot-panel::before{
+    content:"";position:absolute;left:-70px;top:-90px;width:280px;height:240px;border-radius:50%;pointer-events:none;
+    background:radial-gradient(closest-side,rgba(255,90,31,.2),transparent);
+  }
+  .spot-h{position:relative;flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:16px 12px 14px 18px;box-shadow:0 1px 0 var(--line);}
+  .spot-id{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;}
+  .spot-id b{font-family:var(--display);font-weight:800;font-size:22px;line-height:1;letter-spacing:-.02em;}
+  .spot-mode{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-weight:700;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);}
+  .spot-mode::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--cool);box-shadow:0 0 8px rgba(61,214,192,.9);}
+  .spot-mode.ai::before{background:var(--hot);box-shadow:0 0 8px rgba(255,90,31,.9);}
+  .spot-ic{
+    appearance:none;-webkit-appearance:none;border:0;background:none;padding:0;flex:0 0 auto;
+    width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:var(--muted);cursor:pointer;
+    transition:background .2s,color .2s,transform .14s;
+  }
+  .spot-ic:active{transform:scale(.9);background:rgba(255,255,255,.05);}
+  .spot-ic svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+  .spot-ic.on{color:var(--hot-2);background:rgba(255,90,31,.1);}
+
+  .spot-log{
+    position:relative;flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
+    padding:18px 16px 10px;display:flex;flex-direction:column;gap:12px;scrollbar-width:none;
+  }
+  .spot-log::-webkit-scrollbar{display:none;}
+  .msg{max-width:90%;animation:rise .45s var(--ease) backwards;}
+  .msg.bot{align-self:flex-start;}
+  .msg.me{align-self:flex-end;}
+  .bub{padding:11px 14px;border-radius:18px;font-size:15px;line-height:1.5;overflow-wrap:anywhere;}
+  .bot .bub{
+    border-top-left-radius:6px;color:var(--fg-2);
+    background:linear-gradient(180deg,var(--panel-2),var(--panel));
+    box-shadow:inset 0 0 0 1px var(--line),inset 0 1px 0 rgba(255,255,255,.045);
+  }
+  .bot .bub b{color:var(--fg);font-weight:600;}
+  .me .bub{
+    border-top-right-radius:6px;color:#fff;
+    background:linear-gradient(180deg,rgba(255,90,31,.26),rgba(255,90,31,.13));
+    box-shadow:inset 0 0 0 1px rgba(255,90,31,.5);
+  }
+  .bub p{margin:0 0 8px;}
+  .bub ul{list-style:none;margin:0 0 8px;padding:0;}
+  .bub p:last-child,.bub ul:last-child{margin-bottom:0;}
+  .bub li{position:relative;padding-left:15px;margin-bottom:5px;}
+  .bub li:last-child{margin-bottom:0;}
+  .bub li::before{content:"";position:absolute;left:1px;top:.68em;width:6px;height:2px;border-radius:1px;background:var(--hot);}
+  .bub .note{display:block;margin-bottom:8px;font-family:var(--mono);font-weight:700;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);}
+  .src{margin:6px 0 0 5px;font-family:var(--mono);font-weight:700;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);}
+  .acts{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+  .act{
+    appearance:none;-webkit-appearance:none;border:0;cursor:pointer;text-decoration:none;
+    display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:100px;
+    font-family:var(--mono);font-weight:700;font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--hot-2);background:rgba(255,90,31,.08);box-shadow:inset 0 0 0 1px #5C2B14;
+    transition:transform .14s,background .2s;
+  }
+  .act:active{transform:scale(.95);background:rgba(255,90,31,.16);}
+  .dots{display:inline-flex;gap:5px;padding:5px 2px;}
+  .dots i{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:dot 1.1s ease-in-out infinite;}
+  .dots i:nth-child(2){animation-delay:.15s;}
+  .dots i:nth-child(3){animation-delay:.3s;}
+  @keyframes dot{0%,60%,100%{transform:none;opacity:.35;}30%{transform:translateY(-4px);opacity:1;}}
+
+  .spot-chips{
+    flex:0 0 auto;display:flex;gap:6px;overflow-x:auto;padding:6px 16px 10px;scrollbar-width:none;
+    -webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 30px),transparent);
+    mask-image:linear-gradient(90deg,#000 calc(100% - 30px),transparent);
+  }
+  .spot-chips::-webkit-scrollbar{display:none;}
+  .sug{
+    flex:0 0 auto;appearance:none;-webkit-appearance:none;border:0;cursor:pointer;white-space:nowrap;
+    font-family:var(--text);font-weight:500;font-size:13.5px;color:var(--fg-2);
+    padding:9px 13px;border-radius:100px;background:rgba(255,255,255,.03);box-shadow:inset 0 0 0 1px var(--line-2);
+    transition:transform .14s,color .2s,box-shadow .2s;
+  }
+  .sug:active{transform:scale(.95);}
+  .spot-in{flex:0 0 auto;display:flex;align-items:center;gap:8px;padding:4px 12px calc(14px + env(safe-area-inset-bottom));}
+  .spot-in input{
+    flex:1;min-width:0;height:48px;border-radius:24px;border:0;outline:0;padding:0 18px;
+    font-family:var(--text);font-size:16px;color:var(--fg);background:var(--well);
+    box-shadow:inset 0 0 0 1px var(--line-2);transition:box-shadow .2s;
+  }
+  .spot-in input::placeholder{color:var(--faint);}
+  .spot-in input:focus{box-shadow:inset 0 0 0 1px rgba(255,90,31,.8),0 0 0 4px rgba(255,90,31,.12);}
+  .spot-send{
+    flex:0 0 auto;appearance:none;-webkit-appearance:none;border:0;padding:0;cursor:pointer;
+    width:48px;height:48px;border-radius:50%;display:grid;place-items:center;color:#160701;
+    background:linear-gradient(180deg,var(--hot-2),var(--hot));
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 8px 20px -8px rgba(255,90,31,.8);
+    transition:transform .14s,filter .2s;
+  }
+  .spot-send:active{transform:scale(.92);}
+  .spot-send svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round;}
+  .spot-send .sq{display:none;width:13px;height:13px;border-radius:3px;background:currentColor;}
+  .spot-send.stop svg{display:none;}
+  .spot-send.stop .sq{display:block;}
+
+  .spot-cfg{
+    position:absolute;left:0;right:0;top:71px;bottom:0;z-index:2;overflow-y:auto;overscroll-behavior:contain;
+    padding:22px 18px calc(28px + env(safe-area-inset-bottom));
+    background:linear-gradient(180deg,#151922,#0C0F15 70%);
+    transform:translate3d(100%,0,0);visibility:hidden;transition:transform .4s var(--ease),visibility 0s .4s;
+  }
+  .spot-cfg.on{transform:none;visibility:visible;transition-delay:0s;}
+  .cfg-l{display:block;margin:0 0 9px;font-family:var(--mono);font-weight:700;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);}
+  .cfg-p{margin:9px 0 22px;color:var(--muted);font-size:13.5px;line-height:1.55;}
+  .cfg-p b{color:var(--fg-2);font-weight:600;}
+  .cfg-p a{color:var(--hot-2);}
+  .seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;border-radius:15px;background:var(--well);box-shadow:inset 0 0 0 1px var(--line);}
+  .seg.three{grid-template-columns:1fr 1fr 1fr;}
+  .seg button{
+    appearance:none;-webkit-appearance:none;border:0;background:none;cursor:pointer;height:42px;border-radius:11px;
+    font-family:var(--text);font-weight:600;font-size:14px;color:var(--muted);transition:background .25s,color .25s,box-shadow .25s;
+  }
+  .seg button[aria-pressed="true"]{color:#fff;background:linear-gradient(180deg,#262C3B,#191D28);box-shadow:inset 0 0 0 1px rgba(255,90,31,.85),0 8px 18px -10px rgba(255,90,31,.6);}
+  .seg button:disabled{opacity:.4;cursor:default;}
+  .key-row{display:flex;gap:8px;}
+  .key-row input{
+    flex:1;min-width:0;height:46px;border-radius:13px;border:0;outline:0;padding:0 14px;
+    font-family:var(--mono);font-weight:600;font-size:16px;letter-spacing:-.02em;color:var(--fg);background:var(--well);
+    box-shadow:inset 0 0 0 1px var(--line-2);
+  }
+  .key-row input:focus{box-shadow:inset 0 0 0 1px rgba(255,90,31,.8),0 0 0 4px rgba(255,90,31,.12);}
+  .btn{
+    appearance:none;-webkit-appearance:none;border:0;cursor:pointer;height:46px;padding:0 18px;border-radius:13px;
+    font-family:var(--text);font-weight:600;font-size:14px;color:#160701;
+    background:linear-gradient(180deg,var(--hot-2),var(--hot));box-shadow:inset 0 1px 0 rgba(255,255,255,.35);
+    transition:transform .14s;
+  }
+  .btn:active{transform:scale(.96);}
+  .btn.ghost{color:var(--fg-2);background:none;box-shadow:inset 0 0 0 1px var(--line-2);}
+  .key-state{margin-top:9px;font-family:var(--mono);font-weight:700;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--cool);min-height:1.4em;}
+  .key-state.bad{color:var(--gold);}
+
+  /* the two actions at the bottom of an open card */
+  .links{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px;}
+  .ask{
+    appearance:none;-webkit-appearance:none;border:0;background:none;cursor:pointer;text-align:left;margin:0;
+    display:flex;align-items:center;gap:10px;color:var(--fg-2);border-radius:13px;padding:11px 14px 11px 12px;
+    font-family:var(--text);font-size:14px;font-weight:500;box-shadow:inset 0 0 0 1px var(--line);
+    transition:box-shadow .2s,color .2s,background .2s;
+  }
+  .ask:active{background:rgba(255,255,255,.03);}
+  .ask .orb{--s:22px;}
+  .ask .orb::before{box-shadow:inset 0 0 0 1px var(--line-2);}
+
+  @media (hover:hover){
+    .spot-fab:hover{transform:scale(1.07);}
+    .spot-ic:hover{color:var(--fg);background:rgba(255,255,255,.05);}
+    .sug:hover{color:var(--fg);box-shadow:inset 0 0 0 1px var(--muted);}
+    .act:hover{background:rgba(255,90,31,.16);}
+    .ask:hover{box-shadow:inset 0 0 0 1px var(--hot);color:var(--fg);}
+    .spot-send:hover{filter:brightness(1.08);}
+  }
+  @media (min-width:1040px){
+    .spot-fab{right:28px;bottom:28px;}
+    .spot-scrim{background:rgba(4,5,8,.38);-webkit-backdrop-filter:none;backdrop-filter:none;}
+    .spot-panel{
+      left:auto;right:28px;bottom:28px;margin:0;width:412px;max-width:none;height:min(86%,660px);border-radius:26px;
+      transform:translate3d(0,22px,0) scale(.96);transform-origin:100% 100%;opacity:0;
+      transition:transform .38s var(--ease),opacity .25s;
+    }
+    .spot.on .spot-panel{opacity:1;}
+    .spot-in{padding-bottom:14px;}
+  }
+  @media (max-width:360px){.links{grid-template-columns:1fr;}}
+  html.spot-open{overflow:hidden;}
+
+  @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;}}
 </style>
 </head>
 <body>
+
+<div class="topbar" id="topbar" aria-hidden="true">
+  <div class="tb-in">
+    <i class="dot"></i><b id="tbTitle">Push</b><span class="tb-day" id="tbDay">Today</span>
+    <span class="tb-n"><i id="tbDone">0</i><s>/ <i id="tbTotal">0</i></s></span>
+  </div>
+  <div class="tb-line"><i id="tbFill"></i></div>
+</div>
+
 <div class="wrap">
 
-  <div class="bar">
-    <div class="mark"><i class="dot"></i><span>Home Program</span></div>
-    <div class="clock" id="clock"></div>
+  <div class="side">
+    <div class="bar">
+      <div class="mark"><i class="dot"></i><span>Home Program</span></div>
+      <div class="clock" id="clock"></div>
+    </div>
+
+    <div class="hero" id="hero">
+      <div class="ghost-w" aria-hidden="true"><span class="ghost" id="ghost" data-n="01">01</span></div>
+      <span class="kicker" id="kick"><b></b><i id="kicker">Today</i></span>
+      <h1><span id="title">Push</span></h1>
+      <div class="focus" id="focus"></div>
+      <p class="blurb" id="blurb"></p>
+    </div>
+
+    <div class="week" id="week" role="group" aria-label="Day"><i class="thumb" aria-hidden="true"></i></div>
+
+    <div class="readout" id="readout">
+      <div class="dial" aria-hidden="true">
+        <svg viewBox="0 0 80 80">
+          <defs>
+            <linearGradient id="gHot" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF9259"/><stop offset="1" stop-color="#FF4A0F"/></linearGradient>
+            <linearGradient id="gCool" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7CF0DF"/><stop offset="1" stop-color="#2FC4AE"/></linearGradient>
+          </defs>
+          <circle class="trk" cx="40" cy="40" r="33"/>
+          <circle class="rim" cx="40" cy="40" r="36.5"/>
+          <circle class="rim" cx="40" cy="40" r="29.5"/>
+          <circle class="arc" id="arc" cx="40" cy="40" r="33" pathLength="100"/>
+        </svg>
+        <span class="pct"><b id="pct">0</b><i>%</i></span>
+      </div>
+      <div class="rd">
+        <div class="rd-top">
+          <span class="big"><i id="done">0</i><s>/ <i id="total">0</i></s></span>
+          <span class="lab" id="rdlab">Sets</span>
+        </div>
+        <div class="segs" id="segs" aria-hidden="true"></div>
+        <div class="rd-sub"><span><i id="lfName">Push</i><b id="lf">0/0</b></span><span>Face<b id="fc">0/0</b></span></div>
+      </div>
+    </div>
   </div>
 
-  <div class="hero">
-    <div class="ghost" id="ghost">01</div>
-    <span class="kicker"><b></b><i id="kicker">Today</i></span>
-    <h1 id="title">Push</h1>
-    <div class="focus" id="focus"></div>
-    <p class="blurb" id="blurb"></p>
+  <div class="main">
+    <ul class="lifts" id="lifts"></ul>
+
+    <div class="pane cool">
+      <div class="pane-h"><h2>Face &amp; Neck</h2><span class="count" id="fcount">0 / 0</span></div>
+      <p class="sub">Every day, rest days included. Eight minutes in the mirror.</p>
+      <ul class="lifts" id="face"></ul>
+    </div>
+
+    <section class="gold">
+      <div class="sec-h"><h2>Straps</h2></div>
+      <p class="sub">Gold chip means bring them.</p>
+      <ul class="notes">
+        <li><b>Top sets only.</b> Warm up bare-handed and strap the heaviest one or two sets. Strap everything and your grip never gets the message.</li>
+        <li><b>Never on carries.</b> Farmer's carries exist to build grip. Strapping them defeats the point entirely.</li>
+        <li><b>Grip work goes last.</b> You train forearms directly now, so fry your hands early and every row after it suffers.</li>
+      </ul>
+    </section>
+
+    <section>
+      <div class="sec-h"><h2>Rules</h2></div>
+      <ul class="notes">
+        <li><b>Three working sets.</b> This is what drives the growth. Grinding harder on two is not a substitute for more hard sets.</li>
+        <li><b>One technique per exercise, last set only.</b> Orange chips mark them. Everywhere at once just wrecks recovery.</li>
+        <li><b>Deload week seven.</b> Two sets, around 60 percent, one week. Six days at this intensity catches up around week eight.</li>
+        <li><b>Log the numbers.</b> Beating last week is the entire mechanism, and you cannot beat what you did not write down.</li>
+        <li><b>Eat for it.</b> More volume without more food makes you tired, not bigger.</li>
+      </ul>
+    </section>
+
+    <footer>
+      <span id="kit">Magnetic cable unit, 200lb stack, two barbells, dumbbells to 75, rack with pull-up bar, bench. Each cue names the pulley height. Set marks clear on their own each morning.</span>
+      <br><button class="reset" id="reset"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 8a5.5 5.5 0 1 0 1.7-4M2.5 2.5V5.2h2.7"/></svg><span id="resetLabel">Clear today's marks</span></button>
+    </footer>
   </div>
 
-  <div class="week" id="week" role="group" aria-label="Day"></div>
+</div>
 
-  <div class="readout" id="readout">
-    <span class="big"><i id="done">0</i><s> / <i id="total">0</i></s></span>
-    <div class="track"><div class="fill" id="fill"></div></div>
-    <span class="lab">Sets</span>
-  </div>
+<button class="spot-fab" id="spotFab" type="button" aria-label="Ask Spot, your coach" aria-haspopup="dialog">
+  <span class="orb" id="fabOrb"><i class="orb-ring"></i><i class="orb-core"><b></b><b></b></i></span>
+  <span class="spot-hint" aria-hidden="true">Ask Spot</span>
+</button>
 
-  <ul class="lifts" id="lifts"></ul>
+<div class="spot" id="spot">
+  <div class="spot-scrim" id="spotScrim"></div>
+  <section class="spot-panel" role="dialog" aria-modal="true" aria-labelledby="spotName">
+    <header class="spot-h">
+      <span class="orb" id="spotOrb" style="--s:42px" aria-hidden="true"><i class="orb-ring"></i><i class="orb-core"><b></b><b></b></i></span>
+      <div class="spot-id"><b id="spotName">Spot</b><span class="spot-mode" id="spotMode">On-device</span></div>
+      <button class="spot-ic" id="spotNew" type="button" aria-label="New chat"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 5.5h12M8 5.5V4h4v1.5M6 5.5l.7 10h6.6l.7-10"/></svg></button>
+      <button class="spot-ic" id="spotCfgBtn" type="button" aria-label="Brain settings" aria-expanded="false"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 6h7M15 6h1M4 14h1M9 14h7"/><circle cx="13" cy="6" r="2"/><circle cx="7" cy="14" r="2"/></svg></button>
+      <button class="spot-ic" id="spotClose" type="button" aria-label="Close"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15"/></svg></button>
+    </header>
 
-  <div class="pane cool">
-    <h2>Face &amp; Neck</h2>
-    <p class="sub">Every day, rest days included. Eight minutes in the mirror.</p>
-    <ul class="lifts" id="face"></ul>
-  </div>
+    <div class="spot-log" id="spotLog" role="log" aria-live="polite"></div>
+    <div class="spot-chips" id="spotChips"></div>
+    <form class="spot-in" id="spotForm" autocomplete="off">
+      <input id="spotQ" type="text" inputmode="text" enterkeyhint="send" autocapitalize="sentences" autocomplete="off" maxlength="400" placeholder="Ask about a lift, a muscle, a rule" aria-label="Ask Spot">
+      <button class="spot-send" id="spotSend" type="submit" aria-label="Send"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 16V4M4.5 9.5L10 4l5.5 5.5"/></svg><i class="sq"></i></button>
+    </form>
 
-  <section>
-    <h2>Straps</h2>
-    <p class="sub">Gold chip means bring them.</p>
-    <ul class="notes">
-      <li><b>Top sets only.</b> Warm up bare-handed and strap the heaviest one or two sets. Strap everything and your grip never gets the message.</li>
-      <li><b>Never on carries.</b> Farmer's carries exist to build grip. Strapping them defeats the point entirely.</li>
-      <li><b>Grip work goes last.</b> You train forearms directly now, so fry your hands early and every row after it suffers.</li>
-    </ul>
+    <div class="spot-cfg" id="spotCfg">
+      <span class="cfg-l">Brain</span>
+      <div class="seg" id="brainSeg" role="group" aria-label="Brain">
+        <button type="button" data-ai="0">On-device</button>
+        <button type="button" data-ai="1">Claude</button>
+      </div>
+      <p class="cfg-p"><b>On-device</b> answers from the plan itself: instant, free, works with no signal. <b>Claude</b> is real AI for open questions. It needs signal and your own Anthropic API key, and it falls back to on-device when either is missing.</p>
+
+      <label class="cfg-l" for="spotKey">Anthropic API key</label>
+      <div class="key-row">
+        <input id="spotKey" type="password" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="sk-ant-...">
+        <button class="btn" id="keySave" type="button">Save</button>
+      </div>
+      <div class="key-state" id="keyState"></div>
+      <p class="cfg-p">Kept in this browser only and sent nowhere except api.anthropic.com. Questions are billed to your Anthropic account, so make a dedicated key with a low spend limit at <a href="https://platform.claude.com" target="_blank" rel="noopener">platform.claude.com</a>. Anyone holding this unlocked phone could read it.</p>
+
+      <span class="cfg-l">Model</span>
+      <div class="seg three" id="modelSeg" role="group" aria-label="Model"></div>
+      <p class="cfg-p" id="modelNote"></p>
+
+      <button class="btn ghost" id="keyClear" type="button">Remove key from this device</button>
+    </div>
   </section>
-
-  <section>
-    <h2>Rules</h2>
-    <ul class="notes">
-      <li><b>Three working sets.</b> This is what drives the growth. Grinding harder on two is not a substitute for more hard sets.</li>
-      <li><b>One technique per exercise, last set only.</b> Orange chips mark them. Everywhere at once just wrecks recovery.</li>
-      <li><b>Deload week seven.</b> Two sets, around 60 percent, one week. Six days at this intensity catches up around week eight.</li>
-      <li><b>Log the numbers.</b> Beating last week is the entire mechanism, and you cannot beat what you did not write down.</li>
-      <li><b>Eat for it.</b> More volume without more food makes you tired, not bigger.</li>
-    </ul>
-  </section>
-
-  <footer>
-    Magnetic cable unit, 200lb stack, two barbells, dumbbells to 75, rack with pull-up bar, bench. Each cue names the pulley height. Set marks clear on their own each morning.
-    <br><button class="reset" id="reset">Clear today's marks</button>
-  </footer>
-
 </div>
 
 <script>
@@ -363,99 +967,852 @@ const store={
 };
 var marks=store.get();
 var view=todayKey;
+var wasFull=null;
 
+var TICK='<svg class="tick" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.6l3.2 3.2L13 4.7"/></svg>';
+
+function $(id){ return document.getElementById(id); }
 function key(d,i,s){ return d+"-"+i+"-"+s; }
 function countDone(d,i,n){ var c=0; for(var s=0;s<n;s++) if(marks[key(d,i,s)]) c++; return c; }
 function chipHTML(c){ return c.map(function(x){ return '<span class="chip '+x[0]+'">'+x[1]+'</span>'; }).join(""); }
+function pad(n){ return (n<10?"0":"")+n; }
+function repsHTML(r){
+  var m=/^(\d+)\s*×\s*(.+)$/.exec(r);
+  return m ? '<span class="c">'+m[1]+'<i>×</i></span>'+m[2] : r;
+}
+function replay(el,cls){ el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); }
+function sheen(el){
+  var s=document.createElement("span");
+  s.className="sheen";
+  el.appendChild(s);
+  setTimeout(function(){ s.remove(); },1200);
+}
+function buzz(ms){ try{ if(navigator.vibrate) navigator.vibrate(ms); }catch(e){} }
 
 function buildList(root,items,day){
   root.innerHTML="";
   items.forEach(function(x,i){
     var li=document.createElement("li");
-    if(countDone(day,i,x.sets)===x.sets) li.className="done";
+    var had=countDone(day,i,x.sets);
+    if(had===x.sets) li.className="done";
+    li.style.setProperty("--i",i);
+    var pips="";
+    for(var p=0;p<x.sets;p++) pips+='<i'+(marks[key(day,i,p)]?' class="on"':'')+'></i>';
     li.innerHTML=
-      '<div class="head"><div><div class="nm">'+x.nm+'</div>'+
-      '<div class="meta"><span class="mus">'+x.mus+'</span>'+chipHTML(x.chips)+'</div></div>'+
-      '<div class="reps">'+x.reps+'<em>'+x.sets+(x.sets===1?" set":" sets")+'</em></div></div>'+
-      '<div class="body"><div class="inner"><p class="cue">'+x.cue+'</p><div class="row">'+
-      '<div class="sets"></div><a class="form" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query='+
-      encodeURIComponent(x.form)+'"><span class="play"></span>Watch form</a></div></div></div>';
+      '<button class="head" type="button" aria-expanded="false">'+
+        '<span class="idx"><span class="num">'+pad(i+1)+'</span>'+TICK+'</span>'+
+        '<span class="ttl"><span class="nm">'+x.nm+'</span>'+
+        '<span class="meta"><span class="mus">'+x.mus+'</span>'+chipHTML(x.chips)+'</span></span>'+
+        '<span class="rx"><span class="reps">'+repsHTML(x.reps)+'</span>'+
+        '<span class="pips" role="img" aria-label="'+x.sets+(x.sets===1?" set":" sets")+'">'+pips+'</span></span>'+
+      '</button>'+
+      '<div class="body"><div class="clip"><div class="inner"><p class="cue">'+x.cue+'</p>'+
+      '<div class="sets" style="--n:'+x.sets+'"></div>'+
+      '<div class="links"><a class="form" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query='+
+      encodeURIComponent(x.form)+'"><span class="play"></span>Watch form</a>'+
+      '<button class="ask" type="button"><span class="orb still" aria-hidden="true"><i class="orb-ring"></i><i class="orb-core"></i></span>Ask Spot</button></div>'+
+      '</div></div></div>';
 
     var sw=li.querySelector(".sets");
+    var pipEls=li.querySelectorAll(".pips i");
     for(var s=0;s<x.sets;s++){
       (function(s){
         var b=document.createElement("button");
-        b.textContent="S"+(s+1);
+        b.className="set";
+        b.type="button";
+        b.innerHTML=TICK+(x.sets===1
+          ? '<span class="l0">Mark done</span><span class="l1">Done</span>'
+          : '<span>Set '+(s+1)+'</span>');
         b.setAttribute("aria-pressed",String(!!marks[key(day,i,s)]));
         b.setAttribute("aria-label","Set "+(s+1));
         b.onclick=function(ev){
           ev.stopPropagation();
           var k=key(day,i,s);
+          var before=countDone(day,i,x.sets)===x.sets;
           if(marks[k]) delete marks[k]; else marks[k]=1;
           store.set(marks);
-          b.setAttribute("aria-pressed",String(!!marks[k]));
-          li.classList.toggle("done",countDone(day,i,x.sets)===x.sets);
+          var on=!!marks[k];
+          b.setAttribute("aria-pressed",String(on));
+          pipEls[s].classList.toggle("on",on);
+          var after=countDone(day,i,x.sets)===x.sets;
+          li.classList.toggle("done",after);
+          if(on){
+            var r=document.createElement("span");
+            r.className="rip";
+            b.appendChild(r);
+            setTimeout(function(){ r.remove(); },650);
+            buzz(after?[10,40,18]:8);
+          }
+          if(after&&!before) sheen(li);
           meter();
         };
         sw.appendChild(b);
       })(s);
     }
-    li.querySelector(".head").onclick=function(){ li.classList.toggle("open"); };
+    li.querySelector(".ask").onclick=function(){
+      if(window.Spot) Spot.ask("Tell me about "+li.querySelector(".nm").textContent);
+    };
+    var head=li.querySelector(".head");
+    head.onclick=function(){
+      var open=li.classList.toggle("open");
+      head.setAttribute("aria-expanded",String(open));
+    };
     root.appendChild(li);
   });
 }
 
-function meter(){
-  var d=PLAN[view], total=0, done=0;
-  d.l.forEach(function(x,i){ total+=x.sets; done+=countDone(view,i,x.sets); });
-  FACE.forEach(function(x,i){ total+=x.sets; done+=countDone("face",i,x.sets); });
-  document.getElementById("fill").style.width=(total?done/total*100:0)+"%";
-  document.getElementById("done").textContent=done;
-  document.getElementById("total").textContent=total;
-  document.getElementById("readout").classList.toggle("full",total>0&&done===total);
-  [].forEach.call(document.getElementById("week").children,function(b){
+function buildSegs(){
+  var root=$("segs"), html="";
+  PLAN[view].l.forEach(function(x){ html+='<span class="sg" style="flex-grow:'+x.sets+'"><i></i></span>'; });
+  html+='<span class="sg-gap"></span>';
+  FACE.forEach(function(x){ html+='<span class="sg" style="flex-grow:'+x.sets+'"><i></i></span>'; });
+  root.innerHTML=html;
+}
+function setSeg(el,c,n){
+  if(!el) return;
+  el.classList.toggle("ok",c===n);
+  el.firstChild.style.transform="scaleX("+(n?c/n:0)+")";
+}
+
+function meter(quiet){
+  var d=PLAN[view], lt=0, ld=0, ft=0, fd=0;
+  var sg=$("segs").querySelectorAll(".sg"), n=0;
+  d.l.forEach(function(x,i){ var c=countDone(view,i,x.sets); lt+=x.sets; ld+=c; setSeg(sg[n++],c,x.sets); });
+  FACE.forEach(function(x,i){ var c=countDone("face",i,x.sets); ft+=x.sets; fd+=c; setSeg(sg[n++],c,x.sets); });
+  var total=lt+ft, done=ld+fd, pct=total?done/total*100:0, full=total>0&&done===total;
+
+  if($("done").textContent!==String(done)){
+    $("done").textContent=done;
+    if(!quiet) replay($("done"),"bump");
+  }
+  $("total").textContent=total;
+  $("pct").textContent=Math.floor(pct);
+  $("arc").style.strokeDashoffset=100-pct;
+  $("arc").style.opacity=pct>0?1:0;
+  $("lf").textContent=ld+"/"+lt;
+  $("fc").textContent=fd+"/"+ft;
+  $("fcount").textContent=fd+" / "+ft;
+  $("fcount").classList.toggle("full",ft>0&&fd===ft);
+  $("rdlab").textContent=full?"Complete":"Sets";
+  $("readout").classList.toggle("full",full);
+  $("tbDone").textContent=done;
+  $("tbTotal").textContent=total;
+  $("tbFill").style.width=pct+"%";
+  $("topbar").classList.toggle("full",full);
+
+  [].forEach.call(document.querySelectorAll("#week .wd"),function(b){
     var k=b.dataset.k, t=0, c=0;
     PLAN[k].l.forEach(function(x,i){ t+=x.sets; c+=countDone(k,i,x.sets); });
-    b.querySelector("i").style.width=(t?c/t*100:0)+"%";
+    b.querySelector(".bar2 i").style.width=(t?c/t*100:0)+"%";
   });
+
+  if(full&&wasFull===false&&!quiet){ sheen($("readout")); buzz([14,50,14,50,30]); }
+  wasFull=full;
 }
 
-function render(){
+function render(animate){
   var d=PLAN[view];
-  document.getElementById("title").textContent=d.t;
-  document.getElementById("ghost").textContent=d.n;
-  document.getElementById("blurb").textContent=d.b;
-  document.getElementById("kicker").textContent = view===todayKey ? "Today" : LBL[view];
-  document.getElementById("focus").innerHTML=d.f.map(function(f){ return "<span>"+f+"</span>"; }).join("");
-  buildList(document.getElementById("lifts"),d.l,view);
-  [].forEach.call(document.getElementById("week").children,function(b){
+  $("title").textContent=d.t;
+  $("ghost").textContent=d.n;
+  $("ghost").setAttribute("data-n",d.n);
+  $("blurb").textContent=d.b;
+  $("kicker").textContent = view===todayKey ? "Today" : LBL[view];
+  $("kick").classList.toggle("away",view!==todayKey);
+  $("tbTitle").textContent=d.t;
+  $("lfName").textContent=d.t;
+  $("tbDay").textContent = view===todayKey ? "Today" : LBL[view];
+  $("focus").innerHTML=d.f.map(function(f){ return "<span>"+f+"</span>"; }).join("");
+  buildList($("lifts"),d.l,view);
+  buildSegs();
+  $("week").style.setProperty("--i",ORDER.indexOf(view));
+  [].forEach.call(document.querySelectorAll("#week .wd"),function(b){
     b.setAttribute("aria-pressed",String(b.dataset.k===view));
   });
-  meter();
+  if(animate){
+    document.body.classList.add("swapping");
+    replay($("hero"),"swap");
+  }
+  wasFull=null;
+  meter(true);
 }
 
-var week=document.getElementById("week");
-ORDER.forEach(function(k){
-  var b=document.createElement("button");
-  b.className="wd"+(k===todayKey?" istoday":"");
-  b.dataset.k=k;
-  b.innerHTML='<span class="d">'+LBL[k]+'</span><span class="bar2"><i></i></span>';
-  b.onclick=function(){ view=k; render(); };
-  week.appendChild(b);
-});
+(function(){
+  var week=$("week"), now=new Date(), back=(now.getDay()+6)%7;
+  ORDER.forEach(function(k,i){
+    var dt=new Date(now.getFullYear(),now.getMonth(),now.getDate()-back+i);
+    var b=document.createElement("button");
+    b.type="button";
+    b.className="wd"+(k===todayKey?" istoday":"");
+    b.dataset.k=k;
+    b.setAttribute("aria-label",dt.toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"})+", "+PLAN[k].t);
+    b.innerHTML='<span class="d">'+LBL[k]+'</span><span class="n">'+dt.getDate()+'</span><span class="bar2"><i></i></span>';
+    b.onclick=function(){
+      if(k===view) return;
+      document.documentElement.style.setProperty("--dir",ORDER.indexOf(k)>ORDER.indexOf(view)?1:-1);
+      view=k;
+      buzz(6);
+      render(true);
+    };
+    week.appendChild(b);
+  });
+})();
 
-document.getElementById("clock").textContent=
+$("clock").textContent=
   new Date().toLocaleDateString(undefined,{weekday:"long",month:"short",day:"numeric"});
 
-document.getElementById("reset").onclick=function(){
+$("reset").onclick=function(){
   marks={};
   store.set(marks);
-  buildList(document.getElementById("face"),FACE,"face");
+  buildList($("face"),FACE,"face");
   render();
+  var l=$("resetLabel"), t=l.textContent;
+  l.textContent="Cleared";
+  setTimeout(function(){ l.textContent=t; },1300);
 };
 
-buildList(document.getElementById("face"),FACE,"face");
+// Compact bar: shown once the readout has scrolled off the top. Tap it to go back up.
+if("IntersectionObserver" in window){
+  new IntersectionObserver(function(es){
+    var e=es[es.length-1];
+    $("topbar").classList.toggle("on",!e.isIntersecting&&e.boundingClientRect.top<0);
+  }).observe($("readout"));
+}
+$("topbar").onclick=function(){ window.scrollTo({top:0,behavior:"smooth"}); };
+
+// Lower sections ease in the first time they scroll into view. Armed only for what starts below the fold.
+if("IntersectionObserver" in window){
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.remove("pre"); io.unobserve(e.target); } });
+  },{rootMargin:"0px 0px -8% 0px"});
+  [].forEach.call(document.querySelectorAll(".pane, .main section, footer"),function(el){
+    if(el.getBoundingClientRect().top>window.innerHeight){ el.classList.add("pre","reveal"); io.observe(el); }
+  });
+}
+
+// iOS only applies :active styles when a touch listener exists.
+document.addEventListener("touchstart",function(){},{passive:true});
+
+// An installed app can sit in memory overnight; start the new day fresh when it comes back.
+document.addEventListener("visibilitychange",function(){
+  if(!document.hidden&&new Date().toDateString()!==stamp) location.reload();
+});
+
+buildList($("face"),FACE,"face");
 render();
+// Let the dial and bars sweep up from zero on first paint.
+(function(){
+  var arc=$("arc"), off=arc.style.strokeDashoffset;
+  arc.style.transition="none";
+  arc.style.strokeDashoffset=100;
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){
+    arc.style.transition="";
+    arc.style.strokeDashoffset=off;
+  }); });
+})();
+</script>
+<script>
+/* Spot: the coach in the corner.
+   Two brains. The on-device one answers from the plan itself (PLAN, FACE and the notes on the page),
+   costs nothing and works with no signal. The Claude one is real AI: it needs signal and the user's own
+   Anthropic API key, which is kept in this browser's localStorage and sent only to api.anthropic.com.
+   Raw fetch on purpose: no build step here, and a CDN-hosted SDK would be a third-party script sitting
+   next to that key. */
+(function(){
+  var API="https://api.anthropic.com/v1/messages";
+  var MODELS=[
+    {id:"claude-opus-5",name:"Opus 5",note:"The smartest. $5 in / $25 out per million tokens, roughly a cent or three per question."},
+    {id:"claude-sonnet-5",name:"Sonnet 5",note:"Quick and sharp. $2 in / $10 out per million tokens."},
+    {id:"claude-haiku-4-5",name:"Haiku 4.5",note:"The cheapest. $1 in / $5 out per million tokens."}
+  ];
+  var DAYNAME={mon:"Monday",tue:"Tuesday",wed:"Wednesday",thu:"Thursday",fri:"Friday",sat:"Saturday",sun:"Sunday"};
+  var REDUCED=window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches;
+
+  var cfg=(function(){ try{ return JSON.parse(localStorage.getItem("hp.spot"))||{}; }catch(e){ return {}; } })();
+  function saveCfg(){ try{ localStorage.setItem("hp.spot",JSON.stringify(cfg)); }catch(e){} }
+  function model(){ return MODELS.filter(function(m){ return m.id===cfg.m; })[0]||MODELS[0]; }
+  function aiOn(){ return !!cfg.k&&cfg.ai!==false; }
+
+  /* ---------- text helpers ---------- */
+  function decode(s){ var t=document.createElement("textarea"); t.innerHTML=s; return t.value; }
+  function plain(s){ return decode(String(s).replace(/<[^>]+>/g,"")); }
+  function bold(s){ return decode(String(s).replace(/<\/?b>/g,"**").replace(/<[^>]+>/g,"")); }
+  function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+  // Escape first, then allow a tiny subset of markdown. Nothing from a model or a user reaches innerHTML unescaped.
+  function fmt(text){
+    if((text.match(/\*\*/g)||[]).length%2) text+="**";
+    function inline(t){ return t.replace(/\*\*([^*]+)\*\*/g,"<b>$1</b>").replace(/`([^`]+)`/g,"$1"); }
+    var out="", list=false;
+    esc(text).split(/\n/).forEach(function(line){
+      var m=/^\s*(?:[-*•]|(\d+)[.)])\s+(.*)$/.exec(line);
+      if(m){ if(!list){ out+="<ul>"; list=true; } out+="<li>"+(m[1]?"<b>"+m[1]+".</b> ":"")+inline(m[2])+"</li>"; return; }
+      if(list){ out+="</ul>"; list=false; }
+      if(line.trim()) out+="<p>"+inline(line.replace(/^#{1,4}\s+/,""))+"</p>";
+    });
+    return out+(list?"</ul>":"");
+  }
+
+  /* ---------- on-device brain: index ---------- */
+  var STOP=/^(a|an|the|is|are|was|do|does|did|i|im|me|my|you|your|to|of|for|in|on|at|it|its|this|that|and|or|with|about|can|could|should|would|will|what|whats|which|who|how|why|when|where|tell|explain|show|give|please|need|want|get|be|am|so|if|then|there|any|some|much|many|more|most|exercise|exercises|workout|workouts|move|moves|movement|lift|lifts|work|works|working|hit|hits|train|trains|training|target|targets|muscle|muscles|day|days|session|good|best|form|properly|correctly|right|break|down)$/;
+  var GENERIC=/^(cable|dumbbell|barbell|seated|standing|incline|weighted|kneeling|hanging|mid|low|high)$/;
+  function norm(s){
+    return " "+String(s).toLowerCase()
+      .replace(/['’]/g,"")
+      .replace(/\b(walk|talk|take|run) me through\b/g," ")
+      .replace(/pull[\s-]?ups?/g,"pull up").replace(/chin[\s-]?ups?/g,"chin up")
+      .replace(/push[\s-]?downs?/g,"pushdown").replace(/pull[\s-]?downs?/g,"pulldown")
+      .replace(/pull[\s-]?throughs?/g,"pull through")
+      .replace(/\brdls?\b/g,"romanian deadlift").replace(/\bbss\b/g,"bulgarian split squat")
+      .replace(/\blat raises?\b/g,"lateral raise").replace(/\blaterals\b/g,"lateral raise")
+      .replace(/\bext\b/g,"extension").replace(/\bdb\b/g,"dumbbell").replace(/\bbb\b/g,"barbell")
+      .replace(/[^a-z0-9]+/g," ").trim()+" ";
+  }
+  function stem(w){ return w.length>3&&/s$/.test(w)&&!/ss$/.test(w)?w.slice(0,-1):w; }
+  function toks(n){ return n.trim().split(" ").filter(function(w){ return w&&!STOP.test(w); }).map(stem); }
+
+  var NAMES={}, LIST=[], DF={};
+  function addEx(day,i,x){
+    var name=plain(x.nm), n=norm(name).trim();
+    if(!NAMES[n]){ NAMES[n]={name:name,n:n,toks:toks(n),at:[]}; LIST.push(NAMES[n]); }
+    NAMES[n].at.push({day:day,i:i,x:x});
+  }
+  ORDER.forEach(function(d){ PLAN[d].l.forEach(function(x,i){ addEx(d,i,x); }); });
+  FACE.forEach(function(x,i){ addEx("face",i,x); });
+  LIST.forEach(function(e){ e.toks.forEach(function(t,j){ if(e.toks.indexOf(t)===j) DF[t]=(DF[t]||0)+1; }); });
+  function weight(t){ return Math.log(1+LIST.length/(DF[t]||1))*(GENERIC.test(t)?.25:1); }
+
+  function matchExercise(qn,qt){
+    var hits=[];
+    LIST.forEach(function(e){
+      if(qn.indexOf(" "+e.n+" ")>=0){ hits.push({e:e,s:100+e.n.length,exact:true}); return; }
+      var got=e.toks.filter(function(t){ return qt.indexOf(t)>=0; });
+      if(!got.some(function(t){ return !GENERIC.test(t); })) return;
+      var s=got.reduce(function(a,t){ return a+weight(t); },0)*Math.sqrt(got.length/e.toks.length);
+      hits.push({e:e,s:s,exact:false});
+    });
+    return hits.sort(function(a,b){ return b.s-a.s; });
+  }
+
+  var MUSCLE=[
+    ["upper chest","Upper chest",["Upper chest"]],
+    ["chest|pecs?|pectorals?","Chest",["Chest","Upper chest"]],
+    ["side delts?|lateral delts?|medial delts?|side shoulders?","Side delts",["Side delt"]],
+    ["rear delts?|posterior delts?|rear shoulders?","Rear delts",["Rear delt"]],
+    ["front delts?|anterior delts?","Front delts",["Front delt"]],
+    ["shoulders?|delts?|deltoids?","Shoulders",["Front delt","Side delt","Rear delt"]],
+    ["triceps?|tris","Triceps",["Triceps"]],
+    ["biceps?|bis","Biceps",["Biceps"]],
+    ["forearms?","Forearms",["Forearms","Grip"]],
+    ["grip","Grip",["Grip","Forearms"]],
+    ["arms?","Arms",["Biceps","Triceps","Forearms"]],
+    ["lats?","Lats",["Lats"]],
+    ["upper back","Upper back",["Upper back"]],
+    ["mid back|middle back|rhomboids?","Mid back",["Mid back"]],
+    ["traps?|trapezius","Traps",["Traps"]],
+    ["back","Back",["Lats","Upper back","Mid back"]],
+    ["quads?|quadriceps","Quads",["Quads"]],
+    ["hamstrings?|hams|hammies","Hamstrings",["Hamstrings","Posterior chain"]],
+    ["glutes?|butt","Glutes",["Glutes"]],
+    ["calves|calf","Calves",["Calves"]],
+    ["posterior chain","Posterior chain",["Posterior chain","Hamstrings","Glutes"]],
+    ["legs?","Legs",["Quads","Hamstrings","Glutes","Calves","Posterior chain"]],
+    ["abs|core|abdominals?|six pack","Abs",["Abs"]],
+    ["neck","Neck",["Neck","Deep neck"]],
+    ["jaw|jawline|masseter","Jaw",["Jaw","Masseter"]],
+    ["eyes?|under eye","Eye area",["Eye area"]],
+    ["face|facial","Face & Neck",["Deep neck","Neck","Posture","Jaw","Masseter","Eye area","Face"]]
+  ].map(function(r){ return {re:new RegExp(" (?:"+r[0]+") "),title:r[1],mus:r[2]}; });
+  function matchMuscle(qn){
+    for(var i=0;i<MUSCLE.length;i++){ var m=MUSCLE[i].re.exec(qn); if(m) return {m:MUSCLE[i],rest:qn.replace(m[0]," ")}; }
+    return null;
+  }
+
+  var DAYWORD={monday:"mon",mon:"mon",tuesday:"tue",tue:"tue",tues:"tue",wednesday:"wed",wed:"wed",thursday:"thu",thu:"thu",thur:"thu",thurs:"thu",friday:"fri",fri:"fri",saturday:"sat",sat:"sat",sunday:"sun",sun:"sun"};
+  var sessionNamed=false;
+  function matchDay(qn,qt){
+    var w=qn.trim().split(" "), i;
+    sessionNamed=false;
+    for(i=0;i<w.length;i++) if(DAYWORD[w[i]]) return DAYWORD[w[i]];
+    var t=ORDER.indexOf(todayKey);
+    if(/ (today|todays|tonight) /.test(qn)) return todayKey;
+    if(/ tomorrow /.test(qn)) return ORDER[(t+1)%7];
+    if(/ yesterday /.test(qn)) return ORDER[(t+6)%7];
+    var m=/ (push|pull|legs?|upper|lower|shape|rest) (day|session|workout) /.exec(qn), named=!!m;
+    if(!m&&qt.length<=1) m=/ (push|pull|upper|lower|shape|rest) /.exec(qn);
+    if(m) for(i=0;i<ORDER.length;i++) if(PLAN[ORDER[i]].t.toLowerCase().indexOf(m[1].replace(/s$/,""))===0){ sessionNamed=named; return ORDER[i]; }
+    return null;
+  }
+
+  /* ---------- on-device brain: what the page itself says ---------- */
+  function notes(sel){
+    return [].map.call(document.querySelectorAll(sel+" .notes li"),function(li){
+      var b=li.querySelector("b"), t=b?b.textContent:"";
+      return {t:t,body:li.textContent.slice(t.length).trim()};
+    });
+  }
+  var STRAPS=notes(".main section.gold"), RULES=notes(".main section:not(.gold)");
+  var KIT=$("kit")?$("kit").textContent.trim():"";
+  function rule(re){ return RULES.filter(function(r){ return re.test(r.t); })[0]; }
+  function ruleLine(r){ return "**"+r.t+"** "+r.body; }
+  function chipped(kind,label){
+    var out=[];
+    LIST.forEach(function(e){ e.at.forEach(function(a){
+      if(a.x.chips.some(function(c){ return c[0]===kind&&(!label||c[1]===label); })) out.push(e.name+" ("+(a.day==="face"?"daily":LBL[a.day])+")");
+    }); });
+    return out;
+  }
+
+  var TECH={
+    "Myo-reps":"Take the set close to failure, rest about 15 seconds, then squeeze out short mini-sets of 3 to 5 reps with the same weight, 15 seconds apart. Your cue: rest 15 seconds, get 4 more, twice. Lots of hard reps in very little time, which is why it sits on a light isolation move.",
+    "Rest-pause":"Go to failure, rest about 15 seconds, then go again with the same weight. Same family as myo-reps, except every bout runs to failure.",
+    "Slow eccentric":"The eccentric is the lowering half of the rep. A four second lowering keeps the muscle loaded while it is stretched, which is hard on it without needing more weight.",
+    "Capped":"A hard ceiling, not a target."
+  };
+  var GLOSS=[
+    {re:/ myo ?reps? | myo /,a:function(){ return A("**Myo-reps.** "+TECH["Myo-reps"]+"\nIn your plan: "+chipped("int","Myo-reps").join(", ")+". Last set only."); }},
+    {re:/ rest pause /,a:function(){ return A("**Rest-pause.** "+TECH["Rest-pause"]+"\nIn your plan: "+chipped("int","Rest-pause").join(", ")+". Last set only."); }},
+    {re:/ eccentrics? | lowering | negatives? | tempo /,a:function(){ return A("**Slow eccentric.** "+TECH["Slow eccentric"]+"\nIn your plan: "+chipped("int","Slow eccentric").join(", ")+". Last set only."); }},
+    {re:/ ramp(ing)? sets? | ramp | warm ?ups? | warming up /,a:function(){ return A("**Ramp sets** are warm-ups that climb toward your working weight: a few easy reps each, getting heavier, never tiring. They groove the pattern and do not count as working sets. Your cues ask for two before bench and three before squat.\nGeneral guide, not written in your plan: something like the empty bar, then about 50, 70 and 85 percent of the working weight."); }},
+    {re:/ working sets? | three sets | 3 sets | how many sets should /,a:function(){ var r=rule(/working sets/i); return A("**Working sets** are the hard ones at your working weight, taken close to failure. Warm-ups and ramp sets are extra."+(r?"\nYour rule: "+ruleLine(r):"")); }},
+    {re:/ deloads?(ing)? /,a:function(){ var r=rule(/deload/i); return A(r?ruleLine(r)+"\nA deload is a planned easy week so fatigue drops and the next block starts fresh.":"A deload is a planned easy week."); }},
+    {re:/ grinders?| to failure | failure | rir /,a:function(){ return A("A **grinder** is a rep that slows right down and takes everything you have. **Failure** is when the next rep will not go. Most of your plan stops just short: \"stop one rep before the grinder\". The exceptions are the orange-chip techniques, which push past that point on purpose, on the last set only."); }},
+    {re:/ (progressive )?overload | log | logging | track(ing)? | progress(ion)? scheme /,a:function(){ var r=rule(/log/i); return A((r?ruleLine(r)+"\n":"")+"That is progressive overload: once you hit the top of a rep range on every set, add a little weight and start again at the bottom of the range."); }},
+    {re:/ eat(ing)? | food | diet | calories | protein | bulk(ing)? | nutrition /,a:function(){ var r=rule(/eat/i); return A((r?ruleLine(r):"Eat enough to grow.")+"\nThat is as far as the plan goes. Specific numbers are a question for the Claude brain, or better, someone who knows your situation.",[{t:"cfg",label:"Connect Claude"}]); }},
+    {re:/ rest (time|times|period|periods|between)| how long (to |should i )?rest | rest between /,a:function(){ return A("Rest times are not written into your plan. General guide: 2 to 3 minutes or more on the heavy compounds (bench, squat, deadlift, rows), 60 to 90 seconds on isolation work. The orange-chip techniques use the 15 second rests their cues spell out."); }},
+    {re:/ (how much|what|which) weights? | how heavy | what load /,a:function(){ return A("Your plan prescribes rep ranges, not weights. Pick a load where the last rep of the set is hard but clean inside the range. When you hit the top of the range on every set, add weight. That only works if you log it."); }},
+    {re:/ chips? | colou?rs? | orange | gold | teal /,a:function(){ return A("**The chips.**\n- **Gold**: bring straps. "+chipped("straps").join(", ")+".\n- **Orange**: an intensity technique on the last set only (myo-reps, rest-pause, slow eccentric).\n- **Teal**: direct grip or forearm work, so it goes late in the session."); }},
+    {re:/ ea | each side | per side /,a:function(){ return A("**ea** means each side: do the reps on one leg or arm, then match them on the other. It counts as one set."); }},
+    {re:/ pulleys? | pulley height /,a:function(){ return A("Every cable cue names where the pulley goes: on the floor, at chest or shoulder height, or high. The height sets the line of pull, which is what decides the part of the muscle that does the work. Open the card and the cue says which."); }},
+    {re:/ hurts?| pain(ful)? | injur(y|ed|ies) | tweak(ed)? | sore(ness)? /,a:function(){ return A("I cannot judge pain from here. Sharp, sudden or lingering joint pain means stop that lift and get it looked at in person. Ordinary muscle soreness a day or two after training is normal and fades. Your own cues already say it: end the set the moment your back rounds, and stop the second a jaw clicks."); }}
+  ];
+
+  /* ---------- on-device brain: answers ---------- */
+  function A(text,acts,kind){ return {text:text,acts:acts||[],kind:kind||"note"}; }
+  function where(day){ return day==="face"?"Face & Neck, every day":DAYNAME[day]+" ("+PLAN[day].t+")"; }
+  function formLink(x){ return "https://www.youtube.com/results?search_query="+encodeURIComponent(x.form); }
+
+  function exerciseAnswer(e){
+    var first=e.at[0].x, lines=["**"+e.name+"** · "+plain(first.mus)], labels=[];
+    e.at.forEach(function(a){
+      lines.push((e.at.length>1?"- ":"")+where(a.day)+": **"+a.x.reps+"**. "+bold(a.x.cue));
+      a.x.chips.forEach(function(c){ if(labels.indexOf(c[1])<0) labels.push(c[1]); });
+    });
+    labels.forEach(function(l){ if(TECH[l]) lines.push("**"+l+":** "+TECH[l]); });
+    if(e.at.some(function(a){ return a.x.chips.some(function(c){ return c[0]==="straps"; }); })) lines.push("Gold chip: bring the straps, top sets only.");
+    var at=e.at.filter(function(a){ return a.day===view; })[0]||e.at.filter(function(a){ return a.day===todayKey; })[0]||e.at[0];
+    return A(lines.join("\n"),[{t:"open",label:"Open card",day:at.day,i:at.i},{t:"link",label:"Watch form",href:formLink(first)}],"exercise");
+  }
+  function muscleAnswer(m,day){
+    var rows=[], sets=0, sessions={}, daily=[];
+    LIST.forEach(function(e){ e.at.forEach(function(a){
+      if(m.mus.indexOf(plain(a.x.mus))<0) return;
+      if(a.day==="face"){ if(!day) daily.push(e.name+", "+a.x.reps); return; }
+      if(day&&a.day!==day) return;
+      rows.push({d:ORDER.indexOf(a.day),s:"- "+LBL[a.day]+": "+e.name+", "+a.x.reps});
+      sets+=a.x.sets; sessions[a.day]=1;
+    }); });
+    rows.sort(function(a,b){ return a.d-b.d; });
+    if(!rows.length&&!daily.length) return A("Nothing in the plan trains **"+m.title.toLowerCase()+"** directly"+(day?" on "+DAYNAME[day]:"")+".");
+    var n=Object.keys(sessions).length, out=[];
+    if(rows.length) out.push("**"+m.title+"** · **"+sets+" sets** "+(day?"on "+DAYNAME[day]:"a week over "+n+" session"+(n===1?"":"s")));
+    else out.push("**"+m.title+"**");
+    out=out.concat(rows.map(function(r){ return r.s; }));
+    if(daily.length) out.push("Every day, in the face and neck block:\n"+daily.map(function(d){ return "- "+d; }).join("\n"));
+    return A(out.join("\n"),[],"muscle");
+  }
+  function volumeAnswer(){
+    var by={};
+    ORDER.forEach(function(d){ PLAN[d].l.forEach(function(x){ var k=plain(x.mus); if(!/Recovery|Planning/.test(k)) by[k]=(by[k]||0)+x.sets; }); });
+    var rows=Object.keys(by).sort(function(a,b){ return by[b]-by[a]; });
+    var total=rows.reduce(function(a,k){ return a+by[k]; },0);
+    return A("**Weekly working sets, by the muscle each lift is filed under** · "+total+" in all\n"+rows.map(function(k){ return "- "+k+": **"+by[k]+"**"; }).join("\n")+"\nPresses also work triceps and front delts, and rows work biceps, so the real totals for those run higher.",[],"volume");
+  }
+  function dayAnswer(day){
+    var d=PLAN[day], sets=0;
+    var rows=d.l.map(function(x){ sets+=x.sets; return "- "+plain(x.nm)+", "+x.reps; });
+    var lifting=d.l.some(function(x){ return /×/.test(x.reps); });
+    return A("**"+DAYNAME[day]+" · "+d.t+"**"+(day===todayKey?" (today)":"")+"\n"+d.b+"\n"+rows.join("\n")+"\n"+(lifting?"**"+sets+" sets**, plus":"Plus")+" the face and neck block.",
+      day!==view?[{t:"day",label:"Show "+DAYNAME[day],day:day}]:[],"day");
+  }
+  function progressAnswer(){
+    var d=PLAN[todayKey], total=0, done=0, left=[], next=null, ft=0, fd=0;
+    d.l.forEach(function(x,i){ var c=countDone(todayKey,i,x.sets); total+=x.sets; done+=c; if(c<x.sets){ if(!next) next={day:todayKey,i:i,x:x,c:c}; else left.push(plain(x.nm)); } });
+    FACE.forEach(function(x,i){ var c=countDone("face",i,x.sets); ft+=x.sets; fd+=c; if(c<x.sets&&!next) next={day:"face",i:i,x:x,c:c}; });
+    total+=ft; done+=fd;
+    if(!next) return A("**"+done+" of "+total+"** ticked. Everything is done today. Go eat.",[],"progress");
+    var out=["**"+done+" of "+total+"** sets ticked today ("+d.t+")."];
+    out.push("Next: **"+plain(next.x.nm)+"**, "+next.x.reps+(next.c?" ("+next.c+" of "+next.x.sets+" done)":"")+".");
+    if(left.length) out.push("After that: "+left.join(", ")+".");
+    if(next.day!=="face"&&fd<ft) out.push("Face and neck block: "+fd+" of "+ft+".");
+    return A(out.join("\n"),[{t:"open",label:"Open it",day:next.day,i:next.i}],"progress");
+  }
+
+  function brain(q){
+    var qn=norm(q), qt=toks(qn);
+    if(/^ (hi|hey|hello|yo|sup|hiya|howdy)( there| spot)? $/.test(qn)||/ what can you (do|answer) | help /.test(qn)) return A("Ask me about any lift, muscle, day, technique or rule in your plan. Try one of the chips below, or tap **Ask Spot** inside any exercise card.");
+    if(/ who are you | your name | what are you | are you (an? )?(ai|bot|robot) /.test(qn)) return A("Spot. Like the person who stands behind the bar, minus the unsolicited advice. I know your whole program and I work with no signal."+(cfg.k?"":" Give me a Claude key in the settings and I can handle open questions too."));
+    if(/ (thanks|thank you|cheers|nice one|appreciate it) /.test(qn)) return A("Anytime. Go lift.");
+    if(/ (whats next|next|whats left|left|remaining|how am i doing|how far|progress so far|done so far|finished) /.test(qn)&&!/ (week|deload) /.test(qn)) return progressAnswer();
+
+    var ex=matchExercise(qn,qt), top=ex[0], mus=matchMuscle(qn), day=matchDay(qn,qt);
+    if(/ straps? | strapped | strapping /.test(qn)){
+      if(top&&(top.exact||top.s>1.4)){
+        var yes=top.e.at.filter(function(a){ return a.x.chips.some(function(c){ return c[0]==="straps"; }); })[0];
+        return A("**"+top.e.name+"**: "+(yes?"yes, straps. "+bold(yes.x.cue):"no gold chip, so no straps.")+"\n"+STRAPS.map(function(s){ return "- "+ruleLine(s); }).join("\n"),[],"straps");
+      }
+      return A("**Straps.** Gold chip means bring them.\n"+STRAPS.map(function(s){ return "- "+ruleLine(s); }).join("\n")+"\nStrapped lifts: "+chipped("straps").join(", ")+".",[],"straps");
+    }
+    if(top&&top.exact) return exerciseAnswer(top.e);
+    if(day&&sessionNamed) return dayAnswer(day);
+    if(/ volume | sets (a|per|each) week | weekly sets | per week /.test(qn)&&!mus) return volumeAnswer();
+    for(var g=0;g<GLOSS.length;g++) if(GLOSS[g].re.test(qn)) return GLOSS[g].a();
+    if(mus&&!toks(mus.rest).filter(function(t){ return !DAYWORD[t]&&!/^(today|tomorrow|yesterday|week|weekly|volume|set|per)$/.test(t); }).length) return muscleAnswer(mus.m,day);
+    if(top&&top.s>1.4){
+      var close=ex.filter(function(h){ return h.s>=top.s*.8; });
+      if(close.length>1) return A("Which one?",close.slice(0,4).map(function(h){ return {t:"ask",label:h.e.name,q:"Tell me about "+h.e.name}; }),"which");
+      return exerciseAnswer(top.e);
+    }
+    if(mus) return muscleAnswer(mus.m,day);
+    if(day) return dayAnswer(day);
+    if(/ rules? /.test(qn)) return A("**The rules.**\n"+RULES.map(function(r){ return "- "+ruleLine(r); }).join("\n"));
+    if(/ equipment | gear | kit | what do i have | home gym /.test(qn)&&KIT) return A(KIT);
+    if(/ techniques? | intensity /.test(qn)) return A("Three intensity techniques, one per exercise, last set only:\n- **Myo-reps:** "+chipped("int","Myo-reps").join(", ")+"\n- **Rest-pause:** "+chipped("int","Rest-pause").join(", ")+"\n- **Slow eccentric:** "+chipped("int","Slow eccentric").join(", "));
+    if(/ week | program | programme | split | plan | schedule /.test(qn)) return A("**The week.**\n"+ORDER.map(function(d){ return "- "+LBL[d]+": **"+PLAN[d].t+"**, "+PLAN[d].f.join(", ").toLowerCase(); }).join("\n")+"\nThe face and neck block runs every day.");
+    return A("That one is past my on-device brain. I answer from the plan itself: any lift, muscle, day, technique or rule."+(cfg.k?"":"\nFor open questions, connect the Claude brain."),cfg.k?[]:[{t:"cfg",label:"Connect Claude"}],"miss");
+  }
+
+  /* ---------- Claude brain ---------- */
+  var PROMPT=null;
+  function prompt(){
+    if(PROMPT) return PROMPT;
+    var p=[
+      "You are Spot, the coach built into a personal workout-planner app. The person chatting follows the program below. They usually ask between sets, on a phone, so every answer has to be quick to read.",
+      "",
+      "How to answer:",
+      "- Lead with the answer. Default to two to five short sentences or a tight list. Go longer only when they ask for depth.",
+      "- Ground answers in their program: the exact exercises, sets, reps, cues, equipment and rules below. When you go beyond the program into general training knowledge, say so plainly.",
+      "- The cues are the owner's own notes. Explain and build on them. If one looks wrong or risky, say so and why rather than quietly contradicting it.",
+      "- Equipment is limited to what is listed. Suggest substitutions only from that equipment.",
+      "- Match the app's voice: direct, dry, no hype, no emoji.",
+      "- Plain text. Short dash lists and **bold** for key terms render; headings, tables and links do not.",
+      "- You are not a doctor. For sharp or persistent pain, numbness, dizziness, or a jaw that clicks or locks, tell them to stop and get it checked in person. Keep nutrition advice general, and do not advise on drugs, extreme dieting or rapid weight cuts.",
+      "- If a question has nothing to do with training, recovery or this app, answer in a line and steer back.",
+      "",
+      "<program>"
+    ];
+    ORDER.forEach(function(d){
+      p.push(DAYNAME[d]+": "+PLAN[d].t+" (focus: "+PLAN[d].f.join(", ")+"). "+PLAN[d].b);
+      PLAN[d].l.forEach(function(x,i){ p.push((i+1)+". "+plain(x.nm)+" | "+plain(x.mus)+" | "+x.reps+(x.chips.length?" | tags: "+x.chips.map(function(c){ return c[1]; }).join(", "):"")+" | cue: "+plain(x.cue)); });
+      p.push("");
+    });
+    p.push("Face & Neck block, every day including rest days:");
+    FACE.forEach(function(x,i){ p.push((i+1)+". "+plain(x.nm)+" | "+plain(x.mus)+" | "+x.reps+" | cue: "+plain(x.cue)); });
+    p.push("","Straps (a gold tag means bring them):");
+    STRAPS.forEach(function(s){ p.push("- "+s.t+" "+s.body); });
+    p.push("","Rules:");
+    RULES.forEach(function(r){ p.push("- "+r.t+" "+r.body); });
+    p.push("","Equipment and notes: "+KIT,"</program>");
+    return (PROMPT=p.join("\n"));
+  }
+  // Changes every request, so it sits after the cache breakpoint and never disturbs the cached program text.
+  function nowContext(){
+    var d=PLAN[todayKey], done=[], part=[], total=0, got=0;
+    d.l.forEach(function(x,i){ var c=countDone(todayKey,i,x.sets); total+=x.sets; got+=c; if(c===x.sets) done.push(plain(x.nm)); else if(c) part.push(plain(x.nm)+" ("+c+"/"+x.sets+")"); });
+    return "Right now: it is "+DAYNAME[todayKey]+", so today's session is "+d.t+". They are looking at the "+PLAN[view].t+" page. Lifting sets ticked today: "+got+" of "+total+"."+(done.length?" Finished: "+done.join(", ")+".":"")+(part.length?" In progress: "+part.join(", ")+".":"");
+  }
+  function history(){
+    var h=chat.slice(-10);
+    while(h.length&&h[0].role!=="user") h.shift();
+    return h.map(function(m){ return {role:m.role,content:m.text}; });
+  }
+  function sseBlock(block){
+    var data=block.split(/\r?\n/).filter(function(l){ return l.indexOf("data:")===0; }).map(function(l){ return l.slice(5).replace(/^ /,""); }).join("\n");
+    if(!data) return null;
+    try{ return JSON.parse(data); }catch(e){ return null; }
+  }
+  async function callClaude(useFallbacks,signal,onText){
+    var m=model().id;
+    var headers={"content-type":"application/json","x-api-key":cfg.k,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"};
+    var body={model:m,max_tokens:8000,stream:true,
+      system:[{type:"text",text:prompt(),cache_control:{type:"ephemeral"}},{type:"text",text:nowContext()}],
+      messages:history()};
+    // Haiku 4.5 takes neither adaptive thinking nor effort. A quick chat wants low effort everywhere else.
+    if(m!=="claude-haiku-4-5"){ body.thinking={type:"adaptive"}; body.output_config={effort:"low"}; }
+    // Opus 5 can decline a request outright; this lets the API re-run it on its recommended fallback in the same call.
+    if(useFallbacks&&m==="claude-opus-5"){ headers["anthropic-beta"]="server-side-fallback-2026-07-01"; body.fallbacks="default"; }
+    var res=await fetch(API,{method:"POST",headers:headers,body:JSON.stringify(body),signal:signal});
+    if(!res.ok){
+      var j=null; try{ j=await res.json(); }catch(e){}
+      throw {status:res.status,message:(j&&j.error&&j.error.message)||""};
+    }
+    var reader=res.body.getReader(), dec=new TextDecoder(), buf="", stop=null;
+    for(;;){
+      var r=await reader.read();
+      if(r.done) break;
+      buf+=dec.decode(r.value,{stream:true});
+      var parts=buf.split(/\r?\n\r?\n/); buf=parts.pop();
+      for(var i=0;i<parts.length;i++){
+        var ev=sseBlock(parts[i]);
+        if(!ev) continue;
+        if(ev.type==="content_block_delta"&&ev.delta&&ev.delta.type==="text_delta") onText(ev.delta.text);
+        else if(ev.type==="message_delta"&&ev.delta&&ev.delta.stop_reason) stop=ev.delta.stop_reason;
+        else if(ev.type==="error") throw {status:ev.error&&ev.error.type==="overloaded_error"?529:500,message:(ev.error&&ev.error.message)||""};
+      }
+    }
+    return stop;
+  }
+  function explain(err){
+    if(err&&err.name==="AbortError") return null;
+    var s=err&&err.status;
+    if(s===401) return "Claude rejected that API key. Check it in the settings.";
+    if(s===402) return "Your Anthropic account has a billing problem, probably no credit.";
+    if(s===403) return "That key is not allowed to do this.";
+    if(s===404) return "That model is not available to your account. Pick another in the settings.";
+    if(s===413) return "That conversation got too long. Start a new chat.";
+    if(s===429) return "Rate limited. Give it a minute.";
+    if(s>=500) return "Claude is overloaded right now.";
+    if(s===400) return "Claude could not take that request"+(err.message?": "+err.message:".");
+    return "No connection to Claude.";
+  }
+
+  /* ---------- chat ---------- */
+  var chat=[], busy=false, ctl=null, isOpen=false, booted=false;
+  var root=$("spot"), log=$("spotLog"), input=$("spotQ"), fab=$("spotFab");
+
+  // Follow the answer down only until the question reaches the top of the log, so a long answer is read from its start.
+  var anchor=null;
+  function stick(){
+    var max=log.scrollHeight-log.clientHeight;
+    log.scrollTop=Math.min(max,anchor?Math.max(0,anchor.offsetTop-10):max);
+  }
+  function setBusy(b,stoppable){
+    busy=b;
+    $("spotOrb").classList.toggle("busy",b);
+    $("spotSend").classList.toggle("stop",!!(b&&stoppable));
+    $("spotSend").setAttribute("aria-label",b&&stoppable?"Stop":"Send");
+  }
+  function addMsg(who,text){
+    var el=document.createElement("div"), bub=document.createElement("div");
+    el.className="msg "+who; bub.className="bub";
+    if(text==null) bub.innerHTML='<span class="dots"><i></i><i></i><i></i></span>';
+    else if(who==="me") bub.textContent=text;
+    else bub.innerHTML=fmt(text);
+    el.appendChild(bub); log.appendChild(el);
+    if(who==="me") anchor=el;
+    stick();
+    return {
+      el:el,
+      set:function(t,note){ bub.innerHTML=(note?'<span class="note">'+esc(note)+'</span>':"")+fmt(t); stick(); },
+      done:function(src,acts){
+        if(src){ var s=document.createElement("div"); s.className="src"; s.textContent=src; el.appendChild(s); }
+        if(acts&&acts.length){ var row=document.createElement("div"); row.className="acts"; acts.forEach(function(a){ row.appendChild(actButton(a)); }); el.appendChild(row); }
+        stick();
+      }
+    };
+  }
+  function actButton(a){
+    var b;
+    if(a.t==="link"){ b=document.createElement("a"); b.href=a.href; b.target="_blank"; b.rel="noopener"; b.textContent=a.label+" ↗"; }
+    else{
+      b=document.createElement("button"); b.type="button"; b.textContent=a.label;
+      b.onclick=function(){
+        if(a.t==="open") openCard(a.day,a.i);
+        else if(a.t==="day") showDay(a.day);
+        else if(a.t==="ask") send(a.q);
+        else if(a.t==="cfg") toggleCfg(true);
+      };
+    }
+    b.className="act";
+    return b;
+  }
+  function typeOut(h,text,note,cb){
+    if(REDUCED){ h.set(text,note); return cb(); }
+    var i=0, step=Math.max(2,Math.ceil(text.length/50));
+    (function tick(){
+      i=Math.min(text.length,i+step); h.set(text.slice(0,i),note);
+      if(i<text.length) requestAnimationFrame(tick); else cb();
+    })();
+  }
+  function replyLocal(ans,note){
+    setBusy(true);
+    var h=addMsg("bot",null);
+    setTimeout(function(){
+      typeOut(h,ans.text,note,function(){
+        chat.push({role:"assistant",text:ans.text});
+        h.done("On-device",ans.acts); setBusy(false);
+      });
+    },REDUCED?0:320);
+  }
+  async function replyClaude(local){
+    setBusy(true,true);
+    var h=addMsg("bot",null), text="", stop=null, err=null;
+    ctl=new AbortController();
+    var dog, feed=function(){ clearTimeout(dog); dog=setTimeout(function(){ ctl.abort(); },60000); };
+    var onText=function(t){ feed(); text+=t; h.set(text); };
+    feed();
+    try{
+      try{ stop=await callClaude(true,ctl.signal,onText); }
+      catch(e){
+        // An organisation without the fallback beta gets a 400 naming the header; ask again without it.
+        if(e&&e.status===400&&/anthropic-beta|fallbacks/i.test(e.message||"")&&!text) stop=await callClaude(false,ctl.signal,onText);
+        else throw e;
+      }
+    }catch(e){ err=e; }
+    clearTimeout(dog);
+    var aborted=err&&err.name==="AbortError";
+    if(stop==="refusal"||(err&&!aborted&&!text)||(aborted&&!text)){
+      // Nothing usable came back: say why, then give the on-device answer so they are not left empty-handed.
+      var why=stop==="refusal"?"Claude declined that one.":(aborted?"Claude took too long.":explain(err));
+      typeOut(h,local.text,why+" Answered on-device.",function(){
+        chat.push({role:"assistant",text:local.text});
+        h.done("On-device",local.acts.concat(err&&(err.status===401||err.status===404)?[{t:"cfg",label:"Open settings"}]:[])); setBusy(false);
+      });
+      return;
+    }
+    if(stop==="max_tokens") text+="\n(cut off at the length limit)";
+    h.set(text||"(no answer)");
+    chat.push({role:"assistant",text:text||"(no answer)"});
+    h.done("Claude · "+model().name+(aborted||err?" · stopped":""),local.kind==="exercise"?local.acts:[]);
+    setBusy(false);
+  }
+  function send(q){
+    q=String(q||"").trim();
+    if(!q||busy) return;
+    toggleCfg(false);
+    addMsg("me",q); chat.push({role:"user",text:q});
+    var local=brain(q);
+    if(aiOn()&&navigator.onLine!==false) replyClaude(local);
+    else replyLocal(local,aiOn()?"No signal. Answered on-device.":null);
+  }
+
+  /* ---------- driving the page ---------- */
+  function openCard(day,i){
+    close();
+    if(day!=="face"&&day!==view) showDay(day,true);
+    setTimeout(function(){
+      var li=document.querySelectorAll(day==="face"?"#face > li":"#lifts > li")[i];
+      if(!li) return;
+      var pane=li.closest(".pre"); if(pane) pane.classList.remove("pre");
+      if(!li.classList.contains("open")) li.querySelector(".head").click();
+      li.scrollIntoView({behavior:REDUCED?"auto":"smooth",block:"center"});
+    },80);
+  }
+  function showDay(day,keepOpen){
+    if(!keepOpen) close();
+    if(day===view) return;
+    document.documentElement.style.setProperty("--dir",ORDER.indexOf(day)>ORDER.indexOf(view)?1:-1);
+    view=day; render(true);
+    if(!keepOpen) window.scrollTo({top:0,behavior:REDUCED?"auto":"smooth"});
+  }
+
+  /* ---------- sheet ---------- */
+  function chips(){
+    var list=["What's next?","Walk me through "+(view===todayKey?"today":DAYNAME[view])], seen={};
+    PLAN[view].l.forEach(function(x){ x.chips.forEach(function(c){ if(c[0]==="int"&&!seen[c[1]]){ seen[c[1]]=1; list.push("What "+(c[1]==="Myo-reps"?"are":"is")+" "+c[1].toLowerCase()+"?"); } }); });
+    list.push("Weekly sets per muscle","When do I use straps?","What hits my side delts?","When is the deload?");
+    var box=$("spotChips"); box.innerHTML="";
+    list.forEach(function(t){ var b=document.createElement("button"); b.type="button"; b.className="sug"; b.textContent=t; b.onclick=function(){ send(t); }; box.appendChild(b); });
+  }
+  function intro(){
+    log.innerHTML=""; chat=[]; anchor=null;
+    var h=addMsg("bot","I'm **Spot**. I know your whole program: every lift, cue, muscle and rule. Ask between sets.");
+    h.done(aiOn()?"Claude connected · falls back on-device":"On-device · works with no signal");
+  }
+  function modeLabel(){
+    var el=$("spotMode"), live=aiOn()&&navigator.onLine!==false;
+    el.textContent=live?"Claude · "+model().name:(aiOn()?"On-device · no signal":"On-device");
+    el.classList.toggle("ai",live);
+  }
+  function fit(){
+    var vv=window.visualViewport;
+    if(!vv||!isOpen) return;
+    // Keeps the input above the iOS keyboard: track the part of the screen that is actually visible.
+    root.style.height=vv.height+"px";
+    root.style.transform="translate3d(0,"+vv.offsetTop+"px,0)";
+    stick();
+  }
+  function open(){
+    if(isOpen) return;
+    isOpen=true;
+    if(!booted){ booted=true; intro(); }
+    chips(); modeLabel();
+    fab.classList.remove("hint");
+    if(!cfg.seen){ cfg.seen=1; saveCfg(); }
+    root.classList.add("on");
+    document.documentElement.classList.add("spot-open");
+    fit();
+    if(window.matchMedia&&matchMedia("(hover:hover)").matches) setTimeout(function(){ input.focus(); },350);
+  }
+  function close(){
+    if(!isOpen) return;
+    isOpen=false;
+    toggleCfg(false);
+    input.blur();
+    root.classList.remove("on");
+    document.documentElement.classList.remove("spot-open");
+    root.style.height=""; root.style.transform="";
+    fab.focus({preventScroll:true});
+  }
+
+  /* ---------- settings ---------- */
+  function toggleCfg(on){
+    var pane=$("spotCfg"), btn=$("spotCfgBtn");
+    if(on===undefined) on=!pane.classList.contains("on");
+    pane.classList.toggle("on",on); btn.classList.toggle("on",on); btn.setAttribute("aria-expanded",String(on));
+    if(on) paintCfg();
+  }
+  function paintCfg(){
+    [].forEach.call($("brainSeg").children,function(b){
+      var ai=b.dataset.ai==="1";
+      b.disabled=ai&&!cfg.k;
+      b.setAttribute("aria-pressed",String(ai===aiOn()));
+    });
+    [].forEach.call($("modelSeg").children,function(b){ b.setAttribute("aria-pressed",String(b.dataset.m===model().id)); });
+    $("modelNote").textContent=model().note+" Billed by Anthropic to your key.";
+    $("spotKey").value="";
+    $("spotKey").placeholder=cfg.k?"Saved: "+cfg.k.slice(0,10)+"…"+cfg.k.slice(-4):"sk-ant-...";
+    $("keyClear").style.display=cfg.k?"":"none";
+    modeLabel();
+  }
+  MODELS.forEach(function(m){
+    var b=document.createElement("button"); b.type="button"; b.dataset.m=m.id; b.textContent=m.name;
+    b.onclick=function(){ cfg.m=m.id; saveCfg(); paintCfg(); };
+    $("modelSeg").appendChild(b);
+  });
+  [].forEach.call($("brainSeg").children,function(b){
+    b.onclick=function(){ cfg.ai=b.dataset.ai==="1"; saveCfg(); paintCfg(); };
+  });
+  $("keySave").onclick=function(){
+    var k=$("spotKey").value.trim(), st=$("keyState");
+    if(!k){ st.textContent="Paste a key first"; st.className="key-state bad"; return; }
+    cfg.k=k; cfg.ai=true; saveCfg(); paintCfg();
+    var odd=!/^sk-ant-/.test(k);
+    st.textContent=odd?"Saved, but that does not look like an Anthropic key":"Saved on this device. Claude is on.";
+    st.className="key-state"+(odd?" bad":"");
+  };
+  $("keyClear").onclick=function(){
+    delete cfg.k; cfg.ai=false; saveCfg(); paintCfg();
+    $("keyState").textContent="Key removed"; $("keyState").className="key-state";
+  };
+
+  /* ---------- wiring ---------- */
+  fab.onclick=open;
+  $("spotClose").onclick=close;
+  $("spotScrim").onclick=close;
+  $("spotCfgBtn").onclick=function(){ toggleCfg(); };
+  $("spotNew").onclick=function(){ if(ctl) ctl.abort(); toggleCfg(false); intro(); };
+  $("spotForm").onsubmit=function(ev){
+    ev.preventDefault();
+    if(busy){ if(ctl&&$("spotSend").classList.contains("stop")) ctl.abort(); return; }
+    var q=input.value; input.value=""; send(q);
+  };
+  document.addEventListener("keydown",function(ev){ if(ev.key==="Escape"&&isOpen){ if($("spotCfg").classList.contains("on")) toggleCfg(false); else close(); } });
+  window.addEventListener("online",modeLabel);
+  window.addEventListener("offline",modeLabel);
+  if(window.visualViewport){ visualViewport.addEventListener("resize",fit); visualViewport.addEventListener("scroll",fit); }
+  if(!cfg.seen) setTimeout(function(){ if(!isOpen){ fab.classList.add("hint"); setTimeout(function(){ fab.classList.remove("hint"); },5200); } },2400);
+
+  window.Spot={open:open,close:close,brain:brain,sseBlock:sseBlock,ask:function(q){ open(); setTimeout(function(){ send(q); },isOpen&&booted?60:380); }};
+})();
 </script>
 <script>
 // Offline support. Progressive enhancement: the page works without it.
