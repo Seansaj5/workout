@@ -1024,13 +1024,13 @@
     .swapping .main > ul.lifts > li{animation-delay:calc(var(--i,0)*34ms + 60ms),0s;}
     .pane ul.lifts li,.tile{animation:cardView linear both;animation-timeline:view();animation-range:cover 0% cover 100%;}
     .notes li{animation:noteIn linear both;animation-timeline:view();animation-range:entry 0% entry 90%;}
-    @keyframes cardView{0%{scale:.94;translate:0 30px;--hx:0%;}24%{scale:1;translate:0 0;}82%{scale:1;}100%{scale:.95;--hx:100%;}}
+    @keyframes cardView{0%{scale:.94;translate:0 30px;}24%{scale:1;translate:0 0;}82%{scale:1;}100%{scale:.95;}}
     @keyframes noteIn{from{opacity:0;translate:-26px 0;}}
   }
   @supports (animation-timeline:scroll()){
     @media (max-width:1039px){
       .hero{animation:heroOut linear both;animation-timeline:scroll(root);animation-range:0 380px;}
-      @keyframes heroOut{to{opacity:.12;translate:0 -54px;scale:.94;filter:blur(4px);}}
+      @keyframes heroOut{to{opacity:.12;translate:0 -54px;scale:.94;}}
     }
   }
   @media (hover:hover){
@@ -1066,21 +1066,9 @@
 
   /* the sky: stars, a moon glow, aurora ribbons, dark hills with a rim of light, faint bubbles */
   .amb{background:linear-gradient(180deg,#020817 0%,#05133A 32%,#0A2758 62%,#0E3468 84%,#103A70 100%);}
-  .amb::before{content:"";position:absolute;inset:0;opacity:.75;
-    background-image:radial-gradient(1.2px 1.2px at 20px 30px,#fff,transparent),radial-gradient(1px 1px at 120px 80px,rgba(255,255,255,.85),transparent),
-      radial-gradient(1px 1px at 200px 160px,rgba(255,255,255,.7),transparent),radial-gradient(1.5px 1.5px at 70px 190px,rgba(200,230,255,.95),transparent),
-      radial-gradient(1px 1px at 170px 20px,rgba(255,255,255,.6),transparent),radial-gradient(1px 1px at 230px 110px,rgba(255,255,255,.7),transparent);
-    background-size:240px 240px;
-    -webkit-mask-image:linear-gradient(180deg,#000,rgba(0,0,0,.55) 45%,transparent 72%);mask-image:linear-gradient(180deg,#000,rgba(0,0,0,.55) 45%,transparent 72%);
-    animation:twinkle 7s ease-in-out infinite alternate;}
-  @keyframes twinkle{to{opacity:.4;}}
   .amb i,.amb b{position:absolute;display:block;}
-  .amb .sun{right:-14vmax;top:-16vmax;width:50vmax;height:50vmax;border-radius:50%;background:radial-gradient(closest-side,rgba(190,220,255,.3),rgba(120,170,255,.1) 32%,transparent 70%);}
-  .amb .fl{border-radius:50%;}
-  .amb .f1{right:28vw;top:22vh;width:10vmax;height:10vmax;background:radial-gradient(closest-side,transparent 60%,rgba(150,200,255,.14) 82%,transparent);}
-  .amb .f2{right:44vw;top:32vh;width:4vmax;height:4vmax;background:radial-gradient(closest-side,rgba(150,220,255,.2),transparent);}
-  .amb .f3{right:56vw;top:41vh;width:15vmax;height:15vmax;background:radial-gradient(closest-side,transparent 70%,rgba(120,200,255,.1) 86%,transparent);}
-  .amb .cl{left:-20vw;width:140vw;height:24vh;border-radius:50%;mix-blend-mode:screen;will-change:translate;
+  .amb .cl{left:-20vw;width:140vw;height:24vh;border-radius:50%;will-change:translate,opacity;
+    -webkit-mask-image:repeating-linear-gradient(90deg,rgba(0,0,0,.5) 0,#000 11px,rgba(0,0,0,.6) 23px,rgba(0,0,0,.95) 31px,rgba(0,0,0,.5) 46px);mask-image:repeating-linear-gradient(90deg,rgba(0,0,0,.5) 0,#000 11px,rgba(0,0,0,.6) 23px,rgba(0,0,0,.95) 31px,rgba(0,0,0,.5) 46px);
     background:radial-gradient(50% 50% at 50% 50%,rgba(70,230,170,.5),rgba(40,180,200,.22) 45%,transparent 70%);
     animation:aurora 26s ease-in-out infinite alternate;}
   .amb .c1{top:4vh;transform:rotate(-12deg);}
@@ -1088,9 +1076,6 @@
   .amb .c3{top:26vh;transform:rotate(-16deg) scaleY(.5);background:radial-gradient(50% 50% at 50% 50%,rgba(40,210,200,.36),rgba(40,160,220,.14) 45%,transparent 70%);animation-duration:40s;animation-delay:-20s;}
   .amb .c4{top:0;transform:rotate(-4deg) scaleY(.45);background:radial-gradient(50% 50% at 50% 50%,rgba(120,240,170,.32),transparent 70%);animation-duration:30s;animation-delay:-14s;}
   @keyframes aurora{0%{translate:-6vw 0;opacity:.32;}50%{opacity:.62;}100%{translate:8vw 2vh;opacity:.42;}}
-  .amb .hill{border-radius:50% 50% 0 0/100% 100% 0 0;}
-  .amb .h2{left:-20vw;right:-60vw;bottom:-6vh;height:27vh;background:radial-gradient(90% 120% at 30% 0%,#123E4A,#0B2A35 45%,#061821);box-shadow:inset 0 2px 0 rgba(110,200,255,.14);}
-  .amb .h1{left:-50vw;right:-8vw;bottom:-12vh;height:29vh;background:radial-gradient(70% 140% at 55% 0%,#0F3A3A,#0A2628 38%,#051516);box-shadow:inset 0 2px 0 rgba(110,240,200,.24),inset 0 12px 26px -10px rgba(80,220,190,.2);}
   .amb b{bottom:-12vh;left:var(--x);width:var(--s);height:var(--s);border-radius:50%;opacity:.6;will-change:transform;
     background:radial-gradient(circle at 32% 28%,rgba(255,255,255,.8) 0 6%,rgba(200,230,255,.25) 11%,rgba(120,180,255,.05) 40%,rgba(120,190,255,.08) 64%,rgba(180,220,255,.45) 97%);
     box-shadow:0 0 14px rgba(80,170,255,.18);
@@ -1341,21 +1326,6 @@
 
   /* ================= Aero, round three: gel icon tiles in the dock, a livelier night sky ================= */
   /* the sky: moon rays, glowing swooshes with a light running along them, glints, shooting stars, fireflies */
-  .amb .rays{right:-69vmax;top:-71vmax;width:160vmax;height:160vmax;border-radius:50%;will-change:transform;
-    background:repeating-conic-gradient(from 0deg,rgba(170,210,255,.055) 0deg 2.5deg,transparent 2.5deg 9deg);
-    -webkit-mask-image:radial-gradient(closest-side,#000 6%,rgba(0,0,0,.45) 26%,transparent 58%);mask-image:radial-gradient(closest-side,#000 6%,rgba(0,0,0,.45) 26%,transparent 58%);
-    animation:raySpin 180s linear infinite;}
-  @keyframes raySpin{to{transform:rotate(360deg);}}
-  .amb .swoosh{position:absolute;left:-4%;top:36vh;width:108%;aspect-ratio:400/250;overflow:visible;}
-  .sw-band{opacity:.9;}
-  .sw-l{fill:none;stroke-width:1.3;vector-effect:non-scaling-stroke;}
-  .sw-glow{fill:none;stroke-width:6;opacity:.3;vector-effect:non-scaling-stroke;}
-  .sw-run{fill:none;stroke:#E8FBFF;stroke-width:2.2;stroke-linecap:round;stroke-dasharray:5 95;stroke-dashoffset:100;
-    animation:swRun 9s cubic-bezier(.45,0,.55,1) infinite;}
-  .sw-run.r2{stroke:#DFFFF0;animation-duration:13s;animation-delay:-6s;}
-  @keyframes swRun{0%{stroke-dashoffset:100;opacity:0;}6%{opacity:1;}60%{opacity:1;}66%,100%{stroke-dashoffset:-6;opacity:0;}}
-  .amb .swoosh g{animation:swDrift 22s ease-in-out infinite alternate;transform-origin:50% 50%;}
-  @keyframes swDrift{to{transform:translate(0,-3%) scaleY(1.06);}}
   .amb .gl{width:16px;height:16px;left:var(--x);top:var(--y);opacity:0;
     background:linear-gradient(90deg,transparent,rgba(215,238,255,.95),transparent) center/100% 1.2px no-repeat,
       linear-gradient(0deg,transparent,rgba(215,238,255,.95),transparent) center/1.2px 100% no-repeat,
@@ -1370,25 +1340,14 @@
     background:radial-gradient(closest-side,#F4FFE0,#9CF5B8 45%,rgba(60,230,170,0));box-shadow:0 0 10px 2px rgba(90,240,180,.45);opacity:0;
     animation:fly var(--d) ease-in-out var(--w) infinite;}
   @keyframes fly{0%{opacity:0;transform:translate(0,0);}20%{opacity:.85;}50%{opacity:.25;transform:translate(14px,-22px);}75%{opacity:.8;transform:translate(-10px,-34px);}100%{opacity:0;transform:translate(6px,-50px);}}
-  .amb .h1::after{content:"";position:absolute;left:18%;right:22%;top:0;height:3px;border-radius:50%;
-    background:linear-gradient(90deg,transparent,rgba(150,255,215,.55),transparent);filter:blur(1.5px);}
-  @supports (animation-timeline:scroll()){
-    .amb::before{animation:twinkle 7s ease-in-out infinite alternate,skyUp linear both;animation-timeline:auto,scroll(root);}
-    .amb .swoosh{animation:skyUp2 linear both;animation-timeline:scroll(root);}
-    .amb .hill{animation:hillDown linear both;animation-timeline:scroll(root);}
-    @keyframes skyUp{to{translate:0 -10vh;}}
-    @keyframes skyUp2{to{translate:0 -22vh;}}
-    @keyframes hillDown{to{translate:0 5vh;}}
-  }
-
   /* the page: a light that sweeps across the Start button, readable footer */
   .go-btn{position:relative;overflow:hidden;isolation:isolate;}
   .go-btn::before{content:"";position:absolute;left:4%;right:4%;top:1px;height:48%;border-radius:100px 100px 40% 40%/100px 100px 20% 20%;
     background:linear-gradient(180deg,rgba(255,255,255,.5),rgba(255,255,255,.06));pointer-events:none;z-index:-1;}
-  .go-btn::after{content:"";position:absolute;top:-20%;bottom:-20%;left:-40%;width:28%;pointer-events:none;
+  .go-btn::after{content:"";position:absolute;top:-20%;bottom:-20%;left:0;width:28%;pointer-events:none;will-change:transform;
     background:linear-gradient(100deg,transparent,rgba(255,255,255,.42) 45%,rgba(255,255,255,.55) 50%,transparent);
-    transform:skewX(-18deg);animation:sweep 6.5s ease-in-out 2s infinite;}
-  @keyframes sweep{0%,72%{left:-40%;}92%,100%{left:120%;}}
+    transform:translateX(-145%) skewX(-18deg);animation:sweep 6.5s ease-in-out 2s infinite;}
+  @keyframes sweep{0%,72%{transform:translateX(-145%) skewX(-18deg);}92%,100%{transform:translateX(430%) skewX(-18deg);}}
   .go-btn.done::after{animation:none;opacity:0;}
   footer{color:var(--muted);}
   .pane .sub{color:var(--fg-2);}
@@ -1437,9 +1396,11 @@
     --ai-aqua:radial-gradient(120% 120% at 50% 110%,#6FF0FF 0%,#22B8DC 40%,#0A84B4 70%,#0B5E8E 100%);
   }
   .dk:not(.on) .ai{filter:saturate(.92) brightness(.93);}
-  #dkGo.ready .ai{filter:none;animation:aiGlow 2.8s ease-in-out infinite;}
-  @keyframes aiGlow{50%{box-shadow:inset 0 1px 0 rgba(255,255,255,.75),inset 0 0 0 1px rgba(255,255,255,.2),inset 0 -5px 9px -3px rgba(255,255,255,.4),
-      0 0 0 1px rgba(0,14,38,.55),0 2px 3px rgba(0,6,20,.5),0 0 18px 2px rgba(60,230,130,.55);}}
+  #dkGo.ready .ai{filter:none;}
+  #dkGo::before{content:"";position:absolute;left:50%;top:0;width:48px;height:48px;margin-left:-24px;border-radius:50%;pointer-events:none;opacity:0;
+    background:radial-gradient(closest-side,rgba(70,235,140,.55),rgba(70,235,140,0));}
+  #dkGo.ready::before{animation:aiGlow 2.8s ease-in-out infinite;}
+  @keyframes aiGlow{50%{opacity:1;}}
   .dk.pop .ai,#dkGo.pop .ai{animation:aiPop .6s var(--spring);}
   .dk.pop .ai::after{animation:aiShine .7s ease-out;}
   @keyframes aiPop{0%{transform:scale(.84);}40%{transform:scale(1.14,.92);}65%{transform:scale(.96,1.05);}100%{transform:none;}}
@@ -1452,35 +1413,41 @@
   .ai-bub b{display:block;width:4px;height:9px;border-radius:45%;background:#04304F;box-shadow:0 1px 0 rgba(255,255,255,.35);animation:orbBlink 5.6s infinite;}
   .rest{bottom:calc(92px + env(safe-area-inset-bottom));}
 
+  /* ================= Round four: a painted sky, and glass that scrolls smoothly ================= */
+  /* The sky is painted once into two canvases (see "the sky" in the script). Only small things move on top of it. */
+  .amb canvas{position:absolute;left:0;width:100%;display:block;}
+  #skyC{top:0;height:calc(100% + 10vh);}
+  #landC{bottom:-5vh;height:40vh;}
+  @supports (height:100lvh){ .amb{bottom:auto;height:100lvh;} }
+  @supports (animation-timeline:scroll()){
+    #skyC{animation:skyUp linear both;animation-timeline:scroll(root);}
+    #landC{animation:landDown linear both;animation-timeline:scroll(root);}
+    @keyframes skyUp{to{translate:0 -10vh;}}
+    @keyframes landDown{to{translate:0 6vh;}}
+  }
+  .amb .gl,.amb .ss,.amb u,.amb b{will-change:transform,opacity;}
+  /* the week thumb rides on translate, which sits outside the lift-up scale, so it stays under the finger */
+  .thumb{transform:none;translate:calc(var(--i,0)*(100% + 4px)) 0;will-change:translate,scale;transition:translate .45s var(--ease),scale .35s var(--spring);}
+  .tb-week .thumb{transform:none;translate:calc(var(--i,0)*(100% + 2px)) 0;}
+  .scrubbing .week .thumb,.scrubbing .tb-week .thumb{transition:scale .35s var(--spring);}
+  /* Blur stays on what floats (top bar, dock, rest pill, sheets). Cards that scroll are tinted glass instead,
+     so the phone is not re-blurring twenty panes on every frame. */
+  :root{--gl-tint:linear-gradient(180deg,rgba(20,70,175,.5),rgba(14,62,168,.58));}
+  .week,.readout,ul.lifts li,.pane,.main section,footer,.count,.tile,.bd,.wm-rest{-webkit-backdrop-filter:none;backdrop-filter:none;}
+  .week,.readout,.main section,footer,.tile,.bd,.wm-rest,ul.lifts li{background:var(--gl-spec) padding-box,var(--gl-fill) padding-box,var(--gl-tint) padding-box,var(--gl-rim) border-box;}
+  .pane{background:var(--gl-spec) padding-box,linear-gradient(180deg,rgba(60,230,180,.14),rgba(40,160,150,.06) 46%,rgba(10,70,70,.04) 54%,rgba(30,130,120,.09)) padding-box,linear-gradient(rgba(8,44,62,.5),rgba(8,44,62,.5)) padding-box,linear-gradient(135deg,rgba(160,255,220,.46),rgba(255,255,255,.08) 30%,rgba(255,255,255,.03) 55%,rgba(120,240,200,.24) 85%,rgba(255,255,255,.36)) border-box;}
+  .pane ul.lifts li{background:var(--gl-spec) padding-box,var(--gl-fill) padding-box,linear-gradient(rgba(10,30,62,.32),rgba(10,30,62,.32)) padding-box,var(--gl-rim) border-box;}
+
   @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;}}
 </style>
 </head>
 <body>
 
 <div class="amb" aria-hidden="true">
-  <i class="rays"></i><i class="sun"></i><i class="fl f1"></i><i class="fl f2"></i><i class="fl f3"></i>
+  <canvas id="skyC"></canvas>
   <i class="cl c1"></i><i class="cl c2"></i><i class="cl c3"></i><i class="cl c4"></i>
-  <svg class="swoosh" viewBox="0 0 400 250" preserveAspectRatio="none">
-    <defs>
-      <linearGradient id="swA" x1="0" x2="1"><stop offset="0" stop-color="#7FE8FF" stop-opacity="0"/><stop offset=".3" stop-color="#A8ECFF" stop-opacity=".7"/><stop offset=".65" stop-color="#7EF0C8" stop-opacity=".5"/><stop offset="1" stop-color="#7FE8FF" stop-opacity="0"/></linearGradient>
-      <linearGradient id="swB" x1="0" x2="1"><stop offset="0" stop-color="#5AA8FF" stop-opacity="0"/><stop offset=".4" stop-color="#7CC4FF" stop-opacity=".55"/><stop offset=".8" stop-color="#9FE6FF" stop-opacity=".35"/><stop offset="1" stop-color="#9FE6FF" stop-opacity="0"/></linearGradient>
-      <linearGradient id="swF" x1="0" x2="1"><stop offset="0" stop-color="#50AAFF" stop-opacity="0"/><stop offset=".4" stop-color="#50AAFF" stop-opacity=".1"/><stop offset=".7" stop-color="#50E6C8" stop-opacity=".07"/><stop offset="1" stop-color="#50E6C8" stop-opacity="0"/></linearGradient>
-      <filter id="swBlur" x="-5%" y="-40%" width="110%" height="180%"><feGaussianBlur stdDeviation="2.5"/></filter>
-      <filter id="swGlow" x="-10%" y="-60%" width="120%" height="220%"><feGaussianBlur stdDeviation="1.8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-    </defs>
-    <g>
-      <path class="sw-band" d="M-10 150C90 95 200 175 410 70L410 102C230 195 100 120-10 178Z" fill="url(#swF)"/>
-      <path class="sw-glow" d="M-10 150C90 95 200 175 410 70" stroke="url(#swA)" filter="url(#swBlur)"/>
-      <path class="sw-l" d="M-10 150C90 95 200 175 410 70" stroke="url(#swA)"/>
-      <path class="sw-l" d="M-10 160C110 112 215 186 410 86" stroke="url(#swA)" opacity=".45"/>
-      <path class="sw-l" d="M-10 178C100 120 230 195 410 102" stroke="url(#swB)"/>
-      <path class="sw-run" d="M-10 150C90 95 200 175 410 70" pathLength="100" filter="url(#swGlow)"/>
-      <path class="sw-run r2" d="M-10 178C100 120 230 195 410 102" pathLength="100" filter="url(#swGlow)"/>
-    </g>
-  </svg>
-  <i class="gl" style="--x:16%;--y:9vh;--d:6s;--w:-1s"></i><i class="gl" style="--x:62%;--y:5vh;--d:8s;--w:-5s"></i><i class="gl" style="--x:38%;--y:21vh;--d:7s;--w:-3s"></i><i class="gl" style="--x:86%;--y:27vh;--d:9s;--w:-7s"></i>
-  <i class="ss" style="--x:80%;--y:7vh;--d:14s;--w:-4s"></i><i class="ss" style="--x:52%;--y:2vh;--d:23s;--w:-15s"></i>
-  <i class="hill h2"></i><i class="hill h1"></i>
+  <i class="gl" style="--x:16%;--y:9vh;--d:6s;--w:-1s"></i><i class="gl" style="--x:62%;--y:5vh;--d:8s;--w:-5s"></i><i class="gl" style="--x:38%;--y:21vh;--d:7s;--w:-3s"></i><i class="gl" style="--x:86%;--y:27vh;--d:9s;--w:-7s"></i><i class="ss" style="--x:80%;--y:7vh;--d:14s;--w:-4s"></i><i class="ss" style="--x:52%;--y:2vh;--d:23s;--w:-15s"></i>
+  <canvas id="landC"></canvas>
   <u style="--x:9%;--y:13vh;--d:9s;--w:-2s"></u><u style="--x:24%;--y:7vh;--d:11s;--w:-7s"></u><u style="--x:41%;--y:16vh;--d:8s;--w:-4s"></u><u style="--x:63%;--y:10vh;--d:12s;--w:-9s"></u><u style="--x:78%;--y:18vh;--d:10s;--w:-1s"></u><u style="--x:91%;--y:8vh;--d:9.5s;--w:-6s"></u>
   <b style="--x:4%;--s:30px;--d:26s;--w:-3s"></b><b style="--x:14%;--s:18px;--d:19s;--w:-11s"></b><b style="--x:23%;--s:46px;--d:31s;--w:-20s"></b><b style="--x:35%;--s:22px;--d:23s;--w:-6s"></b><b style="--x:47%;--s:58px;--d:36s;--w:-27s"></b><b style="--x:58%;--s:16px;--d:18s;--w:-14s"></b><b style="--x:66%;--s:34px;--d:27s;--w:-2s"></b><b style="--x:77%;--s:24px;--d:21s;--w:-17s"></b><b style="--x:86%;--s:52px;--d:33s;--w:-9s"></b><b style="--x:93%;--s:20px;--d:24s;--w:-22s"></b>
 </div>
@@ -2215,14 +2182,14 @@ function setThumbs(i){
 // the cards are rebuilt once, when the finger lifts, so nothing flickers mid-drag.
 var scrubbing=false, scrubEnd=0;
 function scrubber(el,pad,gap){
-  var drag=null, raf=0;
-  function pos(x){ var r=el.getBoundingClientRect(), w=(r.width-2*pad-6*gap)/7; return Math.max(0,Math.min(6,(x-r.left-pad-w/2)/(w+gap))); }
+  var drag=null, raf=0, thumb=el.querySelector(".thumb"), box=null;
+  function pos(x){ return Math.max(0,Math.min(6,(x-box.left-pad-box.w/2)/(box.w+gap))); }
   function frame(){
     raf=0;
     if(!drag) return;
     var p=pos(drag.x), k=ORDER[Math.round(p)];
-    setThumbs(p);
-    if(k!==drag.k){ drag.k=k; paintHero(k); buzz(4); }
+    thumb.style.translate=(p*(box.w+gap)).toFixed(1)+"px 0";
+    if(k!==drag.k){ drag.k=k; paintHero(k,true); buzz(4); }
   }
   el.addEventListener("pointerdown",function(e){ if(e.button>0) return; drag={x0:e.clientX,x:e.clientX,id:e.pointerId,on:false,k:view}; });
   el.addEventListener("pointermove",function(e){
@@ -2231,6 +2198,7 @@ function scrubber(el,pad,gap){
     if(!drag.on){
       if(Math.abs(e.clientX-drag.x0)<8) return;
       drag.on=scrubbing=true;
+      box={left:el.getBoundingClientRect().left+el.clientLeft,w:(el.clientWidth-2*pad-6*gap)/7};
       try{ el.setPointerCapture(e.pointerId); }catch(err){}
       document.documentElement.classList.add("scrubbing");
     }
@@ -2243,6 +2211,7 @@ function scrubber(el,pad,gap){
     if(!d.on) return;
     scrubbing=false; scrubEnd=Date.now();
     document.documentElement.classList.remove("scrubbing");
+    thumb.style.translate="";
     if(d.k!==view) go(d.k,true);
     else { paintHero(view); setThumbs(ORDER.indexOf(view)); }
   }
@@ -2251,22 +2220,24 @@ function scrubber(el,pad,gap){
 }
 function tapDay(k){ if(Date.now()-scrubEnd>350) go(k); }
 
-// Everything that names the day, without touching the cards.
-function paintHero(k){
+// Everything that names the day, without touching the cards. A peek, while dragging, changes only what
+// cannot change the hero's height (chips and blurb wrap differently per day), so the strip never moves under the finger.
+function paintHero(k,peek){
   var d=PLAN[k];
   $("title").textContent=d.t;
   $("ghost").textContent=d.n;
   $("ghost").setAttribute("data-n",d.n);
-  $("blurb").textContent=d.b;
   $("kicker").textContent = k===todayKey ? "Today" : LBL[k];
   $("kick").classList.toggle("away",k!==todayKey);
   $("tbTitle").textContent=d.t;
   $("lfName").textContent=d.t;
   $("tbDay").textContent = k===todayKey ? "Today" : LBL[k];
-  $("focus").innerHTML=d.f.map(function(f){ return "<span>"+f+"</span>"; }).join("");
   [].forEach.call(document.querySelectorAll("#week .wd, #tbWeek button"),function(b){
     b.setAttribute("aria-pressed",String(b.dataset.k===k));
   });
+  if(peek) return;
+  $("blurb").textContent=d.b;
+  $("focus").innerHTML=d.f.map(function(f){ return "<span>"+f+"</span>"; }).join("");
   heroStats(k);
 }
 
@@ -2845,6 +2816,124 @@ $("wm").addEventListener("click",function(e){
   else if(b.dataset.j!=null){ WM.i=+b.dataset.j; wmRender(); }
 });
 
+/* ---------- the sky: painted once into two canvases, so scrolling and dragging never repaint it ---------- */
+(function(){
+  var sky=$("skyC"), land=$("landC"), seen=[0,0], rt=0, TAU=Math.PI*2;
+  function rng(a){ return function(){ a=a+0x6D2B79F5|0; var t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+  function fit(c){
+    var r=Math.min(window.devicePixelRatio||1,2), w=c.clientWidth, h=c.clientHeight, g=c.getContext("2d");
+    c.width=Math.round(w*r); c.height=Math.round(h*r); g.setTransform(r,0,0,r,0,0);
+    return {g:g,w:w,h:h};
+  }
+  function glow(g,x,y,r,rgb,a){
+    var q=g.createRadialGradient(x,y,0,x,y,r);
+    q.addColorStop(0,"rgba("+rgb+","+a+")"); q.addColorStop(1,"rgba("+rgb+",0)");
+    g.fillStyle=q; g.fillRect(x-r,y-r,2*r,2*r);
+  }
+  function paintSky(){
+    var o=fit(sky), g=o.g, w=o.w, h=o.h, R=rng(11), i, x, y, t, a, p;
+    var bg=g.createLinearGradient(0,0,0,h);
+    bg.addColorStop(0,"#020716"); bg.addColorStop(.28,"#051338"); bg.addColorStop(.58,"#0A2656"); bg.addColorStop(.82,"#0E3366"); bg.addColorStop(1,"#113B70");
+    g.fillStyle=bg; g.fillRect(0,0,w,h);
+    // the galaxy: a band from low left to high right, soft blue and teal clouds along it
+    function band(t){ return [w*(-.1+1.2*t),h*(.52-.44*t)]; }
+    for(i=0;i<16;i++){
+      p=band(R()); t=R();
+      glow(g,p[0]+(R()-.5)*w*.2,p[1]+(R()-.5)*h*.06,Math.max(w,h)*(.12+R()*.16),t<.3?"40,200,210":t<.55?"90,110,255":"60,140,255",.03+R()*.04);
+    }
+    // stars, some crowded into the band, thinning toward the hills
+    var n=Math.round(w*h/1200);
+    for(i=0;i<n;i++){
+      if(R()<.45){ p=band(R()); x=p[0]+(R()+R()+R()-1.5)*w*.14; y=p[1]+(R()+R()+R()-1.5)*h*.08; }
+      else { x=R()*w; y=R()*h*.86; }
+      a=(.3+R()*.7)*Math.max(0,1-y/(h*.88));
+      if(a<=0) continue;
+      t=R(); g.globalAlpha=a; g.fillStyle=t<.1?"#FFE7C4":t<.38?"#BFD8FF":"#FFFFFF";
+      g.beginPath(); g.arc(x,y,.3+Math.pow(R(),3)*1.25,0,TAU); g.fill();
+    }
+    g.globalAlpha=1;
+    for(i=0;i<9;i++){
+      x=R()*w; y=R()*h*.55;
+      glow(g,x,y,7+R()*7,"170,210,255",.32);
+      g.fillStyle="#fff"; g.beginPath(); g.arc(x,y,1+R()*.6,0,TAU); g.fill();
+    }
+    // the moon: faint rays, a halo, a glossy disc
+    var mx=w*.8, my=Math.min(h*.075,70), mr=Math.max(15,Math.min(w,h)*.042), rl=Math.max(w,h)*.95;
+    var rg=g.createRadialGradient(mx,my,mr,mx,my,rl);
+    rg.addColorStop(0,"rgba(170,210,255,.09)"); rg.addColorStop(.3,"rgba(170,210,255,.03)"); rg.addColorStop(1,"rgba(170,210,255,0)");
+    g.fillStyle=rg;
+    for(i=0;i<20;i++){
+      t=i/20*TAU+R()*.15; a=.02+R()*.03;
+      g.beginPath(); g.moveTo(mx,my); g.arc(mx,my,rl,t-a,t+a); g.closePath(); g.fill();
+    }
+    glow(g,mx,my,mr*8,"110,160,255",.15);
+    glow(g,mx,my,mr*2.8,"190,220,255",.2);
+    var md=g.createRadialGradient(mx-mr*.35,my-mr*.4,mr*.1,mx,my,mr);
+    md.addColorStop(0,"#F2F8FF"); md.addColorStop(.6,"#C4D9F4"); md.addColorStop(1,"#86A8D6");
+    g.save(); g.shadowColor="rgba(150,200,255,.85)"; g.shadowBlur=mr*1.5;
+    g.fillStyle=md; g.beginPath(); g.arc(mx,my,mr,0,TAU); g.fill(); g.restore();
+    g.fillStyle="rgba(110,140,190,.2)";
+    [[.28,-.05,.26],[-.28,.22,.22],[.12,.42,.15],[-.05,-.35,.12]].forEach(function(c){ g.beginPath(); g.arc(mx+c[0]*mr,my+c[1]*mr,c[2]*mr,0,TAU); g.fill(); });
+    var gs=g.createLinearGradient(0,my-mr,0,my+mr*.1);
+    gs.addColorStop(0,"rgba(255,255,255,.6)"); gs.addColorStop(1,"rgba(255,255,255,0)");
+    g.fillStyle=gs; g.beginPath(); g.ellipse(mx,my-mr*.42,mr*.66,mr*.46,0,0,TAU); g.fill();
+    // Aero swooshes: three lit curves across the middle, a faint band between two of them
+    function curve(y0,ax,ay,bx,by,y1){ g.beginPath(); g.moveTo(-w*.05,h*y0); g.bezierCurveTo(w*ax,h*ay,w*bx,h*by,w*1.05,h*y1); }
+    function stroke(c){
+      var q=g.createLinearGradient(0,0,w,0);
+      q.addColorStop(0,"rgba("+c[0]+",0)"); q.addColorStop(.3,"rgba("+c[0]+","+c[2]+")"); q.addColorStop(.68,"rgba("+c[1]+","+c[2]*.75+")"); q.addColorStop(1,"rgba("+c[1]+",0)");
+      return q;
+    }
+    var A=[.56,.25,.47,.5,.62,.42], B=[.625,.28,.53,.6,.67,.475], C=[.59,.27,.5,.55,.645,.448];
+    var fill=g.createLinearGradient(0,0,w,0);
+    fill.addColorStop(0,"rgba(80,170,255,0)"); fill.addColorStop(.4,"rgba(80,170,255,.09)"); fill.addColorStop(.72,"rgba(80,230,200,.06)"); fill.addColorStop(1,"rgba(80,230,200,0)");
+    curve.apply(null,A); g.lineTo(w*1.05,h*B[5]); g.bezierCurveTo(w*B[3],h*B[4],w*B[1],h*B[2],-w*.05,h*B[0]); g.closePath(); g.fillStyle=fill; g.fill();
+    [[A,["168,236,255","126,240,200",.6]],[C,["168,236,255","126,240,200",.28]],[B,["120,190,255","160,230,255",.5]]].forEach(function(l){
+      g.save(); g.strokeStyle=stroke(l[1]); g.shadowColor="rgba(120,220,255,.9)"; g.shadowBlur=12;
+      g.lineWidth=5; g.globalAlpha=.3; curve.apply(null,l[0]); g.stroke();
+      g.shadowBlur=4; g.lineWidth=1.3; g.globalAlpha=1; curve.apply(null,l[0]); g.stroke(); g.restore();
+    });
+    // a little sheen of light on the brightest curve
+    glow(g,w*.34,h*.525,Math.max(w,h)*.07,"200,245,255",.16);
+    // haze over the horizon
+    var hz=g.createLinearGradient(0,h*.6,0,h);
+    hz.addColorStop(0,"rgba(40,170,200,0)"); hz.addColorStop(1,"rgba(40,170,200,.14)");
+    g.fillStyle=hz; g.fillRect(0,h*.6,w,h*.4);
+  }
+  function paintLand(){
+    var o=fit(land), g=o.g, w=o.w, h=o.h;
+    function hill(crest,stops,rim,ra){
+      var f=g.createLinearGradient(0,h*.2,0,h);
+      stops.forEach(function(c,i){ f.addColorStop(i/(stops.length-1),c); });
+      function shape(){ crest(); g.lineTo(w*1.2,h); g.lineTo(-w*.2,h); g.closePath(); }
+      shape(); g.fillStyle=f; g.fill();
+      // light on the crest, bleeding a little into the hill
+      g.save(); shape(); g.clip();
+      crest(); g.strokeStyle="rgba("+rim+","+ra*.25+")"; g.lineWidth=22; g.stroke();
+      crest(); g.strokeStyle="rgba("+rim+","+ra*.4+")"; g.lineWidth=7; g.stroke();
+      g.restore();
+      g.save(); crest(); g.strokeStyle="rgba("+rim+","+ra+")"; g.shadowColor="rgba("+rim+",.9)"; g.shadowBlur=9; g.lineWidth=1.4; g.stroke(); g.restore();
+    }
+    var mist=g.createLinearGradient(0,h*.15,0,h*.6);
+    mist.addColorStop(0,"rgba(60,190,210,0)"); mist.addColorStop(1,"rgba(60,190,210,.08)");
+    g.fillStyle=mist; g.fillRect(0,0,w,h);
+    hill(function(){ g.beginPath(); g.moveTo(-w*.2,h*.66); g.bezierCurveTo(w*.2,h*.4,w*.45,h*.22,w*.72,h*.24); g.bezierCurveTo(w*.92,h*.26,w*1.05,h*.34,w*1.2,h*.44); },
+      ["#14425A","#0B2838","#061722"],"110,200,255",.32);
+    hill(function(){ g.beginPath(); g.moveTo(-w*.2,h*.5); g.bezierCurveTo(w*.02,h*.42,w*.24,h*.4,w*.46,h*.5); g.bezierCurveTo(w*.66,h*.6,w*.9,h*.74,w*1.2,h*.86); },
+      ["#10403F","#0A2829","#041314"],"110,240,200",.45);
+    hill(function(){ g.beginPath(); g.moveTo(w*.38,h*1.02); g.bezierCurveTo(w*.6,h*.8,w*.84,h*.7,w*1.2,h*.72); },
+      ["#0C302A","#061C18","#020B0A"],"150,255,210",.36);
+  }
+  function paint(){
+    var w=sky.clientWidth, h=sky.clientHeight;
+    if(!w||(w===seen[0]&&Math.abs(h-seen[1])<140)) return;
+    seen=[w,h];
+    try{ paintSky(); paintLand(); }catch(e){}
+  }
+  paint();
+  window.addEventListener("resize",function(){ clearTimeout(rt); rt=setTimeout(paint,180); });
+})();
+
 /* ---------- light: the glass highlight follows the pointer, or the phone's tilt when that is switched on ---------- */
 var LIGHT={x:22,y:-10,tx:22,ty:-10,raf:0};
 function setLight(x,y){
@@ -2853,13 +2942,17 @@ function setLight(x,y){
 }
 function lightFrame(){
   LIGHT.raf=0;
-  LIGHT.x+=(LIGHT.tx-LIGHT.x)*.18; LIGHT.y+=(LIGHT.ty-LIGHT.y)*.18;
+  LIGHT.x+=(LIGHT.tx-LIGHT.x)*.3; LIGHT.y+=(LIGHT.ty-LIGHT.y)*.3;
   var r=document.documentElement.style;
   r.setProperty("--lx",LIGHT.x.toFixed(1)+"%"); r.setProperty("--ly",LIGHT.y.toFixed(1)+"%");
-  if(Math.abs(LIGHT.tx-LIGHT.x)>.4||Math.abs(LIGHT.ty-LIGHT.y)>.4) LIGHT.raf=requestAnimationFrame(lightFrame);
+  if(Math.abs(LIGHT.tx-LIGHT.x)>1||Math.abs(LIGHT.ty-LIGHT.y)>1) LIGHT.raf=requestAnimationFrame(lightFrame);
 }
-if(!CALM&&window.matchMedia&&matchMedia("(hover:hover)").matches) document.addEventListener("pointermove",function(e){ setLight(e.clientX/innerWidth*100,e.clientY/innerHeight*80-20); },{passive:true});
-function onTilt(e){ if(e.gamma==null||e.beta==null) return; setLight(50+e.gamma*1.5,(e.beta-45)*1.2); }
+if(!CALM&&window.matchMedia&&matchMedia("(hover:hover)").matches) document.addEventListener("pointermove",function(e){ if(!e.buttons&&!scrubbing) setLight(e.clientX/innerWidth*100,e.clientY/innerHeight*80-20); },{passive:true});
+function onTilt(e){
+  if(e.gamma==null||e.beta==null||scrubbing) return;
+  var x=50+e.gamma*1.5, y=(e.beta-45)*1.2;
+  if(Math.abs(x-LIGHT.tx)>1.5||Math.abs(y-LIGHT.ty)>1.5) setLight(x,y);
+}
 function tiltOff(){ window.removeEventListener("deviceorientation",onTilt); setLight(22,-10); }
 // iPhone asks once for motion access, and only from a tap.
 function tiltOn(ask){
