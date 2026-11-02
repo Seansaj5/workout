@@ -768,7 +768,7 @@
 
     <div class="pane cool">
       <div class="pane-h"><h2>Face &amp; Neck</h2><span class="count" id="fcount">0 / 0</span></div>
-      <p class="sub">Every day, rest days included. Eight minutes in the mirror.</p>
+      <p class="sub" id="fsub"></p>
       <ul class="lifts" id="face"></ul>
     </div>
 
@@ -785,9 +785,9 @@
     <section>
       <div class="sec-h"><h2>Rules</h2></div>
       <ul class="notes">
-        <li><b>Three working sets.</b> This is what drives the growth. Grinding harder on two is not a substitute for more hard sets.</li>
+        <li><b>Two working sets, both all-out.</b> Every set goes to the last clean rep. Two is enough only because neither one is held back. On barbell presses and squats, stop one rep short of a miss, nobody is spotting you.</li>
         <li><b>One technique per exercise, last set only.</b> Orange chips mark them. Everywhere at once just wrecks recovery.</li>
-        <li><b>Deload week seven.</b> Two sets, around 60 percent, one week. Six days at this intensity catches up around week eight.</li>
+        <li><b>Deload week seven.</b> One set, around 60 percent, one week. Six days at this intensity catches up around week eight.</li>
         <li><b>Log the numbers.</b> Beating last week is the entire mechanism, and you cannot beat what you did not write down.</li>
         <li><b>Eat for it.</b> More volume without more food makes you tired, not bigger.</li>
       </ul>
@@ -853,76 +853,78 @@
 function ex(nm,mus,reps,sets,cue,form,chips){
   return {nm:nm,mus:mus,reps:reps,sets:sets,cue:cue,form:form,chips:chips||[]};
 }
+// Mouth and jaw work runs every other day; the rest of the face block runs daily.
+function alt(x){ x.alt=true; return x; }
 
 const PLAN={
  mon:{t:"Push",n:"01",f:["Chest","Front delt","Side delt","Triceps"],
   b:"Cable low for flyes, high for pushdowns. Heaviest pressing of the week.",
   l:[
-   ex("Barbell bench press","Chest","3 \u00d7 5-8",3,"Two ramp sets first. The last rep of set one should be a real grind, not a warm-up.","barbell bench press form"),
-   ex("Incline dumbbell press","Upper chest","3 \u00d7 8-10",3,"Up to the 75s. Once ten is clean across all three, slow the lowering to four seconds rather than chasing more reps.","incline dumbbell press form"),
-   ex("Cable fly, low to high","Upper chest","3 \u00d7 12-15",3,"Pulley on the floor, press up and together at chest height. <b>Four second lowering on the last set.</b>","low to high cable fly upper chest",[["int","Slow eccentric"]]),
-   ex("Seated dumbbell press","Front delt","3 \u00d7 8-10",3,"Bench upright against the rack. Stop one rep before the grinder.","seated dumbbell shoulder press form"),
-   ex("Cable lateral raise","Side delt","3 \u00d7 12-15",3,"Pulley at the floor, cable behind your back, one arm at a time. <b>Myo-reps on the last set. Rest 15 seconds, get 4 more, twice.</b>","cable lateral raise form",[["int","Myo-reps"]]),
-   ex("Overhead cable extension","Triceps","2 \u00d7 10-12",2,"Pulley high, face away, elbows locked beside your ears the whole way.","overhead cable tricep extension form"),
-   ex("Cable pushdown","Triceps","3 \u00d7 12-15",3,"Elbows pinned to your ribs, no leaning into it. <b>Rest-pause the last set. Fail, rest 15 seconds, go again.</b>","cable tricep pushdown form",[["int","Rest-pause"]])
+   ex("Barbell bench press","Chest","2 \u00d7 6-8",2,"Two ramp sets first. The last rep of set one should be a real grind, not a warm-up.","barbell bench press form"),
+   ex("Incline dumbbell press","Upper chest","2 \u00d7 6-8",2,"Up to the 75s. Once eight is clean on both sets, slow the lowering to four seconds rather than chasing more reps.","incline dumbbell press form"),
+   ex("Cable fly, low to high","Upper chest","2 \u00d7 6-8",2,"Pulley on the floor, press up and together at chest height. <b>Four second lowering on the last set.</b>","low to high cable fly upper chest",[["int","Slow eccentric"]]),
+   ex("Seated dumbbell press","Front delt","2 \u00d7 6-8",2,"Bench upright against the rack. Both sets until the dumbbells stop moving, they are safe to fail with.","seated dumbbell shoulder press form"),
+   ex("Cable lateral raise","Side delt","2 \u00d7 6-8",2,"Pulley at the floor, cable behind your back, one arm at a time. <b>Myo-reps on the last set. Rest 15 seconds, get 4 more, twice.</b>","cable lateral raise form",[["int","Myo-reps"]]),
+   ex("Overhead cable extension","Triceps","2 \u00d7 6-8",2,"Pulley high, face away, elbows locked beside your ears the whole way.","overhead cable tricep extension form"),
+   ex("Cable pushdown","Triceps","2 \u00d7 6-8",2,"Elbows pinned to your ribs, no leaning into it. <b>Rest-pause the last set. Fail, rest 15 seconds, go again.</b>","cable tricep pushdown form",[["int","Rest-pause"]])
   ]},
  tue:{t:"Pull",n:"02",f:["Lats","Upper back","Rear delt","Biceps","Forearms"],
   b:"Back thickness and width, then the first forearm block of the week.",
   l:[
-   ex("Pull-up","Lats","3 \u00d7 8-12",3,"Bodyweight, full hang at the bottom, chin clearly over the bar. When twelve is easy on all three, slow the lowering to three seconds.","pull up form"),
-   ex("Barbell row","Upper back","3 \u00d7 6-8",3,"Torso around 45 degrees, pull to the bottom of the ribs. Strap the top two sets and stop heaving.","barbell row form",[["straps","Straps"]]),
-   ex("Cable pulldown","Lats","3 \u00d7 10-12",3,"Pulley at the top, wide grip. Pull with the elbows, not the hands.","lat pulldown form"),
-   ex("Chest-supported row","Mid back","3 \u00d7 10-12",3,"Bench at 30 degrees, lie face down on it, dumbbells hanging. Chest stays glued to the pad so the lower back does nothing. Pull to the hips, full second of squeeze.","chest supported dumbbell row form"),
-   ex("Cable rear delt fly","Rear delt","3 \u00d7 15-20",3,"Pulley at shoulder height, cables crossed, sweep wide and back. This one never gets heavy.","cable rear delt fly form"),
-   ex("Barbell curl","Biceps","3 \u00d7 6-10",3,"<b>Rest-pause the last set. Fail, rest 15 seconds, go again, twice.</b>","barbell curl form",[["int","Rest-pause"]]),
-   ex("Incline dumbbell curl","Biceps","2 \u00d7 10-12",2,"Bench at 45, arms hanging straight down behind you. The stretch at the bottom is the entire point.","incline dumbbell curl form"),
-   ex("Barbell wrist curl","Forearms","3 \u00d7 15-20",3,"Forearms on the bench, hands off the edge, palms up. Let the bar roll to the fingertips, then curl it back. Slow.","barbell wrist curl form",[["grip","Forearms"]])
+   ex("Pull-up","Lats","2 \u00d7 6-8",2,"Bodyweight only, full hang at the bottom, chin clearly over the bar. Once eight is easy on both sets, slow the lowering to three seconds instead of adding weight.","pull up form"),
+   ex("Barbell row","Upper back","2 \u00d7 6-8",2,"Torso around 45 degrees, pull to the bottom of the ribs. Strap both working sets and stop heaving.","barbell row form",[["straps","Straps"]]),
+   ex("Cable pulldown","Lats","2 \u00d7 6-8",2,"Pulley at the top, wide grip. Pull with the elbows, not the hands.","lat pulldown form"),
+   ex("Chest-supported row","Mid back","2 \u00d7 6-8",2,"Bench at 30 degrees, lie face down on it, dumbbells hanging. Chest stays glued to the pad so the lower back does nothing. Pull to the hips, full second of squeeze.","chest supported dumbbell row form"),
+   ex("Cable rear delt fly","Rear delt","2 \u00d7 6-8",2,"Pulley at shoulder height, cables crossed, sweep wide and back. Heavy enough to stall by eight, never so heavy the traps take over.","cable rear delt fly form"),
+   ex("Barbell curl","Biceps","2 \u00d7 6-8",2,"<b>Rest-pause the last set. Fail, rest 15 seconds, go again, twice.</b>","barbell curl form",[["int","Rest-pause"]]),
+   ex("Incline dumbbell curl","Biceps","2 \u00d7 6-8",2,"Bench at 45, arms hanging straight down behind you. The stretch at the bottom is the entire point.","incline dumbbell curl form"),
+   ex("Barbell wrist curl","Forearms","2 \u00d7 6-8",2,"Forearms on the bench, hands off the edge, palms up. Let the bar roll to the fingertips, then curl it back. Slow.","barbell wrist curl form",[["grip","Forearms"]])
   ]},
  wed:{t:"Legs",n:"03",f:["Quads","Hamstrings","Calves","Abs"],
   b:"Squat pattern and hamstrings. The heaviest day of the week, eat before it.",
   l:[
-   ex("Barbell back squat","Quads","3 \u00d7 5-8",3,"Three ramp sets in. Below parallel or it does not count.","barbell back squat form"),
-   ex("Romanian deadlift","Hamstrings","3 \u00d7 6-8",3,"Bar dragging the legs, hips back, stop when the hamstrings run out of stretch. Strap the heavy sets.","romanian deadlift form",[["straps","Straps"]]),
-   ex("Bulgarian split squat","Quads","2 \u00d7 8-10 ea",2,"Rear foot on the bench, dumbbells in hand. This is supposed to be miserable.","bulgarian split squat form"),
-   ex("Cable pull-through","Glutes","2 \u00d7 12-15",2,"Pulley on the floor between your legs. Hinge, then drive the hips forward hard.","cable pull through form"),
-   ex("Standing calf raise","Calves","4 \u00d7 10-12",4,"Dumbbell in one hand, toes on a plate. Two second pause in the bottom stretch every rep.","standing calf raise form"),
-   ex("Hanging leg raise","Abs","3 \u00d7 max",3,"From the pull-up bar. Curl the pelvis up, do not just swing the legs.","hanging leg raise form")
+   ex("Barbell back squat","Quads","2 \u00d7 6-8",2,"Three ramp sets in. Below parallel or it does not count.","barbell back squat form"),
+   ex("Romanian deadlift","Hamstrings","2 \u00d7 6-8",2,"Bar dragging the legs, hips back, stop when the hamstrings run out of stretch. Strap the heavy sets.","romanian deadlift form",[["straps","Straps"]]),
+   ex("Bulgarian split squat","Quads","2 \u00d7 6-8 ea",2,"Rear foot on the bench, dumbbells in hand. This is supposed to be miserable.","bulgarian split squat form"),
+   ex("Cable pull-through","Glutes","2 \u00d7 6-8",2,"Pulley on the floor between your legs. Hinge, then drive the hips forward hard.","cable pull through form"),
+   ex("Standing calf raise","Calves","2 \u00d7 6-8",2,"Dumbbell in one hand, toes on a plate. Two second pause in the bottom stretch every rep.","standing calf raise form"),
+   ex("Hanging leg raise","Abs","2 \u00d7 max",2,"From the pull-up bar. Curl the pelvis up, do not just swing the legs.","hanging leg raise form")
   ]},
  thu:{t:"Upper",n:"04",f:["Chest","Back","Side delt","Arms","Grip"],
   b:"Second pass above the waist, angled away from Monday and Tuesday.",
   l:[
-   ex("Incline barbell press","Upper chest","3 \u00d7 6-8",3,"Bench at 30 degrees. This is your upper chest day, do not rush it.","incline barbell bench press form"),
-   ex("Weighted chin-up","Lats","3 \u00d7 6-10",3,"Underhand grip, so the biceps take a real share of this.","weighted chin up form"),
-   ex("Inverted row","Upper back","3 \u00d7 10-15",3,"Bar in the rack at hip height, hang underneath, body straight, pull the chest to the bar with elbows flared wide. Walk the feet further out to make it harder, or put them on the bench.","inverted row rack form"),
-   ex("Dumbbell lateral raise","Side delt","4 \u00d7 12-15",4,"Four sets deliberately. Slight forward lean, pinkies a shade high.","dumbbell lateral raise form"),
-   ex("Cable fly, mid","Chest","3 \u00d7 12-15",3,"Pulley at chest height, straight across. <b>Four second lowering on the last set.</b>","cable chest fly form",[["int","Slow eccentric"]]),
-   ex("Dumbbell overhead ext","Triceps","2 \u00d7 10-12",2,"One heavy dumbbell, both hands, deep stretch behind the head.","dumbbell overhead tricep extension form"),
-   ex("Cable curl","Biceps","2 \u00d7 10-12",2,"Pulley on the floor, step back far enough that there is tension at the bottom.","cable bicep curl form"),
-   ex("Dead hang","Grip","3 \u00d7 max",3,"Straight off the pull-up bar, no straps, hang until you drop. Free grip work and it decompresses the spine.","dead hang bar grip",[["grip","Grip"]])
+   ex("Incline barbell press","Upper chest","2 \u00d7 6-8",2,"Bench at 30 degrees. This is your upper chest day, do not rush it.","incline barbell bench press form"),
+   ex("Chin-up","Lats","2 \u00d7 6-8",2,"Bodyweight, underhand grip, so the biceps take a real share of this. Past eight on both sets, slow the lowering to four seconds instead of adding weight.","chin up form"),
+   ex("Inverted row","Upper back","2 \u00d7 6-8",2,"Bar in the rack at hip height, hang underneath, body straight, pull the chest to the bar with elbows flared wide. Walk the feet further out to make it harder, or put them on the bench.","inverted row rack form"),
+   ex("Dumbbell lateral raise","Side delt","2 \u00d7 6-8",2,"Slight forward lean, pinkies a shade high.","dumbbell lateral raise form"),
+   ex("Cable fly, mid","Chest","2 \u00d7 6-8",2,"Pulley at chest height, straight across. <b>Four second lowering on the last set.</b>","cable chest fly form",[["int","Slow eccentric"]]),
+   ex("Dumbbell overhead ext","Triceps","2 \u00d7 6-8",2,"One heavy dumbbell, both hands, deep stretch behind the head.","dumbbell overhead tricep extension form"),
+   ex("Cable curl","Biceps","2 \u00d7 6-8",2,"Pulley on the floor, step back far enough that there is tension at the bottom.","cable bicep curl form"),
+   ex("Dead hang","Grip","2 \u00d7 max",2,"Straight off the pull-up bar, no straps, hang until you drop. Free grip work and it decompresses the spine.","dead hang bar grip",[["grip","Grip"]])
   ]},
  fri:{t:"Lower",n:"05",f:["Posterior chain","Glutes","Calves","Abs"],
   b:"Hinge pattern instead of squat. Kinder on the knees by week four.",
   l:[
-   ex("Deadlift","Posterior chain","3 \u00d7 4-6",3,"Reset on the floor between reps. Strap the top sets. End the set the moment your back rounds.","conventional deadlift form",[["straps","Straps"]]),
-   ex("Front squat","Quads","3 \u00d7 8-10",3,"Front squat if the rack unracks cleanly, goblet with a 75 if not.","front squat form"),
-   ex("Reverse lunge","Quads","2 \u00d7 10-12 ea",2,"Dumbbells, step backward not forward. Much kinder to the knee.","reverse lunge form"),
-   ex("Cable hip thrust","Glutes","3 \u00d7 12-15",3,"Pulley on the floor, shoulders on the bench, belt across the hips. Two second squeeze up top.","cable hip thrust form"),
-   ex("Seated calf raise","Calves","4 \u00d7 12-15",4,"Dumbbell on the knee, seated. Different angle than Wednesday, hits the soleus underneath.","seated calf raise form"),
-   ex("Kneeling cable crunch","Abs","3 \u00d7 12-15",3,"Pulley high, rope behind the head, crunch ribs toward hips. The only ab move you can actually load.","kneeling cable crunch form")
+   ex("Deadlift","Posterior chain","2 \u00d7 6-8",2,"Reset on the floor between reps. Strap the top sets. End the set the moment your back rounds.","conventional deadlift form",[["straps","Straps"]]),
+   ex("Front squat","Quads","2 \u00d7 6-8",2,"Front squat if the rack unracks cleanly, goblet with a 75 if not.","front squat form"),
+   ex("Reverse lunge","Quads","2 \u00d7 6-8 ea",2,"Dumbbells, step backward not forward. Much kinder to the knee.","reverse lunge form"),
+   ex("Cable hip thrust","Glutes","2 \u00d7 6-8",2,"Pulley on the floor, shoulders on the bench, belt across the hips. Two second squeeze up top.","cable hip thrust form"),
+   ex("Seated calf raise","Calves","2 \u00d7 6-8",2,"Dumbbell on the knee, seated. Different angle than Wednesday, hits the soleus underneath.","seated calf raise form"),
+   ex("Kneeling cable crunch","Abs","2 \u00d7 6-8",2,"Pulley high, rope behind the head, crunch ribs toward hips. The only ab move you can actually load.","kneeling cable crunch form")
   ]},
  sat:{t:"Shape",n:"06",f:["Side delt","Arms","Forearms","Neck","Abs"],
   b:"Delts, arms, neck and grip. The day that changes how you look in a shirt fastest.",
   l:[
-   ex("Cable lateral raise","Side delt","4 \u00d7 12-15",4,"<b>Myo-reps on the final set.</b> Side delts are the highest return muscle you own for looking wider.","cable lateral raise form",[["int","Myo-reps"]]),
-   ex("Cable rear delt fly","Rear delt","3 \u00d7 15-20",3,"Fills in the shoulder from behind so it reads round instead of flat.","cable rear delt fly form"),
-   ex("Dumbbell shrug","Traps","3 \u00d7 10-12",3,"The 75s, two second hold at the top, no rolling. Strap these, traps handle more than fingers.","dumbbell shrug form",[["straps","Straps"]]),
-   ex("Close-grip bench","Triceps","3 \u00d7 8-10",3,"Hands just inside shoulder width, elbows tucked to the ribs.","close grip bench press form"),
-   ex("Cable overhead ext","Triceps","2 \u00d7 12-15",2,"Long head, which is most of the arm when seen from the side.","overhead cable tricep extension form"),
-   ex("Hammer curl","Biceps","3 \u00d7 10-12",3,"Builds the brachialis underneath, which pushes the bicep up and thickens the whole arm.","hammer curl form"),
-   ex("Reverse curl","Forearms","3 \u00d7 12-15",3,"Palms down, bar or dumbbells. Hits the brachioradialis, the muscle that makes a forearm look thick from the front.","reverse curl forearm form",[["grip","Forearms"]]),
-   ex("Farmer's carry","Grip","3 \u00d7 40 steps",3,"The 75s, no straps ever. Walk tall, shoulders down. Best single thing you can do for grip.","farmers carry form",[["grip","Grip"]]),
-   ex("Neck extension &amp; flexion","Neck","3 \u00d7 15-20 ea",3,"Face down on the bench, towel-wrapped plate on the back of the head, then face up for the front. Start at five pounds. A thicker neck changes your whole frame.","neck extension flexion training"),
-   ex("Ab circuit","Abs","3 rounds",3,"Hanging leg raise, cable crunch, 45 second plank. Straight through, one minute between rounds.","ab circuit core workout")
+   ex("Cable lateral raise","Side delt","2 \u00d7 6-8",2,"<b>Myo-reps on the final set.</b> Side delts are the highest return muscle you own for looking wider.","cable lateral raise form",[["int","Myo-reps"]]),
+   ex("Cable rear delt fly","Rear delt","2 \u00d7 6-8",2,"Fills in the shoulder from behind so it reads round instead of flat.","cable rear delt fly form"),
+   ex("Dumbbell shrug","Traps","2 \u00d7 6-8",2,"The 75s, two second hold at the top, no rolling. Strap these, traps handle more than fingers.","dumbbell shrug form",[["straps","Straps"]]),
+   ex("Close-grip bench","Triceps","2 \u00d7 6-8",2,"Hands just inside shoulder width, elbows tucked to the ribs.","close grip bench press form"),
+   ex("Cable overhead ext","Triceps","2 \u00d7 6-8",2,"Long head, which is most of the arm when seen from the side.","overhead cable tricep extension form"),
+   ex("Hammer curl","Biceps","2 \u00d7 6-8",2,"Builds the brachialis underneath, which pushes the bicep up and thickens the whole arm.","hammer curl form"),
+   ex("Reverse curl","Forearms","2 \u00d7 6-8",2,"Palms down, bar or dumbbells. Hits the brachioradialis, the muscle that makes a forearm look thick from the front.","reverse curl forearm form",[["grip","Forearms"]]),
+   ex("Farmer's carry","Grip","2 \u00d7 40 steps",2,"The 75s, no straps ever. Walk tall, shoulders down. Best single thing you can do for grip.","farmers carry form",[["grip","Grip"]]),
+   ex("Neck extension &amp; flexion","Neck","2 \u00d7 15-20 ea",2,"Face down on the bench, towel-wrapped plate on the back of the head, then face up for the front. Start at five pounds. A thicker neck changes your whole frame.","neck extension flexion training"),
+   ex("Ab circuit","Abs","2 rounds",2,"Hanging leg raise, cable crunch, 45 second plank. Straight through, one minute between rounds.","ab circuit core workout")
   ]},
  sun:{t:"Rest",n:"07",f:["Recovery"],
   b:"No lifting. The face and neck block still happens.",
@@ -937,18 +939,21 @@ const PLAN={
 const FACE=[
  ex("Chin tucks","Deep neck","3 \u00d7 10",3,"Sit tall, slide the head straight back, hold five seconds. Kills forward head posture, which does more for a jawline than any facial move.","chin tuck exercise form"),
  ex("Neck isometrics","Neck","3 \u00d7 20s",3,"Palm to forehead, then the back of the head, then each side. Push around 70 percent, nothing moves.","neck isometric exercise"),
- ex("Tongue to palate","Posture","2 min",1,"Whole tongue flat on the roof of the mouth, lips sealed, breathing through the nose. Then hold it as your default all day.","proper tongue posture"),
- ex("Jaw-opening resistance","Jaw","2 \u00d7 10",2,"Fist under the chin, open slowly against light pressure. Gentle. Stop the second anything clicks.","jaw resistance exercise"),
- ex("Mastic gum","Masseter","10 min cap",1,"Trains the muscle that actually widens the lower face. <b>Ten to fifteen minutes is the ceiling.</b> An hour of chewing buys jaw pain, not a jaw.","mastic gum jaw training",[["int","Capped"]]),
+ alt(ex("Tongue to palate","Posture","2 min",1,"Whole tongue flat on the roof of the mouth, lips sealed, breathing through the nose. Then hold it as your default all day.","proper tongue posture")),
+ alt(ex("Jaw-opening resistance","Jaw","2 \u00d7 10",2,"Fist under the chin, open slowly against light pressure. Gentle. Stop the second anything clicks.","jaw resistance exercise")),
+ alt(ex("Mastic gum","Masseter","10 min cap",1,"Trains the muscle that actually widens the lower face. <b>Ten to fifteen minutes is the ceiling.</b> An hour of chewing buys jaw pain, not a jaw.","mastic gum jaw training",[["int","Capped"]])),
  ex("Orbicularis squeeze","Eye area","3 \u00d7 10",3,"Firm squint, hold five, release completely.","orbicularis oculi exercise"),
  ex("Under-eye drainage","Eye area","60s",1,"Ring finger tapping from the inner corner outward, then down toward the ear. Almost no pressure.","lymphatic drainage under eye"),
- ex("Cheek and lip holds","Face","3 \u00d7 10",3,"Puff both cheeks, hold five, push the air side to side, finish with a hard lip press.","facial muscle exercise cheeks")
+ alt(ex("Cheek and lip holds","Face","3 \u00d7 10",3,"Puff both cheeks, hold five, push the air side to side, finish with a hard lip press.","facial muscle exercise cheeks"))
 ];
 
 const ORDER=["mon","tue","wed","thu","fri","sat","sun"];
 const LBL={mon:"Mon",tue:"Tue",wed:"Wed",thu:"Thu",fri:"Fri",sat:"Sat",sun:"Sun"};
 const todayKey=ORDER[(new Date().getDay()+6)%7];
 const stamp=new Date().toDateString();
+// Counted in calendar days from 2 Nov 2026, a jaw day, so the rhythm carries straight across weeks.
+const jawDay=(function(){ var t=new Date(); return Math.round((new Date(t.getFullYear(),t.getMonth(),t.getDate())-new Date(2026,10,2))/864e5)%2===0; })();
+const FACE_TODAY=jawDay?FACE:FACE.filter(function(x){ return !x.alt; });
 
 let mem={};
 const store={
@@ -1065,7 +1070,7 @@ function buildSegs(){
   var root=$("segs"), html="";
   PLAN[view].l.forEach(function(x){ html+='<span class="sg" style="flex-grow:'+x.sets+'"><i></i></span>'; });
   html+='<span class="sg-gap"></span>';
-  FACE.forEach(function(x){ html+='<span class="sg" style="flex-grow:'+x.sets+'"><i></i></span>'; });
+  FACE_TODAY.forEach(function(x){ html+='<span class="sg" style="flex-grow:'+x.sets+'"><i></i></span>'; });
   root.innerHTML=html;
 }
 function setSeg(el,c,n){
@@ -1078,7 +1083,7 @@ function meter(quiet){
   var d=PLAN[view], lt=0, ld=0, ft=0, fd=0;
   var sg=$("segs").querySelectorAll(".sg"), n=0;
   d.l.forEach(function(x,i){ var c=countDone(view,i,x.sets); lt+=x.sets; ld+=c; setSeg(sg[n++],c,x.sets); });
-  FACE.forEach(function(x,i){ var c=countDone("face",i,x.sets); ft+=x.sets; fd+=c; setSeg(sg[n++],c,x.sets); });
+  FACE_TODAY.forEach(function(x,i){ var c=countDone("face",i,x.sets); ft+=x.sets; fd+=c; setSeg(sg[n++],c,x.sets); });
   var total=lt+ft, done=ld+fd, pct=total?done/total*100:0, full=total>0&&done===total;
 
   if($("done").textContent!==String(done)){
@@ -1163,7 +1168,7 @@ $("clock").textContent=
 $("reset").onclick=function(){
   marks={};
   store.set(marks);
-  buildList($("face"),FACE,"face");
+  buildList($("face"),FACE_TODAY,"face");
   render();
   var l=$("resetLabel"), t=l.textContent;
   l.textContent="Cleared";
@@ -1197,7 +1202,10 @@ document.addEventListener("visibilitychange",function(){
   if(!document.hidden&&new Date().toDateString()!==stamp) location.reload();
 });
 
-buildList($("face"),FACE,"face");
+$("fsub").textContent=jawDay
+  ? "Neck and eyes every day, mouth and jaw every other day. Today is a jaw day."
+  : "Neck and eyes today. Mouth and jaw run every other day, back tomorrow.";
+buildList($("face"),FACE_TODAY,"face");
 render();
 // Let the dial and bars sweep up from zero on first paint.
 (function(){
@@ -1276,7 +1284,7 @@ render();
     NAMES[n].at.push({day:day,i:i,x:x});
   }
   ORDER.forEach(function(d){ PLAN[d].l.forEach(function(x,i){ addEx(d,i,x); }); });
-  FACE.forEach(function(x,i){ addEx("face",i,x); });
+  FACE.forEach(function(x){ addEx("face",FACE_TODAY.indexOf(x),x); });
   LIST.forEach(function(e){ e.toks.forEach(function(t,j){ if(e.toks.indexOf(t)===j) DF[t]=(DF[t]||0)+1; }); });
   function weight(t){ return Math.log(1+LIST.length/(DF[t]||1))*(GENERIC.test(t)?.25:1); }
 
@@ -1356,7 +1364,7 @@ render();
   function chipped(kind,label){
     var out=[];
     LIST.forEach(function(e){ e.at.forEach(function(a){
-      if(a.x.chips.some(function(c){ return c[0]===kind&&(!label||c[1]===label); })) out.push(e.name+" ("+(a.day==="face"?"daily":LBL[a.day])+")");
+      if(a.x.chips.some(function(c){ return c[0]===kind&&(!label||c[1]===label); })) out.push(e.name+" ("+(a.day==="face"?(a.x.alt?"every other day":"daily"):LBL[a.day])+")");
     }); });
     return out;
   }
@@ -1372,9 +1380,9 @@ render();
     {re:/ rest pause /,a:function(){ return A("**Rest-pause.** "+TECH["Rest-pause"]+"\nIn your plan: "+chipped("int","Rest-pause").join(", ")+". Last set only."); }},
     {re:/ eccentrics? | lowering | negatives? | tempo /,a:function(){ return A("**Slow eccentric.** "+TECH["Slow eccentric"]+"\nIn your plan: "+chipped("int","Slow eccentric").join(", ")+". Last set only."); }},
     {re:/ ramp(ing)? sets? | ramp | warm ?ups? | warming up /,a:function(){ return A("**Ramp sets** are warm-ups that climb toward your working weight: a few easy reps each, getting heavier, never tiring. They groove the pattern and do not count as working sets. Your cues ask for two before bench and three before squat.\nGeneral guide, not written in your plan: something like the empty bar, then about 50, 70 and 85 percent of the working weight."); }},
-    {re:/ working sets? | three sets | 3 sets | how many sets should /,a:function(){ var r=rule(/working sets/i); return A("**Working sets** are the hard ones at your working weight, taken close to failure. Warm-ups and ramp sets are extra."+(r?"\nYour rule: "+ruleLine(r):"")); }},
+    {re:/ working sets? | three sets | 3 sets | how many sets should /,a:function(){ var r=rule(/working sets/i); return A("**Working sets** are the hard ones at your working weight, taken to the last clean rep. Your plan runs two per lift. Warm-ups and ramp sets are extra."+(r?"\nYour rule: "+ruleLine(r):"")); }},
     {re:/ deloads?(ing)? /,a:function(){ var r=rule(/deload/i); return A(r?ruleLine(r)+"\nA deload is a planned easy week so fatigue drops and the next block starts fresh.":"A deload is a planned easy week."); }},
-    {re:/ grinders?| to failure | failure | rir /,a:function(){ return A("A **grinder** is a rep that slows right down and takes everything you have. **Failure** is when the next rep will not go. Most of your plan stops just short: \"stop one rep before the grinder\". The exceptions are the orange-chip techniques, which push past that point on purpose, on the last set only."); }},
+    {re:/ grinders?| to failure | failure | rir /,a:function(){ return A("A **grinder** is a rep that slows right down and takes everything you have. **Failure** is when the next rep will not go. Your plan takes every working set there, except barbell presses and squats, which stop one rep short of a miss because nobody is spotting you. The orange-chip techniques push past failure on purpose, on the last set only."); }},
     {re:/ (progressive )?overload | log | logging | track(ing)? | progress(ion)? scheme /,a:function(){ var r=rule(/log/i); return A((r?ruleLine(r)+"\n":"")+"That is progressive overload: once you hit the top of a rep range on every set, add a little weight and start again at the bottom of the range."); }},
     {re:/ eat(ing)? | food | diet | calories | protein | bulk(ing)? | nutrition /,a:function(){ var r=rule(/eat/i); return A((r?ruleLine(r):"Eat enough to grow.")+"\nThat is as far as the plan goes. Specific numbers are a question for the Claude brain, or better, someone who knows your situation.",[{t:"cfg",label:"Connect Claude"}]); }},
     {re:/ rest (time|times|period|periods|between)| how long (to |should i )?rest | rest between /,a:function(){ return A("Rest times are not written into your plan. General guide: 2 to 3 minutes or more on the heavy compounds (bench, squat, deadlift, rows), 60 to 90 seconds on isolation work. The orange-chip techniques use the 15 second rests their cues spell out."); }},
@@ -1387,25 +1395,27 @@ render();
 
   /* ---------- on-device brain: answers ---------- */
   function A(text,acts,kind){ return {text:text,acts:acts||[],kind:kind||"note"}; }
-  function where(day){ return day==="face"?"Face & Neck, every day":DAYNAME[day]+" ("+PLAN[day].t+")"; }
+  function where(day,x){ return day==="face"?(x&&x.alt?"Face & Neck, every other day ("+(jawDay?"today":"tomorrow")+")":"Face & Neck, every day"):DAYNAME[day]+" ("+PLAN[day].t+")"; }
   function formLink(x){ return "https://www.youtube.com/results?search_query="+encodeURIComponent(x.form); }
 
   function exerciseAnswer(e){
     var first=e.at[0].x, lines=["**"+e.name+"** · "+plain(first.mus)], labels=[];
     e.at.forEach(function(a){
-      lines.push((e.at.length>1?"- ":"")+where(a.day)+": **"+a.x.reps+"**. "+bold(a.x.cue));
+      lines.push((e.at.length>1?"- ":"")+where(a.day,a.x)+": **"+a.x.reps+"**. "+bold(a.x.cue));
       a.x.chips.forEach(function(c){ if(labels.indexOf(c[1])<0) labels.push(c[1]); });
     });
     labels.forEach(function(l){ if(TECH[l]) lines.push("**"+l+":** "+TECH[l]); });
     if(e.at.some(function(a){ return a.x.chips.some(function(c){ return c[0]==="straps"; }); })) lines.push("Gold chip: bring the straps, top sets only.");
     var at=e.at.filter(function(a){ return a.day===view; })[0]||e.at.filter(function(a){ return a.day===todayKey; })[0]||e.at[0];
-    return A(lines.join("\n"),[{t:"open",label:"Open card",day:at.day,i:at.i},{t:"link",label:"Watch form",href:formLink(first)}],"exercise");
+    var acts=[{t:"link",label:"Watch form",href:formLink(first)}];
+    if(at.i>=0) acts.unshift({t:"open",label:"Open card",day:at.day,i:at.i});
+    return A(lines.join("\n"),acts,"exercise");
   }
   function muscleAnswer(m,day){
     var rows=[], sets=0, sessions={}, daily=[];
     LIST.forEach(function(e){ e.at.forEach(function(a){
       if(m.mus.indexOf(plain(a.x.mus))<0) return;
-      if(a.day==="face"){ if(!day) daily.push(e.name+", "+a.x.reps); return; }
+      if(a.day==="face"){ if(!day) daily.push(e.name+", "+a.x.reps+(a.x.alt?" (every other day)":"")); return; }
       if(day&&a.day!==day) return;
       rows.push({d:ORDER.indexOf(a.day),s:"- "+LBL[a.day]+": "+e.name+", "+a.x.reps});
       sets+=a.x.sets; sessions[a.day]=1;
@@ -1416,7 +1426,7 @@ render();
     if(rows.length) out.push("**"+m.title+"** · **"+sets+" sets** "+(day?"on "+DAYNAME[day]:"a week over "+n+" session"+(n===1?"":"s")));
     else out.push("**"+m.title+"**");
     out=out.concat(rows.map(function(r){ return r.s; }));
-    if(daily.length) out.push("Every day, in the face and neck block:\n"+daily.map(function(d){ return "- "+d; }).join("\n"));
+    if(daily.length) out.push("In the face and neck block:\n"+daily.map(function(d){ return "- "+d; }).join("\n"));
     return A(out.join("\n"),[],"muscle");
   }
   function volumeAnswer(){
@@ -1436,7 +1446,7 @@ render();
   function progressAnswer(){
     var d=PLAN[todayKey], total=0, done=0, left=[], next=null, ft=0, fd=0;
     d.l.forEach(function(x,i){ var c=countDone(todayKey,i,x.sets); total+=x.sets; done+=c; if(c<x.sets){ if(!next) next={day:todayKey,i:i,x:x,c:c}; else left.push(plain(x.nm)); } });
-    FACE.forEach(function(x,i){ var c=countDone("face",i,x.sets); ft+=x.sets; fd+=c; if(c<x.sets&&!next) next={day:"face",i:i,x:x,c:c}; });
+    FACE_TODAY.forEach(function(x,i){ var c=countDone("face",i,x.sets); ft+=x.sets; fd+=c; if(c<x.sets&&!next) next={day:"face",i:i,x:x,c:c}; });
     total+=ft; done+=fd;
     if(!next) return A("**"+done+" of "+total+"** ticked. Everything is done today. Go eat.",[],"progress");
     var out=["**"+done+" of "+total+"** sets ticked today ("+d.t+")."];
@@ -1476,7 +1486,7 @@ render();
     if(/ rules? /.test(qn)) return A("**The rules.**\n"+RULES.map(function(r){ return "- "+ruleLine(r); }).join("\n"));
     if(/ equipment | gear | kit | what do i have | home gym /.test(qn)&&KIT) return A(KIT);
     if(/ techniques? | intensity /.test(qn)) return A("Three intensity techniques, one per exercise, last set only:\n- **Myo-reps:** "+chipped("int","Myo-reps").join(", ")+"\n- **Rest-pause:** "+chipped("int","Rest-pause").join(", ")+"\n- **Slow eccentric:** "+chipped("int","Slow eccentric").join(", "));
-    if(/ week | program | programme | split | plan | schedule /.test(qn)) return A("**The week.**\n"+ORDER.map(function(d){ return "- "+LBL[d]+": **"+PLAN[d].t+"**, "+PLAN[d].f.join(", ").toLowerCase(); }).join("\n")+"\nThe face and neck block runs every day.");
+    if(/ week | program | programme | split | plan | schedule /.test(qn)) return A("**The week.**\n"+ORDER.map(function(d){ return "- "+LBL[d]+": **"+PLAN[d].t+"**, "+PLAN[d].f.join(", ").toLowerCase(); }).join("\n")+"\nThe face and neck block runs every day: neck and eyes daily, mouth and jaw every other day.");
     return A("That one is past my on-device brain. I answer from the plan itself: any lift, muscle, day, technique or rule."+(cfg.k?"":"\nFor open questions, connect the Claude brain."),cfg.k?[]:[{t:"cfg",label:"Connect Claude"}],"miss");
   }
 
@@ -1504,8 +1514,8 @@ render();
       PLAN[d].l.forEach(function(x,i){ p.push((i+1)+". "+plain(x.nm)+" | "+plain(x.mus)+" | "+x.reps+(x.chips.length?" | tags: "+x.chips.map(function(c){ return c[1]; }).join(", "):"")+" | cue: "+plain(x.cue)); });
       p.push("");
     });
-    p.push("Face & Neck block, every day including rest days:");
-    FACE.forEach(function(x,i){ p.push((i+1)+". "+plain(x.nm)+" | "+plain(x.mus)+" | "+x.reps+" | cue: "+plain(x.cue)); });
+    p.push("Face & Neck block, every day including rest days. Items marked every other day are mouth and jaw work that alternates by calendar day.");
+    FACE.forEach(function(x,i){ p.push((i+1)+". "+plain(x.nm)+" | "+plain(x.mus)+" | "+x.reps+(x.alt?" | every other day":"")+" | cue: "+plain(x.cue)); });
     p.push("","Straps (a gold tag means bring them):");
     STRAPS.forEach(function(s){ p.push("- "+s.t+" "+s.body); });
     p.push("","Rules:");
