@@ -38,6 +38,9 @@ GitHub Pages redeploys in about a minute. The phone picks up the new page the ne
 - **Rest timer.** Starts when a set is ticked: 3 minutes after lifts matching `BIG` (presses, squats, deadlifts, rows, pull-ups, chin-ups, lunges, thrusts), 90 seconds otherwise. It counts to a fixed end time, so locking the phone does not lose it. Turn it or its chime off in Progress.
 - **Progress.** The flame at the top right: streak (a lifting day counts at half its lifting sets, Sunday at half of everything), this week, volume, PRs, a 16 week heatmap and a trend line per lift.
 - **Face and neck.** The block runs every other day by calendar date, counted from 2 Nov 2026 (`isFaceDate`). Off days hide it.
+- **Workout mode.** The Start workout button under the day's stats opens a full-screen guided session for today: one exercise at a time, the same steppers, a big Log set button, the rest countdown, and it moves on by itself. It writes the same tick marks and log as the cards, and opens the finish card when the last lifting set is in.
+- **Warm-ups.** Barbell lifts at 95 lb or more show a warm-up ramp under the plates: the bar, then about 50, 70 and 85 percent of the working weight (`warmupHTML`).
+- **Badges.** `BADGES` near the end of the main script. They are worked out from `hp.log` each time; `hp.badges` only remembers which ones the finish card has already announced.
 - **Form videos.** `VID` maps each exercise's `form` phrase to a short YouTube video that plays inside the card (muted at first, via youtube-nocookie). A new exercise without an entry falls back to a YouTube search link. To swap a video, change its id in `VID`.
 
 ## Spot, the coach in the corner
