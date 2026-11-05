@@ -1786,6 +1786,17 @@
   html.sheet-open .aur s{animation-play-state:paused;}
   .fin-star b{color:#FFE3A6;}
 
+  /* quick day: a short version of today for the days you're not feeling it */
+  .go-row{gap:10px;}
+  .qk-btn{display:inline-flex;align-items:center;gap:8px;height:50px;padding:0 18px 0 15px;border-radius:100px;font-size:15px;font-weight:700;
+    color:var(--fg);background:radial-gradient(120% 100% at 0 0,rgba(255,214,120,.14),transparent 60%),var(--gl-fill);box-shadow:var(--gl-edge);text-shadow:none;}
+  .qk-btn[hidden]{display:none;}
+  .qk-btn svg{width:15px;height:15px;fill:#FFD46A;}
+  .qk-btn.on{color:var(--fg-2);}
+  .qk-btn.on svg{fill:var(--muted);}
+  .qk-tag{display:inline-flex;align-items:center;gap:6px;margin-left:8px;padding:2px 8px;border-radius:100px;font:700 9.5px var(--mono);letter-spacing:.16em;
+    text-transform:uppercase;color:#4A2600;background:linear-gradient(180deg,#FFE7A0,#F2B13E 50%,#D98A1C 51%,#F5C65A);vertical-align:2px;}
+
   @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;}}
 </style>
 <script>try{if(!matchMedia("(prefers-reduced-motion:reduce)").matches){var hiD=new Date(),hiT=hiD.getFullYear()+"-"+(hiD.getMonth()+1)+"-"+hiD.getDate();if(localStorage.getItem("hp.hi")!==hiT){localStorage.setItem("hp.hi",hiT);document.documentElement.classList.add("hi");}}}catch(e){}</script>
@@ -1831,7 +1842,7 @@
       <p class="blurb" id="blurb"></p>
       <div class="stats" id="stats"></div>
       <div class="quest" id="quest" hidden></div>
-      <div class="go-row"><button class="btn go-btn" id="goBtn" type="button"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5v11l9.5-5.5z"/></svg><span id="goLbl">Start workout</span></button></div>
+      <div class="go-row"><button class="btn go-btn" id="goBtn" type="button"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5v11l9.5-5.5z"/></svg><span id="goLbl">Start workout</span></button><button class="btn qk-btn" id="qkBtn" type="button" hidden><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M9.3 1.5L3.6 9h3.7l-.8 5.5L12.4 7H8.6z"/></svg><span id="qkLbl">Quick day</span></button></div>
     </div>
 
     <div class="week" id="week" role="group" aria-label="Day"><i class="thumb" aria-hidden="true"></i></div>
@@ -2157,6 +2168,31 @@ const store={
 };
 var marks=store.get();
 var view=todayKey;
+
+/* ---------- quick day: the three lifts that matter most, two sets each, so a rough day still counts ---------- */
+var QUICK={mon:[0,3,6],tue:[0,1,5],wed:[0,1,5],thu:[0,1,3],fri:[0,1,5],sat:[0,1,2]}, FULL=PLAN[todayKey].l.slice();
+function isQuick(){ try{ return !!QUICK[todayKey]&&localStorage.getItem("hp.quick")===ymd(new Date()); }catch(e){ return false; } }
+function applyQuick(on){ PLAN[todayKey].l=on?QUICK[todayKey].map(function(i){ return FULL[i]; }):FULL.slice(); }
+function setQuick(on){
+  var p=QUICK[todayKey], pre=todayKey+"-", m={};
+  if(!p||on===isQuick()) return;
+  // today's ticks move with their lift; ticks on lifts the quick day leaves out wait in "full:" until it is switched back
+  Object.keys(marks).forEach(function(k){
+    if(k.indexOf("full:")===0){ if(!on) m[k.slice(5)]=marks[k]; return; }
+    if(k.indexOf(pre)!==0){ m[k]=marks[k]; return; }
+    var a=k.split("-"), i=+a[1], j;
+    if(on){ j=p.indexOf(i); if(j<0) m["full:"+k]=marks[k]; else m[pre+j+"-"+a[2]]=marks[k]; }
+    else m[pre+p[i]+"-"+a[2]]=marks[k];
+  });
+  marks=m; store.set(marks);
+  try{ localStorage.setItem("hp.quick",on?ymd(new Date()):""); }catch(e){}
+  applyQuick(on);
+  WM.i=0;
+  document.documentElement.style.setProperty("--dir",on?1:-1);
+  render(true);
+  buzz(10);
+}
+applyQuick(isQuick());
 var wasFull=null, wasLift=null;
 
 var TICK='<svg class="tick" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.6l3.2 3.2L13 4.7"/></svg>';
@@ -2840,7 +2876,8 @@ function paintHero(k,peek){
     b.setAttribute("aria-pressed",String(b.dataset.k===k));
   });
   if(peek) return;
-  $("blurb").textContent=d.b;
+  $("blurb").textContent=k===todayKey&&isQuick()?"Quick day. The three lifts that matter most, two sets each, then you're out. It still counts for your streak.":d.b;
+  if(k===todayKey&&isQuick()) $("kicker").insertAdjacentHTML("beforeend",'<span class="qk-tag">Quick day</span>');
   $("focus").innerHTML=d.f.map(function(f){ return "<span>"+f+"</span>"; }).join("");
   heroStats(k);
 }
@@ -3371,8 +3408,14 @@ function updateGo(k){
   b.classList.toggle("recap",k===todayKey&&!lifting);
   b.classList.toggle("done",k===todayKey&&lifting&&!liftsLeft());
   $("goLbl").textContent=k!==todayKey?"Back to today":!lifting?"Your week":!liftsLeft()?"Workout done":any?"Resume workout":"Start workout";
+  var q=$("qkBtn"), qk=isQuick();
+  q.hidden=k!==todayKey||!QUICK[todayKey];
+  q.classList.toggle("on",qk);
+  $("qkLbl").textContent=qk?"Full day":"Quick day";
+  q.setAttribute("aria-label",qk?"Switch back to the full day":"Quick day: three lifts, two sets each");
   updateDock(k);
 }
+$("qkBtn").onclick=function(){ setQuick(!isQuick()); };
 
 /* ---------- workout mode: one exercise at a time, full screen ---------- */
 var WM={i:0,iv:0};
