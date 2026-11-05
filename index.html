@@ -1909,7 +1909,7 @@ const PLAN={
   l:[
    ex("Barbell back squat","Quads","2 \u00d7 6-8",2,"Three ramp sets in. Below parallel or it does not count.","barbell back squat form"),
    ex("Romanian deadlift","Hamstrings","2 \u00d7 6-8",2,"Bar dragging the legs, hips back, stop when the hamstrings run out of stretch. Strap the heavy sets.","romanian deadlift form",[["straps","Straps"]]),
-   ex("Bulgarian split squat","Quads","2 \u00d7 6-8 ea",2,"Rear foot on the bench, dumbbells in hand. This is supposed to be miserable.","bulgarian split squat form"),
+   ex("Heel-elevated goblet squat","Quads","2 \u00d7 6-8",2,"Heels up on a pair of plates, the 75 held tight at the chest. Sit straight down between the heels and let the knees run past the toes. Both legs at once, no balance to fight, all quads.","heel elevated goblet squat form"),
    ex("Cable pull-through","Glutes","2 \u00d7 6-8",2,"Pulley on the floor between your legs. Hinge, then drive the hips forward hard.","cable pull through form"),
    ex("Standing calf raise","Calves","2 \u00d7 6-8",2,"Dumbbell in one hand, toes on a plate. Two second pause in the bottom stretch every rep.","standing calf raise form"),
    ex("Hanging leg raise","Abs","2 \u00d7 max",2,"From the pull-up bar. Curl the pelvis up, do not just swing the legs.","hanging leg raise form")
@@ -1972,7 +1972,6 @@ const VID={
  "barbell bench press form":"lWFknlOTbyM",
  "barbell curl form":"ZQWL7omZh94",
  "barbell row form":"qXrTDQG1oUQ",
- "bulgarian split squat form":"vgn7bSXkgkA",
  "cable bicep curl form":"NFzTWp2qpiE",
  "cable chest fly form":"4Y8QgiT2-OA",
  "cable hip thrust form":"WieGZholDKI",
@@ -1993,6 +1992,7 @@ const VID={
  "front squat form":"uYumuL_G_V0",
  "hammer curl form":"BRVDS6HVR9Q",
  "hanging leg raise form":"_jLskVdzS4o",
+ "heel elevated goblet squat form":"lt9BKstdwdU",
  "incline barbell bench press form":"5kyLUGVq_pk",
  "incline dumbbell curl form":"HhHHBj3qTJ4",
  "incline dumbbell press form":"IP4oeKh1Sd4",
@@ -3812,7 +3812,7 @@ var Story=(function(){
       .replace(/pull[\s-]?ups?/g,"pull up").replace(/chin[\s-]?ups?/g,"chin up")
       .replace(/push[\s-]?downs?/g,"pushdown").replace(/pull[\s-]?downs?/g,"pulldown")
       .replace(/pull[\s-]?throughs?/g,"pull through")
-      .replace(/\brdls?\b/g,"romanian deadlift").replace(/\bbss\b/g,"bulgarian split squat")
+      .replace(/\brdls?\b/g,"romanian deadlift")
       .replace(/\blat raises?\b/g,"lateral raise").replace(/\blaterals\b/g,"lateral raise")
       .replace(/\bext\b/g,"extension").replace(/\bdb\b/g,"dumbbell").replace(/\bbb\b/g,"barbell")
       .replace(/[^a-z0-9]+/g," ").trim()+" ";
