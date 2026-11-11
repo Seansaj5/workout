@@ -2033,7 +2033,6 @@ const PLAN={
    ex("Barbell back squat","Quads","2 \u00d7 6-8",2,"Three ramp sets in. Below parallel or it does not count.","barbell back squat form"),
    ex("Romanian deadlift","Hamstrings","2 \u00d7 6-8",2,"Bar dragging the legs, hips back, stop when the hamstrings run out of stretch. Strap the heavy sets.","romanian deadlift form",[["straps","Straps"]]),
    ex("Heel-elevated goblet squat","Quads","2 \u00d7 6-8",2,"Heels up on a pair of plates, the 75 held tight at the chest. Sit straight down between the heels and let the knees run past the toes. Both legs at once, no balance to fight, all quads.","heel elevated goblet squat form"),
-   ex("Cable pull-through","Glutes","2 \u00d7 6-8",2,"Pulley on the floor between your legs. Hinge, then drive the hips forward hard.","cable pull through form"),
    ex("Standing calf raise","Calves","2 \u00d7 6-8",2,"Dumbbell in one hand, toes on a plate. Two second pause in the bottom stretch every rep.","standing calf raise form"),
    ex("Hanging leg raise","Abs","2 \u00d7 max",2,"From the pull-up bar. Curl the pelvis up, do not just swing the legs.","hanging leg raise form")
   ]},
@@ -2099,7 +2098,6 @@ const VID={
  "cable chest fly form":"4Y8QgiT2-OA",
  "cable hip thrust form":"WieGZholDKI",
  "cable lateral raise form":"-CAGLnWUkWA",
- "cable pull through form":"IU-ERkjTKXA",
  "cable rear delt fly form":"er15V96hG5U",
  "cable tricep pushdown form":"8WL0m0vLAPo",
  "chest supported dumbbell row form":"vmX58YYK3-8",
@@ -2170,7 +2168,7 @@ var marks=store.get();
 var view=todayKey;
 
 /* ---------- quick day: the three lifts that matter most, two sets each, so a rough day still counts ---------- */
-var QUICK={mon:[0,3,6],tue:[0,1,5],wed:[0,1,5],thu:[0,1,3],fri:[0,1,5],sat:[0,1,2]}, FULL=PLAN[todayKey].l.slice();
+var QUICK={mon:[0,3,6],tue:[0,1,5],wed:[0,1,4],thu:[0,1,3],fri:[0,1,5],sat:[0,1,2]}, FULL=PLAN[todayKey].l.slice();
 function isQuick(){ try{ return !!QUICK[todayKey]&&localStorage.getItem("hp.quick")===ymd(new Date()); }catch(e){ return false; } }
 function applyQuick(on){ PLAN[todayKey].l=on?QUICK[todayKey].map(function(i){ return FULL[i]; }):FULL.slice(); }
 function setQuick(on){
